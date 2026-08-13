@@ -21,7 +21,7 @@ useSeoMeta({
 
 <template>
   <UApp>
-    <UMain>
+    <UMain class="h-dvh w-dvw">
       <NuxtLayout>
         <NuxtPage/>
       </NuxtLayout>
