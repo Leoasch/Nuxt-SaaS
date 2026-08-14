@@ -1,4 +1,4 @@
-import type { InferAttributes, InferCreationAttributes } from 'sequelize'
+import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize'
 import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '..'
 
@@ -6,10 +6,10 @@ export class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
 > {
-  declare id: string
+  declare id: CreationOptional<string>
   declare name: string
   declare email: string
-  declare password: string
+  declare passwordHash: string
 }
 
 User.init(
@@ -28,7 +28,7 @@ User.init(
       allowNull: false,
       unique: true
     },
-    password: {
+    passwordHash: {
       type: DataTypes.STRING,
       allowNull: false
     }

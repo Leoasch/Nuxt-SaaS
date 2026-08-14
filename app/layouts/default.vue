@@ -3,6 +3,7 @@ import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 
 const open = ref(false)
 const colorMode = useColorMode()
+const { clear } = useUserSession()
 
 const user = ref({
   name: 'Benjamin Canac',
@@ -64,13 +65,13 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
     {
       label: 'GitHub',
       icon: 'i-simple-icons-github',
-      to: 'https://github.com/nuxt/ui',
+      to: 'https://github.com/Leoasch/Nuxt-SaaS',
       target: '_blank'
     },
     {
       label: 'Log out',
       icon: 'i-lucide-log-out',
-      to: '/auth/login'
+      onSelect: logout
     }
   ]
 ])
@@ -103,6 +104,16 @@ function getItems () {
       to: '/stock'
     },
   ] satisfies NavigationMenuItem[]
+}
+
+async function logout () {
+  await $fetch('/api/auth/logout', {
+    method: 'POST',
+  })
+
+  await clear()
+
+  await navigateTo('/auth/login')
 }
 </script>
 

@@ -3,7 +3,7 @@ import '../database/models/User'
 
 export default defineNitroPlugin(async () => {
   await sequelize.authenticate()
-  await sequelize.sync()
+  await sequelize.sync({ alter: true })
 
   console.log('PostgreSQL connected and synched')
 })
