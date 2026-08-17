@@ -1,7 +1,9 @@
 import { sequelize } from '../database'
-import '../database/models/User'
+import { registerAssociations } from '../database/associations'
 
 export default defineNitroPlugin(async () => {
+  registerAssociations()
+
   await sequelize.authenticate()
   await sequelize.sync({ alter: true })
 
