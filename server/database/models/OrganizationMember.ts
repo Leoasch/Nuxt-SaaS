@@ -1,6 +1,7 @@
 import type { InferAttributes, InferCreationAttributes } from 'sequelize'
 import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '..'
+import type { Role } from '~~/shared/types'
 
 export class OrganizationMember extends Model<
   InferAttributes<OrganizationMember>,
@@ -8,7 +9,7 @@ export class OrganizationMember extends Model<
 > {
   declare organization_id: string
   declare user_id: string
-  declare role: 'ADMIN' | 'MANAGER' | 'EMPLOYEE'
+  declare role: Role
 }
 
 OrganizationMember.init(

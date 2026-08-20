@@ -1,6 +1,7 @@
 import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize'
 import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '..'
+import { decimalToNumber } from '~~/server/utils/dataHandler'
 
 export class Sale extends Model<
   InferAttributes<Sale>,
@@ -38,17 +39,26 @@ Sale.init(
     discount: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
-      defaultValue: 0
+      defaultValue: 0,
+      get (this: Sale) {
+        return decimalToNumber.call(this, 'discount')
+      }
     },
     subtotal: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
+      get (this: Sale) {
+        return decimalToNumber.call(this, 'subtotal') 
+      }
     },
     total: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
+      get (this: Sale) {
+        return decimalToNumber.call(this, 'total')
+      }
     },
     payment_method: {
       type: DataTypes.STRING,

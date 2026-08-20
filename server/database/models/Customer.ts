@@ -9,9 +9,9 @@ export class Customer extends Model<
   declare id: CreationOptional<string>
   declare organization_id: string
   declare name: string
-  declare email: string
-  declare phone: string
-  declare document: string
+  declare email: string | null
+  declare phone: string | null
+  declare document: string | null
 }
 
 Customer.init(

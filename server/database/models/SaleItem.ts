@@ -1,6 +1,7 @@
 import type { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize'
 import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '..'
+import { decimalToNumber } from '~~/server/utils/dataHandler'
 
 export class SaleItem extends Model<
   InferAttributes<SaleItem>,
@@ -37,12 +38,18 @@ SaleItem.init(
     unit_price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
+      get (this: SaleItem) {
+        return decimalToNumber.call(this, 'unit_price')
+      }
     },
     total: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      defaultValue: 0
+      defaultValue: 0,
+      get (this: SaleItem) {
+        return decimalToNumber.call(this, 'total')
+      }
     }
   },
   {

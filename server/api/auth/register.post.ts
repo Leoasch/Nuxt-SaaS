@@ -1,5 +1,6 @@
 import { User } from '~~/server/database/models/User'
 import { z } from 'zod'
+import { parseBody } from '~~/server/utils/accessValidation'
 
 const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -12,50 +13,22 @@ const registerSchema = z.object({
     path: ['repeatPassword'],
     message: 'password_do_not_match'
   }
-)
-
-export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
-
-  const result = registerSchema.safeParse(body)
-
-  if (!result.success) {
-    const fields: Record<string, string> = {}
-
-    for (const issue of result.error.issues) {
-      const field = issue.path[0]
-
-      if (typeof field === 'string' && !fields[field]) {
-        fields[field] = issue.code === 'custom'
-          ? issue.message
-          : issue.code
-      }
-    }
-
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Validation Error',
-      data: {
-        code: 'VALIDATION_ERROR',
-        fields,
-      },
-    })
-  }
-
-  const { name, email, password } = result.data
-
-  const existingUser = await User.findOne({
-    where: { email },
-  })
+).superRefine(async (data, ctx) => {
+  const existingUser = await User.findOne({ where: { email: data.email } })
 
   if (existingUser) {
-    throw createError({
-      status: 409,
-      data: {
-        code: 'AUTH_EMAIL_ALREADY_EXISTS'
-      }
+    ctx.addIssue({
+      code: 'custom',
+      path: ['email'],
+      message: 'email_already_in_use'
     })
   }
+})
+
+export default defineEventHandler(async (event) => {
+  const result = await parseBody(event, registerSchema)
+
+  const { name, email, password } = result.data
 
   const passwordHash = await hashPassword(password)
 

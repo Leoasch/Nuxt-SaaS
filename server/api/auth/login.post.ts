@@ -1,5 +1,6 @@
 import { User } from '~~/server/database/models/User'
 import { z } from 'zod'
+import { parseBody } from '~~/server/utils/accessValidation'
 
 const loginSchema = z.object({
   email: z.email(),
@@ -7,30 +8,7 @@ const loginSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
-
-  const result = loginSchema.safeParse(body)
-
-  if (!result.success) {
-    const fields: Record<string, string> = {}
-
-    for (const issue of result.error.issues) {
-      const field = issue.path[0]
-
-      if (typeof field === 'string') {
-        fields[field] = issue.code
-      }
-    }
-
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Validation Error',
-      data: {
-        code: 'VALIDATION_ERROR',
-        fields,
-      },
-    })
-  }
+  const result = await parseBody(event, loginSchema)
 
   const { email, password } = result.data
 
