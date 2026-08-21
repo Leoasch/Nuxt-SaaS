@@ -7,18 +7,12 @@ const email = ref('')
 const password = ref('')
 const show = ref(false)
 
-const errors = reactive<{
-  email?: string
-  password?: string
-  login?: string
-}>({})
+const { errors, resetErrors, handleError } = useFormErrors(['email', 'password'] as const, 'login')
 
 const { fetch: fetchSession } = useUserSession()
 
 async function login () {
-  errors.login = undefined
-  errors.password = undefined
-  errors.email = undefined
+  resetErrors()
 
   try {
     await $fetch('/api/auth/login', {
@@ -32,22 +26,7 @@ async function login () {
     await fetchSession()
     await navigateTo('/')
   } catch (error: any) {
-    const fields = error?.data?.data?.fields
-    const code = error?.data?.data?.code
-
-    if (fields) {
-      errors.email = fields.email
-        ? $t(`validation.email.${fields.email}`)
-        : undefined
-
-      errors.password = fields.password
-        ? $t(`validation.password.${fields.password}`)
-        : undefined
-    }
-
-    errors.login = code
-      ? $t(`errors.${code}`)
-      : $t('errors.UNKNOWN')
+    handleError(error)
   }
 }
 </script>

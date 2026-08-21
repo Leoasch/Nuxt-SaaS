@@ -10,22 +10,15 @@ const repeatPassword = ref('')
 const showPassword = ref(false)
 const showRepeatPassword = ref(false)
 
-const errors = reactive<{
-  name?: string
-  email?: string
-  password?: string
-  repeatPassword?: string
-  register?: string
-}>({})
+const { errors, resetErrors, handleError } = useFormErrors(
+  ['name', 'email', 'password', 'repeatPassword'] as const,
+  'register'
+)
 
 const { fetch: fetchSession } = useUserSession()
 
 async function register () {
-  errors.register = undefined
-  errors.name = undefined
-  errors.email = undefined
-  errors.password = undefined
-  errors.repeatPassword = undefined
+  resetErrors()
 
   try {
     await $fetch('/api/auth/register', {
@@ -41,30 +34,7 @@ async function register () {
     await fetchSession()
     await navigateTo('/')
   } catch (error: any) {
-    const fields = error?.data?.data?.fields
-    const code = error?.data?.data?.code
-
-    if (fields) {
-      errors.name = fields.name
-        ? $t(`validation.name.${fields.name}`)
-        : undefined
-
-      errors.email = fields.email
-        ? $t(`validation.email.${fields.email}`)
-        : undefined
-
-      errors.password = fields.password
-        ? $t(`validation.password.${fields.password}`)
-        : undefined
-
-      errors.repeatPassword = fields.repeatPassword
-        ? $t(`validation.repeatPassword.${fields.repeatPassword}`)
-        : undefined
-    }
-
-    errors.register = code
-      ? $t(`errors.${code}`)
-      : $t('errors.UNKNOWN')
+    handleError(error)
   }
 }
 </script>

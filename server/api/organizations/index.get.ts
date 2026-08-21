@@ -19,7 +19,8 @@ export default defineEventHandler(async (event) => {
   )
 
   const organizations = await Organization.findAll({
-    where: { id: [...roleByOrganizationId.keys()] }
+    where: { id: [...roleByOrganizationId.keys()] },
+    order: [['createdAt', 'ASC']],
   })
 
   return {

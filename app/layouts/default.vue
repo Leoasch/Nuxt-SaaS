@@ -135,7 +135,7 @@ async function logout () {
       }"
     >
       <template #header>
-        <h1>Header</h1>
+        <Logo v-if="open"/>
       </template>
 
       <template #default="{ state }">

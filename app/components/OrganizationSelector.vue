@@ -23,9 +23,5 @@ const organizationsItems = computed<SelectItem[]>(() => {
   <USelect
     v-model="selectedOrganizationId"
     :items="organizationsItems"
-  >
-    <template #content-bottom>
-      <UButton icon="lucide:plus">New</UButton>
-    </template>
-  </USelect>
+  />
 </template>

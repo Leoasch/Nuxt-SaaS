@@ -1,10 +1,10 @@
 import type { Organization } from '~~/shared/types'
 import { apiRequest } from '.'
 
-type OrganizationBody = {
+export type OrganizationBody = {
   id?: string
   name: string
-  document: string
+  document: string | null
 }
 
 export async function getOrganizations (): Promise<{ organizations: Organization[] } | null>
@@ -17,25 +17,21 @@ export async function getOrganizations (id?: string) {
 }
 
 export async function postOrganization (body: OrganizationBody) {
-  return await apiRequest<{ organization: Organization[] }>('/organizations', {
-    body,
+  return await $fetch<{ organization: Organization }>('/api/organizations', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body,
   })
 }
 
 export async function editOrganization (body: OrganizationBody) {
-  return await apiRequest<{ organization: Organization[] }>('/organizations', {
-    body,
+  const { id, ...rest } = body
+
+  return await $fetch<{ organization: Organization }>(`/api/organizations/${id}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: rest,
   })
 }
 
-export async function deleteOrganization () {
-  return await apiRequest<{ organization: Organization[] }>('/organizations', { method: 'DELETE' })
+export async function deleteOrganization (id: string) {
+  return await $fetch<{ organization: Organization }>(`/api/organizations/${id}`, { method: 'DELETE' })
 }

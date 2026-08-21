@@ -1,23 +1,12 @@
 <script setup lang="ts">
-import type { PropType } from 'vue'
 import type { Role } from '~~/shared/types'
+import OrganizationForm from './Forms/OrganizationForm.vue'
 
-const props = defineProps({
-  name: {
-    type: String,
-    default: () => ''
-  },
-  document: {
-    type: String,
-    required: false,
-    nullable: true,
-    default: () => ''
-  },
-  role: {
-    type: String as PropType<Role>,
-    default: () => 'EMPLOYEE' as Role
-  },
-})
+const props = defineProps<{
+  organization: Organization
+}>()
+
+const overlay = useOverlay()
 
 const ROLE_STYLES: Record<Role, { label: string; color: 'error' | 'warning' | 'neutral'; icon: string; accent: string }> = {
   ADMIN: { label: 'Admin', color: 'error', icon: 'i-lucide-shield-check', accent: 'border-l-error' },
@@ -25,7 +14,11 @@ const ROLE_STYLES: Record<Role, { label: string; color: 'error' | 'warning' | 'n
   EMPLOYEE: { label: 'Employee', color: 'neutral', icon: 'i-lucide-user', accent: 'border-l-neutral' },
 }
 
-const roleStyle = computed(() => ROLE_STYLES[props.role])
+const roleStyle = computed(() => ROLE_STYLES[props.organization.role])
+
+function editModal () {
+  overlay.create(OrganizationForm, { props: { organization: props.organization } }).open()
+}
 </script>
 
 <template>
@@ -37,9 +30,10 @@ const roleStyle = computed(() => ROLE_STYLES[props.role])
       body: 'bg-linear-to-r from-accented/30 to-accented/10'
     }"
     variant="soft"
-    :title="name"
+    :title="organization.name"
+    @click="editModal"
   >
-    <h1 v-if="document">{{ document }}</h1>
+    <h1 v-if="organization.document">{{ organization.document }}</h1>
     <UBadge
       :color="roleStyle.color"
       :icon="roleStyle.icon"
