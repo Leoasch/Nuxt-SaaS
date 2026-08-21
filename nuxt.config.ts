@@ -18,7 +18,12 @@ export default defineNuxtConfig({
     databasePort: 5432,
     databaseName: '',
     databaseUser: '',
-    databasePassword: ''
+    databasePassword: '',
+    s3Endpoint: '',
+    s3Region: 'us-east-1',
+    s3Bucket: '',
+    s3AccessKeyId: '',
+    s3SecretAccessKey: ''
   },
 
   routeRules: {

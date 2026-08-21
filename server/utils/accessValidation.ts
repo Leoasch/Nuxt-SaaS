@@ -4,6 +4,7 @@ import { Organization } from '../database/models/Organization'
 import { OrganizationMember } from '../database/models/OrganizationMember'
 import type { Role } from '~~/shared/types'
 import { Product } from '../database/models/Product'
+import { ProductImage } from '../database/models/ProductImage'
 import { Customer } from '../database/models/Customer'
 import type z from 'zod'
 
@@ -94,6 +95,35 @@ export async function accessProduct (event: H3Event<globalThis.EventHandlerReque
   }
 
   return { product }
+}
+
+export async function accessProductImage (event: H3Event<globalThis.EventHandlerRequest>, product_id: string) {
+  const image_id = getRouterParam(event, 'image_id')
+
+  if (!image_id) {
+    // INVALID ID
+    throw createError({
+      statusCode: 400,
+      data: {
+        code: 'INVALID_ID',
+      },
+    })
+  }
+
+  const image = await ProductImage.findOne({ where: { id: image_id, product_id } })
+
+  if (!image) {
+    // NOT FOUND ERROR
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Image not found.',
+      data: {
+        code: 'PRODUCT_IMAGE.NOT_FOUND',
+      },
+    })
+  }
+
+  return { image }
 }
 
 export async function accessCustomer (event: H3Event<globalThis.EventHandlerRequest>, organization_id: string) {

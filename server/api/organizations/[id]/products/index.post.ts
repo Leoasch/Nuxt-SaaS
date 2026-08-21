@@ -4,8 +4,8 @@ import { organizationAccessValidation, parseBody } from '~~/server/utils/accessV
 
 const createProductSchema = z.object({
   name: z.string().trim().min(2).max(100),
-  sku: z.string().trim().min(2).max(100).optional(),
-  barcode: z.string().trim().min(2).max(100).optional(),
+  sku: z.string().trim().min(2).max(100).optional().nullable(),
+  barcode: z.string().trim().min(2).max(100).optional().nullable(),
   cost_price: z.number().optional(),
   sale_price: z.number().optional(),
   stock_quantity: z.number().optional(),

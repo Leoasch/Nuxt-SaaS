@@ -3,7 +3,7 @@ import { organizationAccessValidation, parseBody } from '~~/server/utils/accessV
 
 const editOrganizationSchema = z.object({
   name: z.string().trim().min(2).max(100),
-  document: z.string().trim().min(1).max(32).optional(),
+  document: z.string().trim().min(1).max(32).optional().nullable(),
 })
 
 export default defineEventHandler(async (event) => {

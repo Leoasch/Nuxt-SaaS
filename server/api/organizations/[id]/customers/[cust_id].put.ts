@@ -3,9 +3,9 @@ import { accessCustomer, organizationAccessValidation, parseBody } from '~~/serv
 
 const editCustomerSchema = z.object({
   name: z.string().trim().min(2).max(100).optional(),
-  email: z.email().optional(),
-  phone: z.string().max(25).optional(),
-  document: z.string().max(30).optional(),
+  email: z.email().optional().nullable(),
+  phone: z.string().max(25).optional().nullable(),
+  document: z.string().max(30).optional().nullable(),
 })
 
 export default defineEventHandler(async (event) => {

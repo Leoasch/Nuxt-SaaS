@@ -84,6 +84,11 @@ function getItems () {
       to: '/'
     },
     {
+      label: $t('my_organizations'),
+      icon: 'i-lucide-square-dot',
+      to: '/organizations'
+    },
+    {
       label: $t('products'),
       icon: 'i-lucide-square-dot',
       to: '/products'
@@ -173,6 +178,7 @@ async function logout () {
           aria-label="Toggle sidebar"
           @click="open = !open"
         />
+        <OrganizationSelector class="mr-4 ml-auto w-60"/>
       </div>
 
       <div class="flex-1 p-4">

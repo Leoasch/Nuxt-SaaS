@@ -2,6 +2,7 @@ import { Customer } from './models/Customer'
 import { Organization } from './models/Organization'
 import { OrganizationMember } from './models/OrganizationMember'
 import { Product } from './models/Product'
+import { ProductImage } from './models/ProductImage'
 import { Sale } from './models/Sale'
 import { SaleItem } from './models/SaleItem'
 import { StockMovement } from './models/StockMovements'
@@ -19,6 +20,9 @@ export function registerAssociations () {
 
   Organization.hasMany(Product, { foreignKey: 'organization_id' })
   Product.belongsTo(Organization, { foreignKey: 'organization_id' })
+
+  Product.hasMany(ProductImage, { foreignKey: 'product_id', onDelete: 'CASCADE' })
+  ProductImage.belongsTo(Product, { foreignKey: 'product_id' })
 
   Organization.hasMany(StockMovement, { foreignKey: 'organization_id' })
   StockMovement.belongsTo(Organization, { foreignKey: 'organization_id' })
