@@ -21,7 +21,7 @@ export function registerAssociations () {
   Organization.hasMany(Product, { foreignKey: 'organization_id' })
   Product.belongsTo(Organization, { foreignKey: 'organization_id' })
 
-  Product.hasMany(ProductImage, { foreignKey: 'product_id', onDelete: 'CASCADE' })
+  Product.hasMany(ProductImage, { foreignKey: 'product_id', as: 'images', onDelete: 'CASCADE' })
   ProductImage.belongsTo(Product, { foreignKey: 'product_id' })
 
   Organization.hasMany(StockMovement, { foreignKey: 'organization_id' })

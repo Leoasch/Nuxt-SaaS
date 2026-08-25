@@ -1,15 +1,16 @@
 import type { Customer } from '~~/shared/types'
 import { apiRequest, orgRoute } from '.'
 
-type CustomerBody = {
+export type CustomerBody = {
+  id?: string
   name: string
   email: string | null
   phone: string | null
   document: string | null
 }
 
-export async function getCustomers(org_id: string): Promise<{ customers: Customer[] } | null>
-export async function getCustomers(org_id: string, id: string): Promise<{ customer: Customer } | null>
+export async function getCustomers(org_id: string): Promise<{ customers: Customer[] }>
+export async function getCustomers(org_id: string, id: string): Promise<{ customer: Customer }>
 export async function getCustomers (org_id: string, id?: string) {
 
   if (!id) {
@@ -21,20 +22,15 @@ export async function getCustomers (org_id: string, id?: string) {
 export async function postCustomer (org_id: string, body: CustomerBody) {
   return await apiRequest<{ customer: Customer }>(orgRoute(org_id) + '/customers', {
     body,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    method: 'POST'
   })
 }
 
-export async function editCustomer (org_id: string, id: string, body: Partial<CustomerBody>) {
+export async function editCustomer (org_id: string, body: Partial<CustomerBody>) {
+  const { id, ...rest } = body
   return await apiRequest<{ customer: Customer }>(orgRoute(org_id) + `/customers/${id}`, {
-    body,
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: rest,
+    method: 'PUT'
   })
 }
 

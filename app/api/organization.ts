@@ -7,8 +7,8 @@ export type OrganizationBody = {
   document: string | null
 }
 
-export async function getOrganizations (): Promise<{ organizations: Organization[] } | null>
-export async function getOrganizations (id: string): Promise<{ organization: Organization } | null>
+export async function getOrganizations (): Promise<{ organizations: Organization[] }>
+export async function getOrganizations (id: string): Promise<{ organization: Organization }>
 export async function getOrganizations (id?: string) {
   if (!id) {
     return await apiRequest<{ organizations: Organization[] }>('/organizations')
@@ -17,7 +17,7 @@ export async function getOrganizations (id?: string) {
 }
 
 export async function postOrganization (body: OrganizationBody) {
-  return await $fetch<{ organization: Organization }>('/api/organizations', {
+  return await apiRequest<{ organization: Organization }>('/api/organizations', {
     method: 'POST',
     body,
   })
@@ -26,12 +26,12 @@ export async function postOrganization (body: OrganizationBody) {
 export async function editOrganization (body: OrganizationBody) {
   const { id, ...rest } = body
 
-  return await $fetch<{ organization: Organization }>(`/api/organizations/${id}`, {
+  return await apiRequest<{ organization: Organization }>(`/api/organizations/${id}`, {
     method: 'PUT',
     body: rest,
   })
 }
 
 export async function deleteOrganization (id: string) {
-  return await $fetch<{ organization: Organization }>(`/api/organizations/${id}`, { method: 'DELETE' })
+  return await apiRequest<{ organization: Organization }>(`/api/organizations/${id}`, { method: 'DELETE' })
 }

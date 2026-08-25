@@ -13,6 +13,13 @@ export interface Organization extends DatabaseModel {
   role: Role
 }
 
+export interface ProductImage extends DatabaseModel {
+  product_id: string
+  key: string
+  mime_type: string
+  size: number
+}
+
 export interface Product extends DatabaseModel {
   organization_id: string;
   name: string;
@@ -22,6 +29,7 @@ export interface Product extends DatabaseModel {
   sale_price: number;
   stock_quantity: number;
   minimum_stock: number;
+  images?: ProductImage[]
 }
 
 export interface Customer extends DatabaseModel {
@@ -32,8 +40,4 @@ export interface Customer extends DatabaseModel {
   document: string | null
 }
 
-export interface ProductImage extends DatabaseModel {
-  product_id: string
-  mime_type: string
-  size: number
-}
+export type DisplayType = 'list' | 'grid'

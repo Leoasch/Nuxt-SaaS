@@ -12,8 +12,8 @@ export type ProductBody = {
   minimum_stock: number;
 }
 
-export async function getProducts(org_id: string): Promise<{ products: Product[] } | null>
-export async function getProducts(org_id: string, id: string): Promise<{ product: Product } | null>
+export async function getProducts(org_id: string): Promise<{ products: Product[] }>
+export async function getProducts(org_id: string, id: string): Promise<{ product: Product }>
 export async function getProducts (org_id: string, id?: string) {
 
   if (!id) {
@@ -23,7 +23,7 @@ export async function getProducts (org_id: string, id?: string) {
 }
 
 export async function postProduct (org_id: string, body: ProductBody) {
-  return await $fetch<{ product: Product }>(`/api${orgRoute(org_id)}/products`, {
+  return await apiRequest<{ product: Product }>(`/api${orgRoute(org_id)}/products`, {
     method: 'POST',
     body,
   })
@@ -32,14 +32,14 @@ export async function postProduct (org_id: string, body: ProductBody) {
 export async function editProduct (org_id: string, body: ProductBody) {
   const { id, ...rest } = body
 
-  return await $fetch<{ product: Product }>(`/api${orgRoute(org_id)}/products/${id}`, {
+  return await apiRequest<{ product: Product }>(`/api${orgRoute(org_id)}/products/${id}`, {
     method: 'PUT',
     body: rest,
   })
 }
 
 export async function deleteProduct (org_id: string, id: string) {
-  return await $fetch<{ product: Product }>(`/api${orgRoute(org_id)}/products/${id}`, { method: 'DELETE' })
+  return await apiRequest<{ product: Product }>(`/api${orgRoute(org_id)}/products/${id}`, { method: 'DELETE' })
 }
 
 export async function getProductImages (org_id: string, product_id: string) {
@@ -53,14 +53,14 @@ export async function uploadProductImages (org_id: string, product_id: string, f
     body.append('images', file)
   }
 
-  return await $fetch<{ images: ProductImage[] }>(`/api${orgRoute(org_id)}/products/${product_id}/images`, {
+  return await apiRequest<{ images: ProductImage[] }>(`/api${orgRoute(org_id)}/products/${product_id}/images`, {
     method: 'POST',
     body,
   })
 }
 
 export async function deleteProductImage (org_id: string, product_id: string, image_id: string) {
-  return await $fetch<{ image: { id: string; product_id: string } }>(
+  return await apiRequest<{ image: { id: string; product_id: string } }>(
     `/api${orgRoute(org_id)}/products/${product_id}/images/${image_id}`,
     { method: 'DELETE' }
   )

@@ -4,12 +4,12 @@ import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 const open = ref(false)
 const colorMode = useColorMode()
 const { clear } = useUserSession()
-
+const { user: sessionUser } = useUserSession()
 const user = ref({
-  name: 'Benjamin Canac',
+  name: sessionUser.value?.name,
   avatar: {
     src: 'https://github.com/benjamincanac.png',
-    alt: 'Benjamin Canac'
+    alt: sessionUser.value?.name
   }
 })
 
@@ -134,8 +134,16 @@ async function logout () {
         body: 'py-0'
       }"
     >
-      <template #header>
+      <template #header="{ close }">
         <Logo v-if="open"/>
+        <UButton
+          icon="i-lucide-x"
+          color="neutral"
+          variant="ghost"
+          class="ml-auto lg:hidden"
+          aria-label="Close sidebar"
+          @click="close"
+        />
       </template>
 
       <template #default="{ state }">
@@ -169,7 +177,7 @@ async function logout () {
       </template>
     </USidebar>
 
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 min-w-0 flex flex-col">
       <div class="h-(--ui-header-height) shrink-0 flex items-center px-4 border-b border-default">
         <UButton
           icon="i-lucide-panel-left"
