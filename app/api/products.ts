@@ -22,6 +22,12 @@ export async function getProducts (org_id: string, id?: string) {
   return await apiRequest<{ product: Product }>(orgRoute(org_id) + `/products/${id}`)
 }
 
+export async function searchProducts (org_id: string, query: string) {
+  return await apiRequest<{ products: Product[] }>(orgRoute(org_id) + '/products/search', {
+    query: { q: query }
+  })
+}
+
 export async function postProduct (org_id: string, body: ProductBody) {
   return await apiRequest<{ product: Product }>(`/api${orgRoute(org_id)}/products`, {
     method: 'POST',

@@ -40,4 +40,12 @@ export interface Customer extends DatabaseModel {
   document: string | null
 }
 
+export interface StockMovement extends DatabaseModel {
+  organization_id: string
+  user_id: string
+  product_id: string
+  quantity: number
+  reason: string | null
+}
+
 export type DisplayType = 'list' | 'grid'

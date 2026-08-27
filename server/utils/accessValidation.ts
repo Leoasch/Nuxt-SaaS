@@ -7,6 +7,7 @@ import { Product } from '../database/models/Product'
 import { ProductImage } from '../database/models/ProductImage'
 import { Customer } from '../database/models/Customer'
 import type z from 'zod'
+import { StockMovement } from '../database/models/StockMovements'
 
 export async function organizationAccessValidation (event: H3Event<globalThis.EventHandlerRequest>, requiredRoles: Role[] = []) {
   const { user } = await requireUserSession(event)
@@ -68,8 +69,11 @@ export async function organizationAccessValidation (event: H3Event<globalThis.Ev
   }
 }
 
-export async function accessProduct (event: H3Event<globalThis.EventHandlerRequest>, organization_id: string) {
-  const product_id = getRouterParam(event, 'prod_id')
+export async function accessProduct (event: H3Event<globalThis.EventHandlerRequest>, organization_id: string, product_id?: string) {
+  
+  if (!product_id) {
+    product_id = getRouterParam(event, 'prod_id')
+  }
 
   if (!product_id) {
     // INVALID ID
@@ -155,10 +159,68 @@ export async function accessCustomer (event: H3Event<globalThis.EventHandlerRequ
   return { customer }
 }
 
+export async function accessStockMv (event: H3Event<globalThis.EventHandlerRequest>, organization_id: string) {
+  const stock_id = getRouterParam(event, 'stock_id')
+
+  if (!stock_id) {
+    // INVALID ID
+    throw createError({
+      statusCode: 400,
+      data: {
+        code: 'INVALID_ID',
+      },
+    })
+  }
+
+  const stockMovement = await StockMovement.findOne({ where: { id: stock_id, organization_id } })
+
+  if (!stockMovement) {
+    // NOT FOUND ERROR
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Stock movement not found.',
+      data: {
+        code: 'STOCK.NOT_FOUND',
+      },
+    })
+  }
+
+  return { stockMovement }
+}
+
 export async function parseBody<T extends z.ZodType> (event: H3Event<globalThis.EventHandlerRequest>, schema: T) {
   const body = await readBody(event)
 
   const result = await schema.safeParseAsync(body)
+
+  if (!result.success) {
+    const fields: Record<string, string> = {}
+
+    for (const issue of result.error.issues) {
+      const field = issue.path[0]
+
+      if (typeof field === 'string' && !fields[field]) {
+        fields[field] = issue.code === 'custom' ? issue.message : issue.code
+      }
+    }
+
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Validation Error',
+      data: {
+        code: 'VALIDATION_ERROR',
+        fields,
+      },
+    })
+  }
+
+  return result as z.ZodSafeParseSuccess<z.infer<T>>
+}
+
+export function parseQuery<T extends z.ZodType> (event: H3Event<globalThis.EventHandlerRequest>, schema: T) {
+  const query = getQuery(event)
+
+  const result = schema.safeParse(query)
 
   if (!result.success) {
     const fields: Record<string, string> = {}

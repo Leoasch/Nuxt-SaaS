@@ -80,32 +80,32 @@ function getItems () {
   return [
     {
       label: $t('dashboard'),
-      icon: 'i-lucide-inbox',
+      icon: 'i-lucide-layout-dashboard',
       to: '/'
     },
     {
       label: $t('my_organizations'),
-      icon: 'i-lucide-square-dot',
+      icon: 'i-lucide-building-2',
       to: '/organizations'
     },
     {
       label: $t('products'),
-      icon: 'i-lucide-square-dot',
+      icon: 'i-lucide-package',
       to: '/products'
     },
     {
       label: $t('customers'),
-      icon: 'i-lucide-square-activity',
+      icon: 'i-lucide-users',
       to: '/customers'
     },
     {
       label: $t('sales'),
-      icon: 'i-lucide-square-activity',
+      icon: 'i-lucide-shopping-cart',
       to: '/sales'
     },
     {
       label: $t('stock'),
-      icon: 'i-lucide-square-activity',
+      icon: 'i-lucide-warehouse',
       to: '/stock'
     },
   ] satisfies NavigationMenuItem[]

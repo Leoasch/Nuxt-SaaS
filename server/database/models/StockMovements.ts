@@ -10,9 +10,8 @@ export class StockMovement extends Model<
   declare organization_id: string
   declare user_id: string
   declare product_id: string
-  declare type: 'ADD' | 'REM'
   declare quantity: number
-  declare reason: string
+  declare reason: string | null
 }
 
 StockMovement.init(
@@ -34,18 +33,14 @@ StockMovement.init(
       type: DataTypes.STRING,
       allowNull: false
     },
-    type: {
-      type: DataTypes.ENUM('ADD', 'REM'),
-      allowNull: false
-    },
     quantity: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       defaultValue: 1
     },
     reason: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
   },
   {
