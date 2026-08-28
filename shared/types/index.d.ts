@@ -44,6 +44,7 @@ export interface StockMovement extends DatabaseModel {
   organization_id: string
   user_id: string
   product_id: string
+  product_name?: string
   quantity: number
   reason: string | null
 }

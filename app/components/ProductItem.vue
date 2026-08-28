@@ -24,7 +24,7 @@ const isLowStock = computed(() => props.product.stock_quantity <= props.product.
 
 <template>
   <div
-    class="cursor-pointer rounded border border-accented bg-accented/20 p-2 flex gap-3 hover:bg-accented/40 hover:scale-105 transition-all duration-300"
+    class="cursor-pointer rounded border border-accented bg-accented/20 p-2 flex gap-3 hover:bg-accented/40 hover:scale-102 transition-all duration-300"
     :class="displayType === 'grid' ? 'flex-col' : 'w-full items-center'"
     @click="editModal">
     <ImageCarousel

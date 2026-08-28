@@ -15,26 +15,25 @@ function editModal () {
   } }).open()
 }
 
-const initials = computed(() => props.customer.name
-  .split(' ')
-  .filter(Boolean)
-  .slice(0, 2)
-  .map(part => part[0]!.toUpperCase())
-  .join(''))
 </script>
 
 <template>
   <div
-    class="cursor-pointer rounded border border-accented bg-accented/20 p-2 flex gap-3 hover:bg-accented/40 hover:scale-105 transition-all duration-100"
+    class="cursor-pointer rounded border border-accented bg-accented/20 p-2 flex gap-3 hover:bg-accented/40 hover:scale-102 transition-all duration-100"
     :class="displayType === 'grid' ? 'flex-col h-30' : 'w-full items-center h-15'"
     @click="editModal">
 
-    <div
+    <!-- <div
       class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/15 font-bold text-primary"
       :class="displayType === 'grid' ? 'mx-auto' : ''"
     >
       {{ initials }}
-    </div>
+    </div> -->
+    <NameInitialsImage 
+      :name="customer.name"
+      :class="displayType === 'grid' ? 'mx-auto' : ''"
+      class="size-10"  
+    />
 
     <div
       class="flex min-w-0 flex-1 flex-col justify-center gap-0.5"

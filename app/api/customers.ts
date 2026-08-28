@@ -19,6 +19,12 @@ export async function getCustomers (org_id: string, id?: string) {
   return await apiRequest<{ customer: Customer }>(orgRoute(org_id) + `/customers/${id}`)
 }
 
+export async function searchCustomers (org_id: string, query: string) {
+  return await apiRequest<{ customers: Customer[] }>(orgRoute(org_id) + '/customers/search', {
+    query: { q: query }
+  })
+}
+
 export async function postCustomer (org_id: string, body: CustomerBody) {
   return await apiRequest<{ customer: Customer }>(orgRoute(org_id) + '/customers', {
     body,

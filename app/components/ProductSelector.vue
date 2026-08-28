@@ -3,18 +3,24 @@ import { searchProducts } from '~/api/products'
 import type { Product } from '~~/shared/types'
 
 const DEBOUNCE_MS = 300
+const DEFAULT_LIMIT = 10
 
 const search_query = ref('')
 const product_id = defineModel<string | null>({ default: null })
 const { selectedOrganizationId } = useOrganization()
+const { products, loadProducts } = useProducts()
 
 const searchedProducts = ref<Product[]>([])
+const selectedProduct = ref<Product | null>(null)
 const loading = ref(false)
 const open = ref(false)
 
+const displayedProducts = computed(() => search_query.value.trim()
+  ? searchedProducts.value
+  : products.value.slice(0, DEFAULT_LIMIT))
+
 let debounceTimer: ReturnType<typeof setTimeout> | undefined
 let requestId = 0
-let suppressSearch = false
 
 async function search () {
   if (!selectedOrganizationId.value) {
@@ -40,83 +46,151 @@ async function search () {
 watch(search_query, (value) => {
   clearTimeout(debounceTimer)
 
-  if (suppressSearch) {
-    suppressSearch = false
-    return
-  }
-
   if (!value.trim()) {
     searchedProducts.value = []
     loading.value = false
     return
   }
 
-  open.value = true
   debounceTimer = setTimeout(search, DEBOUNCE_MS)
 })
 
+watch(() => selectedOrganizationId.value, async () => {
+  selectedProduct.value = null
+  searchedProducts.value = []
+  await loadProducts()
+})
+
 function select (product: Product) {
-  suppressSearch = true
   product_id.value = product.id
-  search_query.value = product.name
+  selectedProduct.value = product
+  search_query.value = ''
   searchedProducts.value = []
   open.value = false
+}
+
+function clearSelection () {
+  product_id.value = null
+  selectedProduct.value = null
 }
 
 onUnmounted(() => clearTimeout(debounceTimer))
 </script>
 
 <template>
-  <div class="relative w-full">
-    <UInput
-      v-model="search_query"
-      :loading="loading"
-      class="w-full"
-      @focus="open = searchedProducts.length > 0"
-      @blur="open = false"
-    />
-
+  <div class="relative">
     <div
-      v-if="open"
-      class="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded border border-accented bg-default shadow-lg">
-      <button
-        v-for="product in searchedProducts"
-        :key="product.id"
-        type="button"
-        class="flex w-full min-w-0 cursor-pointer flex-col gap-0.5 p-2 text-left hover:bg-accented/40"
-        @mousedown.prevent="select(product)">
-        <span class="truncate font-bold">{{ product.name }}</span>
+      v-if="selectedProduct"
+      class="flex w-full min-w-0 items-center gap-3 rounded border border-accented p-2">
+      <ImageCarousel
+        v-if="selectedProduct.images"
+        :org-id="selectedProduct.organization_id"
+        :product-id="selectedProduct.id"
+        :images="selectedProduct.images"
+        class="size-10 shrink-0 border border-accented/50"
+      />
+      <div class="flex min-w-0 flex-1 flex-col">
+        <span class="truncate font-bold">{{ selectedProduct.name }}</span>
 
         <span class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-dimmed">
           <span
-            v-if="product.sku"
+            v-if="selectedProduct.sku"
             class="flex min-w-0 items-center gap-1">
             <UIcon
               name="lucide:tag"
               class="size-3.5 shrink-0"/>
-            <span class="truncate">{{ product.sku }}</span>
+            <span class="truncate">{{ selectedProduct.sku }}</span>
           </span>
           <span
-            v-if="product.barcode"
+            v-if="selectedProduct.barcode"
             class="flex min-w-0 items-center gap-1">
             <UIcon
               name="lucide:barcode"
               class="size-3.5 shrink-0"/>
-            <span class="truncate">{{ product.barcode }}</span>
+            <span class="truncate">{{ selectedProduct.barcode }}</span>
           </span>
           <span
             class="flex shrink-0 items-center gap-1"
-            :class="product.stock_quantity <= product.minimum_stock ? 'text-error' : ''">
+            :class="selectedProduct.stock_quantity <= selectedProduct.minimum_stock ? 'text-error' : ''">
             <UIcon
               name="lucide:package"
               class="size-3.5 shrink-0"/>
-            {{ product.stock_quantity }}
+            {{ selectedProduct.stock_quantity }}
           </span>
         </span>
+      </div>
+      <UButton
+        icon="lucide:x"
+        color="neutral"
+        variant="ghost"
+        size="sm"
+        class="shrink-0 cursor-pointer"
+        :aria-label="$t('product.selector.clear')"
+        @click="clearSelection"
+      />
+    </div>
+
+    <UInput
+      v-else
+      v-model="search_query"
+      :loading="loading"
+      class="w-full"
+      :placeholder="$t('product.select.placeholder')"
+      icon="lucide:search"
+      @focus="open = true"
+      @blur="open = false"
+    />
+
+    <div
+      v-if="open && !selectedProduct"
+      class="absolute z-10 mt-1 max-h-40 w-full overflow-y-auto rounded border border-accented bg-default shadow-lg">
+      <button
+        v-for="product in displayedProducts"
+        :key="product.id"
+        type="button"
+        class="flex w-full min-w-0 cursor-pointer items-center gap-0.5 p-2 text-left hover:bg-accented/40"
+        @mousedown.prevent="select(product)">
+        <ImageCarousel
+          v-if="product.images"
+          :org-id="product.organization_id"
+          :product-id="product.id"
+          :images="product.images"
+          class="size-12 shrink-0 border border-accented/50"
+        />
+        <div class="ml-3 flex min-w-0 flex-col">
+          <span class="truncate font-bold">{{ product.name }}</span>
+
+          <span class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-dimmed">
+            <span
+              v-if="product.sku"
+              class="flex min-w-0 items-center gap-1">
+              <UIcon
+                name="lucide:tag"
+                class="size-3.5 shrink-0"/>
+              <span class="truncate">{{ product.sku }}</span>
+            </span>
+            <span
+              v-if="product.barcode"
+              class="flex min-w-0 items-center gap-1">
+              <UIcon
+                name="lucide:barcode"
+                class="size-3.5 shrink-0"/>
+              <span class="truncate">{{ product.barcode }}</span>
+            </span>
+            <span
+              class="flex shrink-0 items-center gap-1"
+              :class="product.stock_quantity <= product.minimum_stock ? 'text-error' : ''">
+              <UIcon
+                name="lucide:package"
+                class="size-3.5 shrink-0"/>
+              {{ product.stock_quantity }}
+            </span>
+          </span>
+        </div>
       </button>
 
       <p
-        v-if="!loading && searchedProducts.length === 0"
+        v-if="!loading && displayedProducts.length === 0"
         class="p-2 text-sm text-dimmed">
         {{ $t('product.search.empty') }}
       </p>

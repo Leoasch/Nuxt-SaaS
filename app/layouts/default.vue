@@ -7,10 +7,6 @@ const { clear } = useUserSession()
 const { user: sessionUser } = useUserSession()
 const user = ref({
   name: sessionUser.value?.name,
-  avatar: {
-    src: 'https://github.com/benjamincanac.png',
-    alt: sessionUser.value?.name
-  }
 })
 
 const userItems = computed<DropdownMenuItem[][]>(() => [
@@ -123,7 +119,7 @@ async function logout () {
 </script>
 
 <template>
-  <div class="flex flex-1">
+  <div class="flex flex-1 size-full">
     <USidebar
       v-model:open="open"
       collapsible="icon"
@@ -172,12 +168,20 @@ async function logout () {
             :ui="{
               trailingIcon: 'text-dimmed ms-auto'
             }"
-          />
+          >
+            <template #leading>
+              <NameInitialsImage
+                v-if="user.name"
+                :name="user.name"
+                :limit="1"
+                class="size-5 max-w-full"/>
+            </template>
+          </UButton>
         </UDropdownMenu>
       </template>
     </USidebar>
 
-    <div class="flex-1 min-w-0 flex flex-col">
+    <div class="flex-1 min-w-0 flex flex-col size-full">
       <div class="h-(--ui-header-height) shrink-0 flex items-center px-4 border-b border-default">
         <UButton
           icon="i-lucide-panel-left"
@@ -189,7 +193,7 @@ async function logout () {
         <OrganizationSelector class="mr-4 ml-auto w-60"/>
       </div>
 
-      <div class="flex-1 p-4">
+      <div class="flex-1 p-4 overflow-auto">
         <slot/>
       </div>
     </div>

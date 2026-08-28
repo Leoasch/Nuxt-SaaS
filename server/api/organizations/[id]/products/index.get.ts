@@ -8,8 +8,9 @@ export default defineEventHandler(async (event) => {
   const products = await Product.findAll({
     where: { organization_id: organization.id },
     order: [['createdAt', 'ASC']],
-    include: { model: ProductImage, as: 'images' }
+    include: { model: ProductImage, as: 'images', attributes: ['id'] }
   })
+
 
   return { products }
 })

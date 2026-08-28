@@ -66,11 +66,12 @@ async function save () {
           <ProductSelector v-model="form.product_id"/>
         </UFormField>
         <UFormField
-          :label="$t('stock.reason')"
-          :error="errors.reason">
+          :label="$t('stock.quantity')"
+          :error="errors.quantity">
           <UInput
-            v-model="form.reason!"
-            :placeholder="$t('stock.reason')"
+            v-model="form.quantity"
+            type="number"
+            :placeholder="$t('stock.quantity')"
             class="w-full"
             :ui="{
               base: 'py-2 px-4'
@@ -78,12 +79,11 @@ async function save () {
           />
         </UFormField>
         <UFormField
-          :label="$t('stock.quantity')"
-          :error="errors.quantity">
-          <UInput
-            v-model="form.quantity"
-            type="number"
-            :placeholder="$t('stock.quantity')"
+          :label="$t('stock.reason')"
+          :error="errors.reason">
+          <UTextarea
+            v-model="form.reason!"
+            :placeholder="$t('stock.reason')"
             class="w-full"
             :ui="{
               base: 'py-2 px-4'

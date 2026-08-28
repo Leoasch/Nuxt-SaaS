@@ -16,6 +16,12 @@ export async function getStockMV (org_id: string, id?: string) {
   return await apiRequest<{ stockMovement: StockMovement }>(orgRoute(org_id) + `/stock/${id}`)
 }
 
+export async function getProductStockMV (org_id: string, product_id: string) {
+  return await apiRequest<{ stockMovements: StockMovement[] }>(orgRoute(org_id) + '/stock', {
+    query: { product_id }
+  })
+}
+
 export async function postStockMV (org_id: string, body: StockMVBody) {
   const { product_id, ...rest } = body
   return await apiRequest<{ stockMovement: StockMovement }>(`/api${orgRoute(org_id)}/stock`, {

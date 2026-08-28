@@ -2,7 +2,7 @@ import { accessProduct, organizationAccessValidation } from '~~/server/utils/acc
 import { ProductImage } from '~~/server/database/models/ProductImage'
 import { uploadObject } from '~~/server/utils/storage'
 
-const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif']
+const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif']
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 
 export default defineEventHandler(async (event) => {

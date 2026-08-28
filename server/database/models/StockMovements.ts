@@ -39,7 +39,7 @@ StockMovement.init(
       defaultValue: 1
     },
     reason: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true
     },
   },

@@ -1,9 +1,18 @@
 <script setup lang="ts">
+import StockMovementItem from '~/components/StockMovementItem.vue'
 
-const { stock, loadStock } = useStock()
+const { stock, loadStock, productFilter } = useStock()
 const { selectedOrganizationId } = useOrganization()
 
+onMounted(() => {
+  productFilter.value = null
+})
+
 watch(() => selectedOrganizationId.value, async () => {
+  productFilter.value = null
+})
+
+watch(() => [productFilter.value, selectedOrganizationId.value], async () => {
   await loadStock()
 })
 
@@ -15,19 +24,17 @@ watch(() => selectedOrganizationId.value, async () => {
       <CreateStockMvtBtn class="ml-auto mr-2"/>
     </div>
     <USeparator class="py-3"/>
-    <!-- <div
-      :class="`
-       gap-2 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 
-      ${displayType === 'list' ? 'flex flex-col' : 'grid gap-6'}
-    `">
+    <ProductSelector
+      v-model="productFilter"
+      class="w-100 max-w-full mb-4"
+    />
+    <div
+      class="gap-2 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 flex flex-col">
       <template
-        v-for="customer in customers"
-        :key="customer.id">
-        <CustomerItem
-          :customer
-          :display-type="displayType"
-        />
+        v-for="movement in stock"
+        :key="movement.id">
+        <StockMovementItem :movement/>
       </template>
-    </div> -->
+    </div>
   </UContainer>
 </template>

@@ -1,7 +1,6 @@
 import { Op } from 'sequelize'
 import { z } from 'zod'
-import { Product } from '~~/server/database/models/Product'
-import { ProductImage } from '~~/server/database/models/ProductImage'
+import { Customer } from '~~/server/database/models/Customer'
 import { organizationAccessValidation, parseQuery } from '~~/server/utils/accessValidation'
 
 const searchQuerySchema = z.object({
@@ -18,19 +17,19 @@ export default defineEventHandler(async (event) => {
   const { data } = parseQuery(event, searchQuerySchema)
   const term = `%${escapeLike(data.q)}%`
 
-  const products = await Product.findAll({
+  const customers = await Customer.findAll({
     where: {
       organization_id: organization.id,
       [Op.or]: [
         { name: { [Op.iLike]: term } },
-        { sku: { [Op.iLike]: term } },
-        { barcode: { [Op.iLike]: term } }
+        { email: { [Op.iLike]: term } },
+        { phone: { [Op.iLike]: term } },
+        { document: { [Op.iLike]: term } }
       ]
     },
     order: [['createdAt', 'ASC']],
-    limit: 10,
-    include: { model: ProductImage, as: 'images', attributes: ['id'] }
+    limit: 10
   })
 
-  return { products }
+  return { customers }
 })
