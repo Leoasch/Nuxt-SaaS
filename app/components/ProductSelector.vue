@@ -7,6 +7,7 @@ const DEFAULT_LIMIT = 10
 
 const search_query = ref('')
 const product_id = defineModel<string | null>({ default: null })
+const emit = defineEmits<{ select: [product: Product | null] }>()
 const { selectedOrganizationId } = useOrganization()
 const { products, loadProducts } = useProducts()
 
@@ -67,11 +68,13 @@ function select (product: Product) {
   search_query.value = ''
   searchedProducts.value = []
   open.value = false
+  emit('select', product)
 }
 
 function clearSelection () {
   product_id.value = null
   selectedProduct.value = null
+  emit('select', null)
 }
 
 onUnmounted(() => clearTimeout(debounceTimer))

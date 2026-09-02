@@ -42,7 +42,7 @@ export function registerAssociations () {
   Customer.hasMany(Sale, { foreignKey: 'customer_id' })
   Sale.belongsTo(Customer, { foreignKey: 'customer_id' })
 
-  Sale.hasMany(SaleItem, { foreignKey: 'sale_id' })
+  Sale.hasMany(SaleItem, { foreignKey: 'sale_id', as: 'sale_items', onDelete: 'CASCADE' })
   SaleItem.belongsTo(Sale, { foreignKey: 'sale_id' })
 
   Product.hasMany(SaleItem, { foreignKey: 'product_id' })

@@ -8,6 +8,7 @@ import { ProductImage } from '../database/models/ProductImage'
 import { Customer } from '../database/models/Customer'
 import type z from 'zod'
 import { StockMovement } from '../database/models/StockMovements'
+import { Sale } from '../database/models/Sale'
 
 export async function organizationAccessValidation (event: H3Event<globalThis.EventHandlerRequest>, requiredRoles: Role[] = []) {
   const { user } = await requireUserSession(event)
@@ -186,6 +187,35 @@ export async function accessStockMv (event: H3Event<globalThis.EventHandlerReque
   }
 
   return { stockMovement }
+}
+
+export async function accessSale (event: H3Event<globalThis.EventHandlerRequest>, organization_id: string) {
+  const sale_id = getRouterParam(event, 'sale_id')
+
+  if (!sale_id) {
+    // INVALID ID
+    throw createError({
+      statusCode: 400,
+      data: {
+        code: 'INVALID_ID',
+      },
+    })
+  }
+
+  const sale = await Sale.findOne({ where: { id: sale_id, organization_id } })
+
+  if (!sale) {
+    // NOT FOUND ERROR
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Sale not found.',
+      data: {
+        code: 'SALE.NOT_FOUND',
+      },
+    })
+  }
+
+  return { sale }
 }
 
 export async function parseBody<T extends z.ZodType> (event: H3Event<globalThis.EventHandlerRequest>, schema: T) {

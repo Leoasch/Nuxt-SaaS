@@ -143,27 +143,17 @@ async function save () {
         <UFormField
           :label="$t('product.cost_price')"
           :error="errors.cost_price">
-          <UInput
+          <PriceInput
             v-model="form.cost_price"
-            type="number"
             :placeholder="$t('product.cost_price')"
-            class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
           />
         </UFormField>
         <UFormField
           :label="$t('product.sale_price')"
           :error="errors.sale_price">
-          <UInput
+          <PriceInput
             v-model="form.sale_price"
-            type="number"
             :placeholder="$t('product.sale_price')"
-            class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
           />
         </UFormField>
         <UFormField

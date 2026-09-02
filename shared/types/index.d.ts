@@ -49,4 +49,22 @@ export interface StockMovement extends DatabaseModel {
   reason: string | null
 }
 
+export interface SaleItem extends DatabaseModel {
+  sale_id: string
+  product_id: string
+  quantity: number
+  unit_price: number
+  original_unit_price: number
+  total: number
+}
+
+export interface Sale extends DatabaseModel {
+  organization_id: string
+  user_id: string
+  customer_id: string | null
+  total: number
+  payment_method: string
+  sale_items: SaleItem[]
+}
+
 export type DisplayType = 'list' | 'grid'

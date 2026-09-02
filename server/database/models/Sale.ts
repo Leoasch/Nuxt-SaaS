@@ -9,10 +9,8 @@ export class Sale extends Model<
 > {
   declare id: CreationOptional<string>
   declare organization_id: string
-  declare customer_id: string
+  declare customer_id: string | null
   declare user_id: string
-  declare subtotal: number
-  declare discount: number
   declare total: number
   declare payment_method: string
 }
@@ -35,22 +33,6 @@ Sale.init(
     customer_id: {
       type: DataTypes.STRING,
       allowNull: true
-    },
-    discount: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: true,
-      defaultValue: 0,
-      get (this: Sale) {
-        return decimalToNumber.call(this, 'discount')
-      }
-    },
-    subtotal: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      defaultValue: 0,
-      get (this: Sale) {
-        return decimalToNumber.call(this, 'subtotal') 
-      }
     },
     total: {
       type: DataTypes.DECIMAL(10, 2),

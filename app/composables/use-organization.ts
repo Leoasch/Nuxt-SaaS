@@ -4,7 +4,7 @@ import type { Organization } from '~~/shared/types'
 export default function () {
   
   const organizations = useState<Organization[]>('organizations', () => [])
-  const selectedOrganizationId = useState<string | null>('selectedOrganizationId', () => null)
+  const selectedOrganizationId = useCookie<string | null>('selectedOrganizationId', { default: () => null })
   
   const selectedOrganization = computed<Organization | null>(() =>
     organizations.value.find(org => org.id === selectedOrganizationId.value) ?? null
