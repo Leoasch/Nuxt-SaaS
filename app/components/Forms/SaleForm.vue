@@ -1,24 +1,14 @@
 <script setup lang="ts">
 import type { SelectItem } from '@nuxt/ui'
 import { postSale, type SaleBody } from '~/api/sales'
-import type { Product } from '~~/shared/types'
+import { emptyLine, priceFormatter } from '~/common'
+import type { Product, SaleLine } from '~~/shared/types'
 
 const props = defineProps<{
   orgId: string
 }>()
 
 const PAYMENT_METHODS = ['cash', 'credit_card', 'debit_card', 'pix', 'other'] as const
-
-type SaleLine = {
-  product_id: string | null
-  product: Product | null
-  quantity: number
-  unit_price: number
-}
-
-function emptyLine (): SaleLine {
-  return { product_id: null, product: null, quantity: 1, unit_price: 0 }
-}
 
 const { errors, resetErrors, handleError } = useFormErrors([
   'customer_id',
@@ -38,8 +28,6 @@ const paymentMethodItems = computed<SelectItem[]>(() => PAYMENT_METHODS.map(meth
   label: $t(`sale.payment_method.${method}`),
   value: method
 })))
-
-const priceFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
 
 function lineTotal (line: SaleLine) {
   return line.unit_price * line.quantity
@@ -117,7 +105,7 @@ async function save () {
     }">
     <template #body>
       <div class="flex flex-col gap-6">
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <UFormField
             :label="$t('sale.customer')"
             :error="errors.customer_id">
@@ -131,6 +119,7 @@ async function save () {
               :items="paymentMethodItems"
               :placeholder="$t('sale.payment_method.label')"
               class="w-full"
+              :ui="{ base: 'h-[58px]' }"
             />
           </UFormField>
         </div>
@@ -139,40 +128,14 @@ async function save () {
           :label="$t('sale.products')"
           :error="errors.products">
           <div class="flex flex-col gap-3">
-            <div
-              v-for="(line, index) in lines"
-              :key="index"
-              class="flex items-start gap-2">
-              <div class="flex-1">
-                <ProductSelector
-                  v-model="line.product_id"
-                  @select="product => onSelectProduct(line, product)"
-                />
-              </div>
-              <UInput
-                v-model.number="line.quantity"
-                type="number"
-                :min="1"
-                class="w-20"
-                :placeholder="$t('sale.quantity')"
-              />
-              <PriceInput
-                v-model="line.unit_price"
-                class="w-32"
-                :placeholder="$t('sale.unit_price')"
-              />
-              <span class="w-28 shrink-0 pt-2 text-right text-sm text-dimmed">
-                {{ priceFormatter.format(lineTotal(line)) }}
-              </span>
-              <UButton
-                icon="lucide:trash-2"
-                color="error"
-                variant="ghost"
-                :disabled="lines.length === 1"
-                @click="removeLine(index)"
-              />
-            </div>
-
+            <ProductsListLine
+              v-for="(line, idx) in lines"
+              :key="idx"
+              :can-delete="lines.length > 1"
+              :model-value="line"
+              @select="product => onSelectProduct(line, product)"
+              @delete="removeLine(idx)"
+            />
             <UButton
               variant="ghost"
               icon="lucide:plus"
@@ -182,14 +145,11 @@ async function save () {
             </UButton>
           </div>
         </UFormField>
-
-        <div class="flex justify-end border-t border-accented pt-3 text-lg font-bold">
-          {{ $t('sale.total') }}: {{ priceFormatter.format(total) }}
-        </div>
       </div>
     </template>
     <template #footer>
-      <div class="flex justify-end gap-2 w-full">
+      <div class="flex w-full flex-wrap items-center justify-between gap-2">
+        <span class="text-lg font-bold">{{ $t('sale.total') }}: {{ priceFormatter.format(total) }}</span>
         <UButton
           :loading="loading"
           @click="save">

@@ -157,19 +157,6 @@ async function save () {
           />
         </UFormField>
         <UFormField
-          :label="$t('product.stock_quantity')"
-          :error="errors.stock_quantity">
-          <UInput
-            v-model="form.stock_quantity"
-            type="number"
-            :placeholder="$t('product.stock_quantity')"
-            class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
-          />
-        </UFormField>
-        <UFormField
           :label="$t('product.minimum_stock')"
           :error="errors.minimum_stock">
           <UInput

@@ -67,4 +67,11 @@ export interface Sale extends DatabaseModel {
   sale_items: SaleItem[]
 }
 
+export type SaleLine = {
+  product_id: string | null
+  product: Product | null
+  quantity: number
+  unit_price: number
+}
+
 export type DisplayType = 'list' | 'grid'

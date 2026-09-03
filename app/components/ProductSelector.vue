@@ -83,19 +83,30 @@ onUnmounted(() => clearTimeout(debounceTimer))
 <template>
   <div class="relative">
     <div
-      v-if="selectedProduct"
-      class="flex w-full min-w-0 items-center gap-3 rounded border border-accented p-2">
+      class="flex h-[58px] w-full min-w-0 items-center gap-3 rounded border border-accented p-2 focus-within:ring-2 focus-within:ring-primary/50">
       <ImageCarousel
-        v-if="selectedProduct.images"
+        v-if="selectedProduct?.images"
         :org-id="selectedProduct.organization_id"
         :product-id="selectedProduct.id"
         :images="selectedProduct.images"
         class="size-10 shrink-0 border border-accented/50"
       />
-      <div class="flex min-w-0 flex-1 flex-col">
+      <div
+        v-else
+        class="flex size-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-accented/50 text-dimmed">
+        <UIcon
+          :name="loading ? 'lucide:loader-circle' : 'lucide:search'"
+          class="size-4"
+          :class="loading ? 'animate-spin' : ''"
+        />
+      </div>
+
+      <div
+        v-if="selectedProduct"
+        class="flex min-w-0 flex-1 flex-col">
         <span class="truncate font-bold">{{ selectedProduct.name }}</span>
 
-        <span class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-dimmed">
+        <span class="flex min-w-0 items-center gap-x-3 overflow-hidden text-xs text-dimmed">
           <span
             v-if="selectedProduct.sku"
             class="flex min-w-0 items-center gap-1">
@@ -122,7 +133,18 @@ onUnmounted(() => clearTimeout(debounceTimer))
           </span>
         </span>
       </div>
+      <input
+        v-else
+        v-model="search_query"
+        type="text"
+        class="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-dimmed"
+        :placeholder="$t('product.select.placeholder')"
+        @focus="open = true"
+        @blur="open = false"
+      >
+
       <UButton
+        v-if="selectedProduct"
         icon="lucide:x"
         color="neutral"
         variant="ghost"
@@ -132,17 +154,6 @@ onUnmounted(() => clearTimeout(debounceTimer))
         @click="clearSelection"
       />
     </div>
-
-    <UInput
-      v-else
-      v-model="search_query"
-      :loading="loading"
-      class="w-full"
-      :placeholder="$t('product.select.placeholder')"
-      icon="lucide:search"
-      @focus="open = true"
-      @blur="open = false"
-    />
 
     <div
       v-if="open && !selectedProduct"
@@ -163,7 +174,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
         <div class="ml-3 flex min-w-0 flex-col">
           <span class="truncate font-bold">{{ product.name }}</span>
 
-          <span class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-dimmed">
+          <span class="flex min-w-0 items-center gap-x-3 overflow-hidden text-xs text-dimmed">
             <span
               v-if="product.sku"
               class="flex min-w-0 items-center gap-1">

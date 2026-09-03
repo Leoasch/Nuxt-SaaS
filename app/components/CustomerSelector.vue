@@ -83,16 +83,28 @@ onUnmounted(() => clearTimeout(debounceTimer))
 <template>
   <div class="relative">
     <div
-      v-if="selectedCustomer"
-      class="flex w-full min-w-0 items-center gap-3 rounded border border-accented p-2">
+      class="flex h-[58px] w-full min-w-0 items-center gap-3 rounded border border-accented p-2 focus-within:ring-2 focus-within:ring-primary/50">
       <NameInitialsImage
+        v-if="selectedCustomer"
         :name="selectedCustomer.name"
         class="size-10"
       />
-      <div class="flex min-w-0 flex-1 flex-col">
+      <div
+        v-else
+        class="flex size-10 shrink-0 items-center justify-center rounded-full border border-dashed border-accented/50 text-dimmed">
+        <UIcon
+          :name="loading ? 'lucide:loader-circle' : 'lucide:search'"
+          class="size-4"
+          :class="loading ? 'animate-spin' : ''"
+        />
+      </div>
+
+      <div
+        v-if="selectedCustomer"
+        class="flex min-w-0 flex-1 flex-col">
         <span class="truncate font-bold">{{ selectedCustomer.name }}</span>
 
-        <span class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-dimmed">
+        <span class="flex min-w-0 items-center gap-x-3 overflow-hidden text-xs text-dimmed">
           <span
             v-if="selectedCustomer.email"
             class="flex min-w-0 items-center gap-1">
@@ -119,7 +131,18 @@ onUnmounted(() => clearTimeout(debounceTimer))
           </span>
         </span>
       </div>
+      <input
+        v-else
+        v-model="search_query"
+        type="text"
+        class="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-dimmed"
+        :placeholder="$t('customer.select.placeholder')"
+        @focus="open = true"
+        @blur="open = false"
+      >
+
       <UButton
+        v-if="selectedCustomer"
         icon="lucide:x"
         color="neutral"
         variant="ghost"
@@ -129,17 +152,6 @@ onUnmounted(() => clearTimeout(debounceTimer))
         @click="clearSelection"
       />
     </div>
-
-    <UInput
-      v-else
-      v-model="search_query"
-      :loading="loading"
-      class="w-full"
-      :placeholder="$t('customer.select.placeholder')"
-      icon="lucide:search"
-      @focus="open = true"
-      @blur="open = false"
-    />
 
     <div
       v-if="open && !selectedCustomer"
@@ -157,7 +169,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
         <div class="ml-3 flex min-w-0 flex-col">
           <span class="truncate font-bold">{{ customer.name }}</span>
 
-          <span class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-dimmed">
+          <span class="flex min-w-0 items-center gap-x-3 overflow-hidden text-xs text-dimmed">
             <span
               v-if="customer.email"
               class="flex min-w-0 items-center gap-1">
