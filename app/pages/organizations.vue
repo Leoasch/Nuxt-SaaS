@@ -1,6 +1,12 @@
 <script setup lang="ts">
+import OrganizationCard from '~/components/Cards/OrganizationCard.vue'
 
 const { organizations } = useOrganization()
+const overlay = useOverlay()
+
+function openOrganizationCard (id: string) {
+  overlay.create(OrganizationCard, { props: { organizationId: id } }).open()
+}
 
 </script>
 <template>
@@ -14,7 +20,10 @@ const { organizations } = useOrganization()
       <template
         v-for="organization in organizations"
         :key="organization.id">
-        <OrganizationCard :organization/>
+        <OrganizationItem
+          :organization
+          @click="() => openOrganizationCard(organization.id)"
+        />
       </template>
     </div>
   </UContainer>

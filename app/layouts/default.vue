@@ -173,8 +173,7 @@ async function logout () {
               <NameInitialsImage
                 v-if="user.name"
                 :name="user.name"
-                :limit="1"
-                class="size-5 max-w-full"/>
+                class="size-5"/>
             </template>
           </UButton>
         </UDropdownMenu>

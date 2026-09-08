@@ -4,6 +4,7 @@ import { Customer } from '~~/server/database/models/Customer'
 import { Product } from '~~/server/database/models/Product'
 import { Sale } from '~~/server/database/models/Sale'
 import { SaleItem } from '~~/server/database/models/SaleItem'
+import { StockMovement } from '~~/server/database/models/StockMovements'
 import { organizationAccessValidation, parseBody } from '~~/server/utils/accessValidation'
 
 const createSaleSchema = z.object({
@@ -42,6 +43,7 @@ export default defineEventHandler(async (event) => {
   const sale = await sequelize.transaction(async (transaction) => {
     let total = 0
     const itemsData = []
+    const movementsData = []
 
     for (const line of products) {
       const product = await Product.findOne({
@@ -61,17 +63,6 @@ export default defineEventHandler(async (event) => {
         })
       }
 
-      // if (product.stock_quantity < line.quantity) {
-      //   throw createError({
-      //     statusCode: 409,
-      //     statusMessage: 'Insufficient stock.',
-      //     data: {
-      //       code: 'PRODUCT.INSUFFICIENT_STOCK',
-      //       product_id: product.id
-      //     },
-      //   })
-      // }
-
       const original_unit_price = product.sale_price
       const unit_price = line.unit_price ?? original_unit_price
       const itemTotal = round2(unit_price * line.quantity)
@@ -88,6 +79,11 @@ export default defineEventHandler(async (event) => {
         original_unit_price,
         total: itemTotal
       })
+
+      movementsData.push({
+        product_id: product.id,
+        quantity: -line.quantity
+      })
     }
 
     const sale = await Sale.create({
@@ -100,6 +96,16 @@ export default defineEventHandler(async (event) => {
 
     await SaleItem.bulkCreate(
       itemsData.map(item => ({ ...item, sale_id: sale.id })),
+      { transaction }
+    )
+
+    await StockMovement.bulkCreate(
+      movementsData.map(movement => ({
+        ...movement,
+        organization_id: organization.id,
+        user_id: user.id,
+        reason: `Sale ${sale.id}`
+      })),
       { transaction }
     )
 

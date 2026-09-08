@@ -55,7 +55,8 @@ async function save () {
     :title="$t('stock.title.create')"
     :ui="{
       content: 'max-w-3xl'
-    }">
+    }"
+    :dismissible="false">
     <template #body>
       <div class="flex flex-col gap-6">
         

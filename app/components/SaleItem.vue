@@ -1,17 +1,10 @@
 <script setup lang="ts">
+import { PAYMENT_METHOD_ICONS } from '~/common'
 import type { Sale } from '~~/shared/types'
 
 const props = defineProps<{
   sale: Sale
 }>()
-
-const PAYMENT_METHOD_ICONS: Record<string, string> = {
-  cash: 'lucide:banknote',
-  credit_card: 'lucide:credit-card',
-  debit_card: 'lucide:credit-card',
-  pix: 'lucide:qr-code',
-  other: 'lucide:circle-dollar-sign'
-}
 
 const { customers } = useCustomers()
 
@@ -44,24 +37,24 @@ const formattedDate = computed(() => props.sale.createdAt ? dateFormatter.format
         class="size-5"/>
     </div>
 
-    <div class="flex min-w-0 flex-1 flex-col justify-center">
-      <h1 class="truncate font-bold">{{ customer?.name ?? $t('sale.walk_in_customer') }}</h1>
-      <span class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-dimmed">
+    <div class="flex min-w-0 flex-1 flex-col justify-center gap-1">
+      <div class="flex min-w-0 items-center gap-2">
+        <h1 class="min-w-0 flex-1 truncate font-bold">{{ customer?.name ?? $t('sale.walk_in_customer') }}</h1>
+        <span class="shrink-0 font-bold">{{ formattedTotal }}</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-dimmed">
         <span
           v-if="formattedDate"
           class="truncate">{{ formattedDate }}</span>
-        <span>{{ itemCount }} {{ $t('sale.items_count') }}</span>
-      </span>
-    </div>
-
-    <div class="flex shrink-0 items-center gap-2 mr-2">
-      <UBadge
-        color="neutral"
-        variant="subtle"
-        :icon="paymentMethodIcon">
-        {{ $t(`sale.payment_method.${sale.payment_method}`) }}
-      </UBadge>
-      <span class="font-bold">{{ formattedTotal }}</span>
+        <span class="shrink-0">{{ itemCount }} {{ $t('sale.items_count') }}</span>
+        <UBadge
+          color="neutral"
+          variant="subtle"
+          :icon="paymentMethodIcon"
+          class="ml-auto shrink-0">
+          {{ $t(`sale.payment_method.${sale.payment_method}`) }}
+        </UBadge>
+      </div>
     </div>
   </div>
 </template>

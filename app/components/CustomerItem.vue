@@ -1,19 +1,10 @@
 <script setup lang="ts">
 import type { DisplayType } from '~~/shared/types'
-import CustomerForm from './Forms/CustomerForm.vue'
 
-const props = defineProps<{
+defineProps<{
   customer: Customer,
   displayType: DisplayType
 }>()
-
-const overlay = useOverlay()
-
-function editModal () {
-  overlay.create(CustomerForm, { props: {
-    customer: props.customer, orgId: props.customer.organization_id
-  } }).open()
-}
 
 </script>
 
@@ -21,14 +12,7 @@ function editModal () {
   <div
     class="cursor-pointer rounded border border-accented bg-accented/20 p-2 flex gap-3 hover:bg-accented/40 hover:scale-102 transition-all duration-100"
     :class="displayType === 'grid' ? 'flex-col h-30' : 'w-full items-center h-15'"
-    @click="editModal">
-
-    <!-- <div
-      class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/15 font-bold text-primary"
-      :class="displayType === 'grid' ? 'mx-auto' : ''"
-    >
-      {{ initials }}
-    </div> -->
+  >
     <NameInitialsImage 
       :name="customer.name"
       :class="displayType === 'grid' ? 'mx-auto' : ''"

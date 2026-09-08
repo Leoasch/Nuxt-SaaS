@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import StockMovementItem from '~/components/StockMovementItem.vue'
+import StockMovementCard from '~/components/Cards/StockMovementCard.vue'
 
 const { stock, loadStock, productFilter } = useStock()
 const { selectedOrganizationId } = useOrganization()
+const overlay = useOverlay()
+
+function openStockMovementCard (id: string) {
+  overlay.create(StockMovementCard, { props: { stockId: id } }).open()
+}
 
 onMounted(() => {
   productFilter.value = null
@@ -33,7 +39,10 @@ watch(() => [productFilter.value, selectedOrganizationId.value], async () => {
       <template
         v-for="movement in stock"
         :key="movement.id">
-        <StockMovementItem :movement/>
+        <StockMovementItem
+          :movement
+          @click="() => openStockMovementCard(movement.id)"
+        />
       </template>
     </div>
   </UContainer>

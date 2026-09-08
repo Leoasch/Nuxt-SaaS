@@ -1,19 +1,10 @@
 <script setup lang="ts">
 import type { DisplayType, Product } from '~~/shared/types'
-import ProductForm from './Forms/ProductForm.vue'
 
 const props = defineProps<{
   product: Product,
   displayType: DisplayType
 }>()
-
-const overlay = useOverlay()
-
-function editModal () {
-  overlay.create(ProductForm, { props: {
-    product: props.product, orgId: props.product.organization_id
-  } }).open()
-}
 
 const priceFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
 
@@ -25,8 +16,7 @@ const isLowStock = computed(() => props.product.stock_quantity <= props.product.
 <template>
   <div
     class="cursor-pointer rounded border border-accented bg-accented/20 p-2 flex gap-3 hover:bg-accented/40 hover:scale-102 transition-all duration-300"
-    :class="displayType === 'grid' ? 'flex-col' : 'w-full items-center'"
-    @click="editModal">
+    :class="displayType === 'grid' ? 'flex-col' : 'w-full items-center'">
     <ImageCarousel
       :images="product.images!"
       :product-id="product.id"

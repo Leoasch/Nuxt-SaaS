@@ -56,6 +56,7 @@ export interface SaleItem extends DatabaseModel {
   unit_price: number
   original_unit_price: number
   total: number
+  product?: Product
 }
 
 export interface Sale extends DatabaseModel {

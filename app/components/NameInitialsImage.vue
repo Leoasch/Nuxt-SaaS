@@ -5,7 +5,7 @@ const props = defineProps<{
   limit?: number
 }>()
 
-const slice = props.limit ?? 2
+const slice = 2
 
 const initials = computed(() => props.name
   .split(' ')
@@ -16,9 +16,7 @@ const initials = computed(() => props.name
 </script>
 
 <template>
-  <div
-    class="flex shrink-0 items-center justify-center rounded-full bg-primary/15 font-bold text-primary"
-  >
-    {{ initials }}
+  <div class="@container flex shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+    <span class="font-bold text-[50cqw]">{{ initials }}</span>
   </div>
 </template>

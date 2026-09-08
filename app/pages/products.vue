@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { searchProducts } from '~/api/products'
+import ProductCard from '~/components/Cards/ProductCard.vue'
 import type { DisplayType, Product } from '~~/shared/types'
 
 const DEBOUNCE_MS = 300
 
 const { products, loadProducts } = useProducts()
 const { selectedOrganizationId } = useOrganization()
+const overlay = useOverlay()
 
 watch(() => selectedOrganizationId.value, async () => {
   search_query.value = ''
@@ -44,6 +46,10 @@ async function search () {
       searching.value = false
     }
   }
+}
+
+function openProductCard (id: string) {
+  overlay.create(ProductCard, { props: { productId: id } }).open()
 }
 
 watch(search_query, (value) => {
@@ -97,6 +103,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
         <ProductItem
           :product
           :display-type="displayType"
+          @click="() => openProductCard(product.id)"
         />
       </template>
     </div>

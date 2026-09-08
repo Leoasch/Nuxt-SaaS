@@ -9,6 +9,7 @@ import { Customer } from '../database/models/Customer'
 import type z from 'zod'
 import { StockMovement } from '../database/models/StockMovements'
 import { Sale } from '../database/models/Sale'
+import type { FindOptions, InferAttributes } from 'sequelize'
 
 export async function organizationAccessValidation (event: H3Event<globalThis.EventHandlerRequest>, requiredRoles: Role[] = []) {
   const { user } = await requireUserSession(event)
@@ -189,7 +190,11 @@ export async function accessStockMv (event: H3Event<globalThis.EventHandlerReque
   return { stockMovement }
 }
 
-export async function accessSale (event: H3Event<globalThis.EventHandlerRequest>, organization_id: string) {
+export async function accessSale (
+  event: H3Event<globalThis.EventHandlerRequest>, 
+  organization_id: string, opts?: FindOptions<InferAttributes<Sale, {
+    omit: never;
+  }>>) {
   const sale_id = getRouterParam(event, 'sale_id')
 
   if (!sale_id) {
@@ -202,7 +207,7 @@ export async function accessSale (event: H3Event<globalThis.EventHandlerRequest>
     })
   }
 
-  const sale = await Sale.findOne({ where: { id: sale_id, organization_id } })
+  const sale = await Sale.findOne({ where: { id: sale_id, organization_id }, ...opts })
 
   if (!sale) {
     // NOT FOUND ERROR

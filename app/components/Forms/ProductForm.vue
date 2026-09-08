@@ -78,7 +78,7 @@ async function save () {
     }
 
     await loadProducts()
-    emit('close')
+    emit('close', true)
   } catch (error: any) {
 
     handleError(error)
@@ -101,7 +101,9 @@ async function save () {
     :title="$t(`product.title.${type}`)"
     :ui="{
       content: 'max-w-3xl'
-    }">
+    }"
+    :dismissible="false"
+  >
     <template #body>
       <div class="flex flex-col gap-6">
         <UFormField

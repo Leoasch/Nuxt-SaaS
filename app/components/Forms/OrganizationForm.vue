@@ -33,7 +33,7 @@ async function save () {
     }
     if (result.organization) {
       await loadOrganizations()
-      emit('close')
+      emit('close', true)
     }    
   } catch (error: any) {
 
@@ -57,7 +57,9 @@ async function save () {
     :title="$t(`organization.title.${type}`)"
     :ui="{
       content: 'max-w-3xl'
-    }">
+    }"
+    :dismissible="false"
+  >
     <template #body>
       <div class="grid grid-cols-5 gap-6">
         <UFormField

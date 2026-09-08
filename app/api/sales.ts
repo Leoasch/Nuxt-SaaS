@@ -14,13 +14,13 @@ export type SaleBody = {
 }
 
 export async function getSales(org_id: string): Promise<{ sales: Sale[] }>
-export async function getSales(org_id: string, id: string): Promise<{ sales: Sale }>
+export async function getSales(org_id: string, id: string): Promise<{ sale: Sale }>
 export async function getSales (org_id: string, id?: string) {
 
   if (!id) {
     return await apiRequest<{ sales: Sale[] }>(orgRoute(org_id) + '/sales')
   }
-  return await apiRequest<{ sales: Sale }>(orgRoute(org_id) + `/sales/${id}`)
+  return await apiRequest<{ sale: Sale }>(orgRoute(org_id) + `/sales/${id}`)
 }
 
 export async function searchSales (org_id: string, query: string) {

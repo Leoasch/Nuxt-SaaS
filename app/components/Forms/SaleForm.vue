@@ -102,7 +102,9 @@ async function save () {
     :title="$t('sale.title.create')"
     :ui="{
       content: 'max-w-3xl'
-    }">
+    }"
+    :dismissible="false"
+  >
     <template #body>
       <div class="flex flex-col gap-6">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { searchCustomers } from '~/api/customers'
+import CustomerCard from '~/components/Cards/CustomerCard.vue'
 import type { Customer, DisplayType } from '~~/shared/types'
 
 const DEBOUNCE_MS = 300
@@ -17,6 +18,7 @@ const displayType = ref<DisplayType>('list')
 const search_query = ref('')
 const searchedCustomers = ref<Customer[]>([])
 const searching = ref(false)
+const overlay = useOverlay()
 
 const displayedCustomers = computed(() => search_query.value.trim()
   ? searchedCustomers.value
@@ -44,6 +46,10 @@ async function search () {
       searching.value = false
     }
   }
+}
+
+function openCustomerCard (id: string) {
+  overlay.create(CustomerCard, { props: { customerId: id } }).open()
 }
 
 watch(search_query, (value) => {
@@ -96,6 +102,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
         <CustomerItem
           :customer
           :display-type="displayType"
+          @click="() => openCustomerCard(customer.id)"
         />
       </template>
     </div>

@@ -40,7 +40,7 @@ async function save () {
     }
 
     await loadCustomers()
-    emit('close')
+    emit('close', true)
   } catch (error: any) {
 
     handleError(error)
@@ -63,7 +63,9 @@ async function save () {
     :title="$t(`customer.title.${type}`)"
     :ui="{
       content: 'max-w-3xl'
-    }">
+    }"
+    :dismissible="false"
+  >
     <template #body>
       <div class="grid grid-cols-2 gap-x-4 gap-y-6">
         <UFormField

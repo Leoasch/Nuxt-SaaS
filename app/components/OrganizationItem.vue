@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import type { Role } from '~~/shared/types'
-import OrganizationForm from './Forms/OrganizationForm.vue'
 
 const props = defineProps<{
   organization: Organization
 }>()
-
-const overlay = useOverlay()
 
 const ROLE_STYLES: Record<Role, { label: string; color: 'error' | 'warning' | 'neutral'; icon: string; accent: string }> = {
   ADMIN: { label: 'Admin', color: 'error', icon: 'i-lucide-shield-check', accent: 'border-l-error' },
@@ -15,14 +12,11 @@ const ROLE_STYLES: Record<Role, { label: string; color: 'error' | 'warning' | 'n
 }
 
 const roleStyle = computed(() => ROLE_STYLES[props.organization.role])
-
-function editModal () {
-  overlay.create(OrganizationForm, { props: { organization: props.organization } }).open()
-}
 </script>
 
 <template>
   <UCard
+    class="cursor-pointer"
     :ui="{
       root: `border-l-4 ${roleStyle.accent}`,
       header: 'bg-accented-900/80',
@@ -31,7 +25,6 @@ function editModal () {
     }"
     variant="soft"
     :title="organization.name"
-    @click="editModal"
   >
     <h1 v-if="organization.document">{{ organization.document }}</h1>
     <UBadge
