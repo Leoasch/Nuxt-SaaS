@@ -10,10 +10,10 @@ import { User } from './models/User'
 
 export function registerAssociations () {
   Organization.hasMany(OrganizationMember, { foreignKey: 'organization_id' })
-  OrganizationMember.belongsTo(Organization, { foreignKey: 'organization_id' })
+  OrganizationMember.belongsTo(Organization, { foreignKey: 'organization_id', as: 'organization' })
 
   User.hasMany(OrganizationMember, { foreignKey: 'user_id' })
-  OrganizationMember.belongsTo(User, { foreignKey: 'user_id' })
+  OrganizationMember.belongsTo(User, { foreignKey: 'user_id', as: 'user' })
 
   Organization.hasMany(Customer, { foreignKey: 'organization_id' })
   Customer.belongsTo(Organization, { foreignKey: 'organization_id' })

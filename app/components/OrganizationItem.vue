@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import type { Role } from '~~/shared/types'
+import { ROLE_STYLES } from '~/common'
 
 const props = defineProps<{
   organization: Organization
 }>()
-
-const ROLE_STYLES: Record<Role, { label: string; color: 'error' | 'warning' | 'neutral'; icon: string; accent: string }> = {
-  ADMIN: { label: 'Admin', color: 'error', icon: 'i-lucide-shield-check', accent: 'border-l-error' },
-  MANAGER: { label: 'Manager', color: 'warning', icon: 'i-lucide-briefcase', accent: 'border-l-warning' },
-  EMPLOYEE: { label: 'Employee', color: 'neutral', icon: 'i-lucide-user', accent: 'border-l-neutral' },
-}
 
 const roleStyle = computed(() => ROLE_STYLES[props.organization.role])
 </script>

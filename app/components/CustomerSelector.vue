@@ -83,7 +83,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
 <template>
   <div class="relative">
     <div
-      class="flex h-[58px] w-full min-w-0 items-center gap-3 rounded border border-accented p-2 focus-within:ring-2 focus-within:ring-primary/50">
+      class="flex h-14.5 w-full min-w-0 items-center gap-3 rounded border border-accented p-2 focus-within:ring-2 focus-within:ring-primary/50">
       <NameInitialsImage
         v-if="selectedCustomer"
         :name="selectedCustomer.name"

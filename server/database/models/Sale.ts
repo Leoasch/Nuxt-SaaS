@@ -13,6 +13,7 @@ export class Sale extends Model<
   declare user_id: string
   declare total: number
   declare payment_method: string
+  declare canceled_at: CreationOptional<Date | null>
 }
 
 Sale.init(
@@ -45,6 +46,11 @@ Sale.init(
     payment_method: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    canceled_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
     }
   },
   {

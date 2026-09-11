@@ -47,3 +47,7 @@ export async function editSale (org_id: string, body: Partial<SaleBody> & { id: 
 export async function deleteSale (org_id: string, id: string) {
   return await apiRequest<{ sale: Sale }>(orgRoute(org_id) + `/sales/${id}`, { method: 'DELETE' })
 }
+
+export async function cancelSale (org_id: string, id: string) {
+  return await apiRequest<{ sale: Sale }>(orgRoute(org_id) + `/sales/${id}/cancel`, { method: 'POST' })
+}

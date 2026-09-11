@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { getSales } from '~/api/sales'
+import { cancelSale, getSales } from '~/api/sales'
 import { PAYMENT_METHOD_ICONS, priceFormatter } from '~/common'
 import CustomerCard from './CustomerCard.vue'
+import ConfirmDeleteDialog from '../ConfirmDeleteDialog.vue'
 
 const props = defineProps<{
   saleId: string
@@ -11,6 +12,7 @@ const sale = ref<Sale | null>(null)
 const loading = ref(false)
 const { selectedOrganizationId } = useOrganization()
 const { customers } = useCustomers()
+const { loadSales } = useSales()
 const customer = computed(() => customers.value.find(c => c.id === sale.value?.customer_id) ?? null)
 const paymentMethodIcon = computed(() => PAYMENT_METHOD_ICONS[sale.value?.payment_method ?? ''] ?? 'lucide:circle-dollar-sign')
 const formattedTotal = computed(() => sale.value ? priceFormatter.format(sale.value.total) : '')
@@ -32,6 +34,36 @@ async function onLoad () {
 
 function openCustomerCard (id: string) {
   overlay.create(CustomerCard, { props: { customerId: id } }).open()
+}
+
+async function onCancel () {
+  if (!sale.value || !selectedOrganizationId.value) {
+    return
+  }
+
+  const dialog = overlay.create(ConfirmDeleteDialog, {
+    props: {
+      title: $t('sale.confirm_cancel.title'),
+      description: $t('sale.confirm_cancel.description'),
+    }
+  }).open()
+
+  if (await dialog.result) {
+    loading.value = true
+    try {
+      const result = await cancelSale(selectedOrganizationId.value, sale.value.id)
+      if (result.sale) {
+        sale.value = result.sale
+        useToast().add({
+          description: $t('sale.cancel_success'),
+          color: 'success'
+        })
+        await loadSales()
+      }
+    } finally {
+      loading.value = false
+    }
+  }
 }
 
 </script>
@@ -73,6 +105,14 @@ function openCustomerCard (id: string) {
           {{ $t(`sale.payment_method.${sale.payment_method}`) }}
         </UBadge>
       </div>
+      <div
+        v-if="sale.canceled_at"
+        class="flex items-center gap-2 rounded border border-error/30 bg-error-500/10 p-2 text-error">
+        <UIcon
+          name="lucide:ban"
+          class="size-4 shrink-0"/>
+        <span class="text-sm font-medium">{{ $t('sale.canceled_at') }}: {{ (new Date(sale.canceled_at)).toLocaleString() }}</span>
+      </div>
       <div class="flex flex-col divide-y divide-accented rounded border border-accented bg-accented/20 dark:bg-accented/30">
         <div
           v-for="saleItem in sale.sale_items"
@@ -103,13 +143,17 @@ function openCustomerCard (id: string) {
       </span>
     </div>
     <template #footer-btns>
-      <UButton 
-        icon="lucide:x" 
+      <UButton
+        v-if="sale && !sale.canceled_at"
+        icon="lucide:x"
         :disabled="loading"
         variant="ghost"
         color="secondary"
         class="cursor-pointer"
-      >Cancel sale</UButton>
+        @click="onCancel"
+      >
+        {{ $t('sale.card.cancel') }}
+      </UButton>
     </template>
   </CardsBase>
 </template>

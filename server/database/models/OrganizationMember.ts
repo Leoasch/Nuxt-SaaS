@@ -5,11 +5,13 @@ import type { Role } from '~~/shared/types'
 
 export class OrganizationMember extends Model<
   InferAttributes<OrganizationMember>,
-  InferCreationAttributes<OrganizationMember>
+  InferCreationAttributes<OrganizationMember, { omit: 'pending_invite' }>
 > {
   declare organization_id: string
   declare user_id: string
   declare role: Role
+  declare accepted_at: Date | null
+  declare pending_invite: boolean
 }
 
 OrganizationMember.init(
@@ -25,6 +27,17 @@ OrganizationMember.init(
     role: {
       type: DataTypes.ENUM('ADMIN', 'MANAGER', 'EMPLOYEE'),
       allowNull: false
+    },
+    accepted_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
+    },
+    pending_invite: {
+      type: DataTypes.VIRTUAL(DataTypes.BOOLEAN, ['accepted_at']),
+      get (this: OrganizationMember) {
+        return this.accepted_at === null
+      }
     }
   },
   {

@@ -23,7 +23,8 @@ export default defineEventHandler(async (event) => {
       id: organization.id,
       name: organization.name,
       document: organization.document,
-      role: 'ADMIN'
+      role: 'ADMIN',
+      is_member: true
     }
   }
 })

@@ -23,7 +23,8 @@ const formattedDate = computed(() => props.sale.createdAt ? dateFormatter.format
 
 <template>
   <div
-    class="rounded border w-full items-center border-accented bg-accented/20 p-2 flex gap-3 hover:bg-accented/40 hover:scale-102 transition-all duration-300">
+    class="rounded border w-full items-center border-accented bg-accented/20 p-2 flex gap-3 hover:bg-accented/40 hover:scale-102 transition-all duration-300"
+    :class="sale.canceled_at ? 'opacity-60' : ''">
     <NameInitialsImage
       v-if="customer"
       :name="customer.name"
@@ -40,6 +41,14 @@ const formattedDate = computed(() => props.sale.createdAt ? dateFormatter.format
     <div class="flex min-w-0 flex-1 flex-col justify-center gap-1">
       <div class="flex min-w-0 items-center gap-2">
         <h1 class="min-w-0 flex-1 truncate font-bold">{{ customer?.name ?? $t('sale.walk_in_customer') }}</h1>
+        <UBadge
+          v-if="sale.canceled_at"
+          color="error"
+          variant="subtle"
+          icon="lucide:ban"
+          class="shrink-0">
+          {{ $t('sale.canceled') }}
+        </UBadge>
         <span class="shrink-0 font-bold">{{ formattedTotal }}</span>
       </div>
       <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-dimmed">

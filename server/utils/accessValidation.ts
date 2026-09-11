@@ -11,9 +11,13 @@ import { StockMovement } from '../database/models/StockMovements'
 import { Sale } from '../database/models/Sale'
 import type { FindOptions, InferAttributes } from 'sequelize'
 
-export async function organizationAccessValidation (event: H3Event<globalThis.EventHandlerRequest>, requiredRoles: Role[] = []) {
+export async function organizationAccessValidation (
+  event: H3Event<globalThis.EventHandlerRequest>,
+  requiredRoles: Role[] = [],
+  opts: { allowPending?: boolean } = {}
+) {
   const { user } = await requireUserSession(event)
-  
+
   const organization_id = getRouterParam(event, 'id')
 
   if (!organization_id) {
@@ -29,7 +33,7 @@ export async function organizationAccessValidation (event: H3Event<globalThis.Ev
   const membership = await OrganizationMember.findOne({
     where: { user_id: user.id, organization_id }
   })
-  
+
   if (!membership) {
     // NOT FOUND ERROR
     throw createError({
@@ -40,7 +44,17 @@ export async function organizationAccessValidation (event: H3Event<globalThis.Ev
       },
     })
   }
-  
+
+  if (!opts.allowPending && membership.pending_invite) {
+    throw createError({
+      statusCode: 405,
+      statusMessage: 'User has not accepted the invite to this organization.',
+      data: {
+        code: 'MEMBERSHIP.PENDING',
+      },
+    })
+  }
+
   const organization = await Organization.findOne({ where: { id: organization_id } })
   
   if (!organization) {
@@ -68,6 +82,49 @@ export async function organizationAccessValidation (event: H3Event<globalThis.Ev
     organization,
     membership,
     user
+  }
+}
+
+export async function accessMembership (
+  event: H3Event<globalThis.EventHandlerRequest>, 
+  organization_id: string, 
+  member_id?: string,
+  opts?: FindOptions<InferAttributes<OrganizationMember, {
+    omit: never;
+  }>>
+) {
+  if (!member_id) {
+    member_id = getRouterParam(event, 'member_id')
+  }
+
+  if (!member_id) {
+    // INVALID ID
+    throw createError({
+      statusCode: 400,
+      data: {
+        code: 'INVALID_ID',
+      },
+    })
+  }
+
+  const membership = await OrganizationMember.findOne({
+    where: { user_id: member_id, organization_id },
+    ...opts
+  })
+  
+  if (!membership) {
+    // NOT FOUND ERROR
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Member not found',
+      data: {
+        code: 'MEMBERSHIP.NOT_FOUND',
+      },
+    })
+  }
+
+  return {
+    membership,
   }
 }
 
@@ -192,9 +249,11 @@ export async function accessStockMv (event: H3Event<globalThis.EventHandlerReque
 
 export async function accessSale (
   event: H3Event<globalThis.EventHandlerRequest>, 
-  organization_id: string, opts?: FindOptions<InferAttributes<Sale, {
+  organization_id: string, 
+  opts?: FindOptions<InferAttributes<Sale, {
     omit: never;
-  }>>) {
+  }>>
+) {
   const sale_id = getRouterParam(event, 'sale_id')
 
   if (!sale_id) {

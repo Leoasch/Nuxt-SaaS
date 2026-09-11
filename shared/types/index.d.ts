@@ -7,10 +7,21 @@ export interface DatabaseModel {
   updatedAt?: string
 }
 
+export interface Membership extends DatabaseModel {
+  organization_id: string
+  user_id: string
+  role: Role
+  user?: User
+  accepted_at: string | null
+  pending_invite: boolean
+  organization?: Organization
+}
+
 export interface Organization extends DatabaseModel {
   name: string,
   document: string | null
   role: Role
+  is_member: boolean
 }
 
 export interface ProductImage extends DatabaseModel {
@@ -65,6 +76,7 @@ export interface Sale extends DatabaseModel {
   customer_id: string | null
   total: number
   payment_method: string
+  canceled_at: string | null
   sale_items: SaleItem[]
 }
 

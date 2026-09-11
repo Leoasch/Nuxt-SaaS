@@ -15,7 +15,10 @@ export default defineEventHandler(async (event) => {
   }
 
   const roleByOrganizationId = new Map(
-    memberships.map(membership => [membership.organization_id, membership.role])
+    memberships.map(membership => [membership.organization_id, {
+      role: membership.role,
+      is_member: !membership.pending_invite
+    }])
   )
 
   const organizations = await Organization.findAll({
@@ -28,7 +31,8 @@ export default defineEventHandler(async (event) => {
       id: organization.id,
       name: organization.name,
       document: organization.document,
-      role: roleByOrganizationId.get(organization.id)
+      role: roleByOrganizationId.get(organization.id)?.role,
+      is_member: roleByOrganizationId.get(organization.id)?.is_member,
     }))
   }
 })

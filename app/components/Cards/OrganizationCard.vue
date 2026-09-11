@@ -1,24 +1,21 @@
 <script setup lang="ts">
 import { deleteOrganization, getOrganizations } from '~/api/organization'
-import type { Organization, Role } from '~~/shared/types'
+import type { Organization } from '~~/shared/types'
 import OrganizationForm from '../Forms/OrganizationForm.vue'
 import ConfirmDeleteDialog from '../ConfirmDeleteDialog.vue'
+import { ROLE_STYLES } from '~/common.ts'
 
 const props = defineProps<{
   organizationId: string
 }>()
 
-const ROLE_STYLES: Record<Role, { label: string; color: 'error' | 'warning' | 'neutral'; icon: string }> = {
-  ADMIN: { label: 'Admin', color: 'error', icon: 'i-lucide-shield-check' },
-  MANAGER: { label: 'Manager', color: 'warning', icon: 'i-lucide-briefcase' },
-  EMPLOYEE: { label: 'Employee', color: 'neutral', icon: 'i-lucide-user' },
-}
-
 const organization = ref<Organization | null>(null)
 const loading = ref(false)
-const { loadOrganizations } = useOrganization()
+const { loadOrganizations, selectedOrganizationId } = useOrganization()
 const overlay = useOverlay()
 const emits = defineEmits(['close'])
+const roleStyle = computed(() => organization.value ? ROLE_STYLES[organization.value.role] : null)
+const isAdminUser = computed(() => organization.value?.role === 'ADMIN' && organization.value?.is_member)
 
 async function onLoad () {
   try {
@@ -65,12 +62,21 @@ async function onDelete () {
   }
 }
 
-const roleStyle = computed(() => organization.value ? ROLE_STYLES[organization.value.role] : null)
+function accessConfigs () {
+  navigateTo(`organization/${organization.value?.id}`)
+  emits('close')
+}
+
+
+onMounted(() => {
+})
 </script>
 
 <template>
   <CardsBase
     :loading
+    :can-delete="isAdminUser"
+    :can-edit="isAdminUser"
     @load="onLoad"
     @edit="onEdit"
     @delete="onDelete"
@@ -107,5 +113,25 @@ const roleStyle = computed(() => organization.value ? ROLE_STYLES[organization.v
         </div>
       </div>
     </div>
+    <template #footer-btns>
+      <UButton
+        :disabled="loading"
+        variant="ghost"
+        color="neutral"
+        class="cursor-pointer"
+        @click="accessConfigs"
+      >
+        {{ $t('organization.configs') }}
+      </UButton>
+      <UButton
+        :disabled="loading || (selectedOrganizationId === organizationId)"
+        variant="ghost"
+        color="secondary"
+        class="cursor-pointer"
+        @click="() => selectedOrganizationId = organizationId"
+      >
+        {{ $t('organization.select') }}
+      </UButton>
+    </template>
   </CardsBase>
 </template>
