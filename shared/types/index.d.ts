@@ -1,5 +1,5 @@
 
-export type Role = 'ADMIN' | 'MANAGER' | 'EMPLOYEE'
+export type Role = 'OWNER' | 'ADMIN' | 'MANAGER' | 'EMPLOYEE'
 
 export interface DatabaseModel {
   id: string

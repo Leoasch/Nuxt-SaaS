@@ -2,6 +2,7 @@
 import type { SelectItem } from '@nuxt/ui'
 import { alterMemberRole, inviteMember } from '~/api/organization'
 import type { Membership, Role } from '~~/shared/types'
+import { hasMinimumRole } from '~~/shared/utils/roles.ts'
 
 const props = defineProps<{
   orgId: string
@@ -9,12 +10,12 @@ const props = defineProps<{
   member?: Membership
 }>()
 
-const canInvite = computed(() => props.currentUserRole === 'ADMIN' || props.currentUserRole === 'MANAGER')
+const canInvite = computed(() => hasMinimumRole(props.currentUserRole, 'MANAGER'))
 
 const ROLES: Role[] = ['EMPLOYEE', 'MANAGER', 'ADMIN']
 
 const roleItems = computed<SelectItem[]>(() => ROLES
-  .filter(role => role !== 'ADMIN' || props.currentUserRole === 'ADMIN')
+  .filter(role => hasMinimumRole(props.currentUserRole, role))
   .map(role => ({ label: $t(`role.${role}`), value: role })))
 
 const { errors, resetErrors, handleError } = useFormErrors([

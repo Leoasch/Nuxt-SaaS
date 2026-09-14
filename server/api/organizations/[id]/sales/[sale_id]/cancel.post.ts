@@ -5,7 +5,7 @@ import { StockMovement } from '~~/server/database/models/StockMovements'
 import { organizationAccessValidation } from '~~/server/utils/accessValidation'
 
 export default defineEventHandler(async (event) => {
-  const { organization, user } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization, user } = await organizationAccessValidation(event, ['MANAGER'])
 
   await sequelize.transaction(async (transaction) => {
     const { sale } = await accessSale(event, organization.id, {

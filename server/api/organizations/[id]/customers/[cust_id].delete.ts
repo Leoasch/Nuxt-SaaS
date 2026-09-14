@@ -1,7 +1,7 @@
 import { accessCustomer } from '~~/server/utils/accessValidation'
 
 export default defineEventHandler(async (event) => {
-  const { organization } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization } = await organizationAccessValidation(event, ['MANAGER'])
 
   const { customer } = await accessCustomer(event, organization.id)
 

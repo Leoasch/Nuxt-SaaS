@@ -25,7 +25,7 @@ OrganizationMember.init(
       allowNull: false
     },
     role: {
-      type: DataTypes.ENUM('ADMIN', 'MANAGER', 'EMPLOYEE'),
+      type: DataTypes.ENUM('OWNER', 'ADMIN', 'MANAGER', 'EMPLOYEE'),
       allowNull: false
     },
     accepted_at: {
@@ -42,6 +42,13 @@ OrganizationMember.init(
   },
   {
     sequelize,
-    tableName: 'organizations_members'
+    tableName: 'organizations_members',
+    indexes: [
+      {
+        unique: true,
+        fields: ['organization_id'],
+        where: { role: 'OWNER' }
+      }
+    ]
   }
 )

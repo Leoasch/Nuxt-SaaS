@@ -20,7 +20,7 @@ const createSaleSchema = z.object({
 const round2 = (value: number) => Math.round(value * 100) / 100
 
 export default defineEventHandler(async (event) => {
-  const { organization, user } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization, user } = await organizationAccessValidation(event, ['MANAGER'])
 
   const result = await parseBody(event, createSaleSchema)
 

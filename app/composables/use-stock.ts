@@ -25,7 +25,7 @@ export default function () {
     stock.value = []
   }
 
-  loadStock()
+  loadStock().catch(() => {})
 
   return { stock, loadStock, productFilter }
 }

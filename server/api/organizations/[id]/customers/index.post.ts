@@ -10,7 +10,7 @@ const createCustomerSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const { organization } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization } = await organizationAccessValidation(event, ['MANAGER'])
   
   const result = await parseBody(event, createCustomerSchema)
 

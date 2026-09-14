@@ -7,7 +7,7 @@ const editOrganizationSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const { organization } = await organizationAccessValidation(event, ['ADMIN'])
+  const { organization, membership } = await organizationAccessValidation(event, ['ADMIN'])
 
   const result = await parseBody(event, editOrganizationSchema)
 
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
       id: organization.id,
       name: organization.name,
       document: organization.document,
-      role: 'ADMIN',
+      role: membership.role,
       is_member: true
     }
   }

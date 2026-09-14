@@ -3,7 +3,7 @@ import StockMovementItem from '~/components/StockMovementItem.vue'
 import StockMovementCard from '~/components/Cards/StockMovementCard.vue'
 
 const { stock, loadStock, productFilter } = useStock()
-const { selectedOrganizationId } = useOrganization()
+const { selectedOrganizationId, selectedOrganization } = useOrganization()
 const overlay = useOverlay()
 
 function openStockMovementCard (id: string) {
@@ -27,7 +27,10 @@ watch(() => [productFilter.value, selectedOrganizationId.value], async () => {
   <UContainer>
     <div class="flex">
       <h1 class="font-bold text-2xl">Stock</h1>
-      <CreateStockMvtBtn class="ml-auto mr-2"/>
+      <CreateStockMvtBtn
+        v-if="selectedOrganization && hasMinimumRole(selectedOrganization.role, 'MANAGER')" 
+        class="ml-auto mr-2"
+      />
     </div>
     <USeparator class="py-3"/>
     <ProductSelector

@@ -6,7 +6,7 @@ import type { Customer, DisplayType } from '~~/shared/types'
 const DEBOUNCE_MS = 300
 
 const { customers, loadCustomers } = useCustomers()
-const { selectedOrganizationId } = useOrganization()
+const { selectedOrganizationId, selectedOrganization } = useOrganization()
 
 watch(() => selectedOrganizationId.value, async () => {
   search_query.value = ''
@@ -70,7 +70,10 @@ onUnmounted(() => clearTimeout(debounceTimer))
   <UContainer class="size-full flex flex-col">
     <div class="flex">
       <h1 class="font-bold text-2xl">Customers</h1>
-      <CreateCustomerBtn class="ml-auto mr-2"/>
+      <CreateCustomerBtn 
+        v-if="selectedOrganization && hasMinimumRole(selectedOrganization.role, 'MANAGER')" 
+        class="ml-auto mr-2"
+      />
     </div>
     <USeparator class="py-3"/>
     <div class="flex gap-2 mb-3">

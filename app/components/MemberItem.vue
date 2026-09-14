@@ -2,6 +2,7 @@
 import type { DropdownMenuItem } from '@nuxt/ui'
 import { ROLE_STYLES } from '~/common'
 import type { Membership } from '~~/shared/types'
+import { hasMinimumRole } from '~~/shared/utils/roles.ts'
 
 const props = defineProps<{
   member: Membership
@@ -15,18 +16,17 @@ const userRole = computed(() => {
 })
 
 const roleCheck = () => {
-  if (userRole.value === 'ADMIN') {
-    return true
-  } else if (userRole.value === 'MANAGER' && props.member.role !== 'ADMIN') {
-    return true
-  }
-  return false
+  return !!userRole.value && hasMinimumRole(userRole.value, props.member.role)
 }
 
 const emits = defineEmits(['alter_permission', 'cancel_invite', 'member_quit', 'member_kick'])
 
 const items = computed<DropdownMenuItem[]>(() => {
   const arr: DropdownMenuItem[] = []
+
+  if (props.member.role === 'OWNER') {
+    return arr
+  }
 
   if (props.member.pending_invite) {
     arr.push({

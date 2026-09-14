@@ -8,7 +8,7 @@ import { StockMovement } from '~~/server/database/models/StockMovements'
 import { organizationAccessValidation } from '~~/server/utils/accessValidation'
 
 export default defineEventHandler(async (event) => {
-  const { organization } = await organizationAccessValidation(event, ['ADMIN'])
+  const { organization, membership } = await organizationAccessValidation(event, ['OWNER'])
 
   await sequelize.transaction(async (transaction) => {
     const sales = await Sale.findAll({
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
       id: organization.id,
       name: organization.name,
       document: organization.document,
-      role: 'ADMIN',
+      role: membership.role,
       is_member: true
     }
   }

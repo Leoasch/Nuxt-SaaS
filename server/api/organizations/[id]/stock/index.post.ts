@@ -8,7 +8,7 @@ const createStockMovementSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const { organization, user } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization, user } = await organizationAccessValidation(event, ['MANAGER'])
   
   const result = await parseBody(event, createStockMovementSchema)
 

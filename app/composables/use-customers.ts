@@ -17,7 +17,7 @@ export default function () {
     customers.value = []
   }
 
-  loadCustomers()
+  loadCustomers().catch(() => {})
 
   return { customers, loadCustomers }
 }

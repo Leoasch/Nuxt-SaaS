@@ -14,10 +14,9 @@ export const PAYMENT_METHOD_ICONS: Record<string, string> = {
   other: 'lucide:circle-dollar-sign'
 }
 
-export const ROLE_STYLES: Record<Role, { label: string; color: 'error' | 'warning' | 'neutral'; icon: string; accent: string }> = {
+export const ROLE_STYLES: Record<Role, { label: string; color: 'primary' | 'error' | 'warning' | 'neutral'; icon: string; accent: string }> = {
+  OWNER: { label: 'owner', color: 'primary', icon: 'i-lucide-crown', accent: 'border-l-primary' },
   ADMIN: { label: 'admin', color: 'error', icon: 'i-lucide-shield-check', accent: 'border-l-error' },
   MANAGER: { label: 'manager', color: 'warning', icon: 'i-lucide-briefcase', accent: 'border-l-warning' },
   EMPLOYEE: { label: 'employee', color: 'neutral', icon: 'i-lucide-user', accent: 'border-l-neutral' },
 }
-
-export const ROLE_RANK: Record<Role, number> = { ADMIN: 0, MANAGER: 1, EMPLOYEE: 2 }

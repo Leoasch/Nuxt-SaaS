@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { acceptOrganizationInvite, deleteMember, getOrganizationMembers, getOrganizations } from '~/api/organization'
-import { ROLE_RANK, ROLE_STYLES } from '~/common'
+import { ROLE_STYLES } from '~/common'
 import ConfirmDeleteDialog from '~/components/ConfirmDeleteDialog.vue'
 import ConfirmDialog from '~/components/ConfirmDialog.vue'
 import InviteForm from '~/components/Forms/InviteForm.vue'
 import type { Membership, Organization } from '~~/shared/types'
-
+import { hasMinimumRole } from '~~/shared/utils/roles.ts'
 
 const route = useRoute()
 const org_id = route.params.id as string
@@ -202,7 +202,7 @@ onMounted(async () => {
             <div class="flex items-center mb-3">
               <h2 class="text-lg font-bold">{{ $t('organization.members') }}</h2>
               <UButton
-                v-if="organization.role !== 'EMPLOYEE'"
+                v-if="hasMinimumRole(organization.role, 'MANAGER')"
                 color="primary"
                 variant="subtle"
                 class="ml-auto mr-0 cursor-pointer font-bold"

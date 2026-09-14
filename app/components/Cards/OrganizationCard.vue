@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { acceptOrganizationInvite, deleteOrganization, getOrganizations } from '~/api/organization'
 import type { Organization } from '~~/shared/types'
+import { hasMinimumRole } from '~~/shared/utils/roles.ts'
 import OrganizationForm from '../Forms/OrganizationForm.vue'
 import ConfirmDeleteDialog from '../ConfirmDeleteDialog.vue'
 import { ROLE_STYLES } from '~/common.ts'
@@ -16,7 +17,8 @@ const { loadOrganizations, selectedOrganizationId } = useOrganization()
 const overlay = useOverlay()
 const emits = defineEmits(['close'])
 const roleStyle = computed(() => organization.value ? ROLE_STYLES[organization.value.role] : null)
-const isAdminUser = computed(() => organization.value?.role === 'ADMIN' && organization.value?.is_member)
+const canEdit = computed(() => !!organization.value?.is_member && hasMinimumRole(organization.value.role, 'ADMIN'))
+const canDelete = computed(() => !!organization.value?.is_member && hasMinimumRole(organization.value.role, 'OWNER'))
 
 async function onLoad () {
   try {
@@ -96,8 +98,8 @@ onMounted(() => {
 <template>
   <CardsBase
     :loading
-    :can-delete="isAdminUser"
-    :can-edit="isAdminUser"
+    :can-delete="canDelete"
+    :can-edit="canEdit"
     @load="onLoad"
     @edit="onEdit"
     @delete="onDelete"

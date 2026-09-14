@@ -17,7 +17,7 @@ export default function () {
     products.value = []
   }
 
-  loadProducts()
+  loadProducts().catch(() => {})
 
   return { products, loadProducts }
 }

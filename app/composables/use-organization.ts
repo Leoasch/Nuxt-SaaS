@@ -17,7 +17,7 @@ export default function () {
     }
   }
 
-  loadOrganizations()
+  loadOrganizations().catch(() => {})
 
   return { organizations, selectedOrganizationId, selectedOrganization, loadOrganizations }
 }

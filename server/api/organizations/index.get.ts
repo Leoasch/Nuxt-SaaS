@@ -1,8 +1,5 @@
 import { Organization } from '~~/server/database/models/Organization'
 import { OrganizationMember } from '~~/server/database/models/OrganizationMember'
-import type { Role } from '~~/shared/types'
-
-const ROLE_RANK: Record<Role, number> = { ADMIN: 0, MANAGER: 1, EMPLOYEE: 2 }
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event)

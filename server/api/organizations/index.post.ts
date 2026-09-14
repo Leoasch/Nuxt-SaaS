@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
       {
         organization_id: organization.id,
         user_id: user.id,
-        role: 'ADMIN',
+        role: 'OWNER',
         accepted_at: new Date()
       },
       { transaction }
@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
       id: organization.id,
       name: organization.name,
       document: organization.document,
-      role: 'ADMIN',
+      role: 'OWNER',
       is_member: true
     }
   }

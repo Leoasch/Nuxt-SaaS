@@ -6,7 +6,7 @@ import type { DisplayType, Product } from '~~/shared/types'
 const DEBOUNCE_MS = 300
 
 const { products, loadProducts } = useProducts()
-const { selectedOrganizationId } = useOrganization()
+const { selectedOrganizationId, selectedOrganization } = useOrganization()
 const overlay = useOverlay()
 
 watch(() => selectedOrganizationId.value, async () => {
@@ -71,7 +71,10 @@ onUnmounted(() => clearTimeout(debounceTimer))
   <UContainer class="size-full flex flex-col">
     <div class="flex max-h-full max-w-full">
       <h1 class="font-bold text-2xl">Products</h1>
-      <CreateProductBtn class="ml-auto mr-2"/>
+      <CreateProductBtn 
+        v-if="selectedOrganization && hasMinimumRole(selectedOrganization.role, 'MANAGER')" 
+        class="ml-auto mr-2"
+      />
     </div>
     <USeparator class="py-3"/>
     <div class="flex gap-2 mb-3">

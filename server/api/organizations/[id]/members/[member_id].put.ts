@@ -6,25 +6,25 @@ const addMemberSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const { organization, membership: userMembership } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization, membership: userMembership } = await organizationAccessValidation(event, ['MANAGER'])
   const { membership } = await accessMembership(event, organization.id)
 
   const { role } = (await parseBody(event, addMemberSchema)).data
 
-  if (membership.role === 'ADMIN' && userMembership.role !== 'ADMIN') {
+  if (!hasMinimumRole(userMembership.role, membership.role)) {
     throw createError({
       statusCode: 405,
-      statusMessage: 'User does not have permission to alter an ADMIN member.',
+      statusMessage: 'User does not have permission to alter this member.',
       data: {
         code: 'MEMBERSHIP.NOT_ALLOWED',
       },
     })
   }
 
-  if (role === 'ADMIN' && userMembership.role !== 'ADMIN') {
+  if (!hasMinimumRole(userMembership.role, role)) {
     throw createError({
       statusCode: 405,
-      statusMessage: 'User does not have permission to promote a member to ADMIN.',
+      statusMessage: 'User does not have permission to promote a member to this role.',
       data: {
         code: 'MEMBERSHIP.NOT_ALLOWED',
       },

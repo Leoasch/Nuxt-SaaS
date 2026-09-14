@@ -9,7 +9,7 @@ const addMemberSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const { organization, membership } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization, membership } = await organizationAccessValidation(event, ['MANAGER'])
 
   const result = await parseBody(event, addMemberSchema)
 
@@ -18,10 +18,10 @@ export default defineEventHandler(async (event) => {
     role
   } = result.data
 
-  if (role === 'ADMIN' && membership.role !== 'ADMIN') {
+  if (!hasMinimumRole(membership.role, role)) {
     throw createError({
       statusCode: 405,
-      statusMessage: 'User does not have permission to add an ADMIN member.',
+      statusMessage: 'User does not have permission to add a member with this role.',
       data: {
         code: 'MEMBERSHIP.NOT_ALLOWED',
       },

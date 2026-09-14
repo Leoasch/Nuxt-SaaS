@@ -12,7 +12,7 @@ const editProductSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const { organization } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization } = await organizationAccessValidation(event, ['MANAGER'])
   const { product } = await accessProduct(event, organization.id)
 
   const result = await parseBody(event, editProductSchema)

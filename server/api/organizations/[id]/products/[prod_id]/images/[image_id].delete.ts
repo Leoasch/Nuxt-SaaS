@@ -2,7 +2,7 @@ import { accessProduct, accessProductImage, organizationAccessValidation } from 
 import { deleteObject } from '~~/server/utils/storage'
 
 export default defineEventHandler(async (event) => {
-  const { organization } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization } = await organizationAccessValidation(event, ['MANAGER'])
   const { product } = await accessProduct(event, organization.id)
   const { image } = await accessProductImage(event, product.id)
 

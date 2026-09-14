@@ -70,7 +70,7 @@ export async function organizationAccessValidation (
 
   const isSelf = !!opts.allowSelf && getRouterParam(event, 'member_id') === user.id
 
-  if (requiredRoles.length > 0 && !isSelf && !requiredRoles.includes(membership.role)) {
+  if (requiredRoles.length > 0 && !isSelf && !requiredRoles.some(r => hasMinimumRole(membership.role, r))) {
     throw createError({
       statusCode: 405,
       statusMessage: 'User does not have permission to execute that task.',

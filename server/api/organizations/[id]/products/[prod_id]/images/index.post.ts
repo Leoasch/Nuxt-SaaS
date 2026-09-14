@@ -6,7 +6,7 @@ const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 
 export default defineEventHandler(async (event) => {
-  const { organization } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization } = await organizationAccessValidation(event, ['MANAGER'])
   const { product } = await accessProduct(event, organization.id)
 
   const parts = await readMultipartFormData(event)
