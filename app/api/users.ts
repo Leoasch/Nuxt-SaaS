@@ -6,3 +6,7 @@ export async function searchUsers (query: string) {
     query: { q: query }
   })
 }
+
+export async function getUser (id: string) {
+  return await apiRequest<{ user: User }>(`/users/${id}`)
+}

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { SelectItem } from '@nuxt/ui'
-import { inviteMember } from '~/api/organization'
-import type { Role } from '~~/shared/types'
+import { alterMemberRole, inviteMember } from '~/api/organization'
+import type { Membership, Role } from '~~/shared/types'
 
 const props = defineProps<{
   orgId: string
   currentUserRole: Role
+  member?: Membership
 }>()
 
 const canInvite = computed(() => props.currentUserRole === 'ADMIN' || props.currentUserRole === 'MANAGER')
@@ -24,8 +25,8 @@ const { errors, resetErrors, handleError } = useFormErrors([
 const loading = ref(false)
 const emit = defineEmits(['close'])
 
-const user_id = ref<string | null>(null)
-const role = ref<Role>('EMPLOYEE')
+const user_id = ref<string | null>(props.member?.user_id ?? null)
+const role = ref<Role>(props.member?.role ?? 'EMPLOYEE')
 
 async function save () {
   resetErrors()
@@ -36,7 +37,11 @@ async function save () {
 
   loading.value = true
   try {
-    await inviteMember(props.orgId, { user_id: user_id.value, role: role.value })
+    if (props.member) {
+      await alterMemberRole(props.orgId, { user_id: user_id.value, role: role.value })
+    } else {
+      await inviteMember(props.orgId, { user_id: user_id.value, role: role.value })
+    }
     emit('close', true)
   } catch (error: any) {
 
@@ -70,7 +75,10 @@ async function save () {
         <UFormField
           :label="$t('member.invite.user')"
           :error="errors.user_id">
-          <UserSelector v-model="user_id"/>
+          <UserSelector 
+            v-model="user_id"
+            :locked="!!member"
+          />
         </UFormField>
         <UFormField
           :label="$t('member.invite.role')"

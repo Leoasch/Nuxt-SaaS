@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { deleteOrganization, getOrganizations } from '~/api/organization'
+import { acceptOrganizationInvite, deleteOrganization, getOrganizations } from '~/api/organization'
 import type { Organization } from '~~/shared/types'
 import OrganizationForm from '../Forms/OrganizationForm.vue'
 import ConfirmDeleteDialog from '../ConfirmDeleteDialog.vue'
 import { ROLE_STYLES } from '~/common.ts'
+import ConfirmDialog from '../ConfirmDialog.vue'
 
 const props = defineProps<{
   organizationId: string
@@ -62,6 +63,26 @@ async function onDelete () {
   }
 }
 
+async function acceptInvite () {
+  const result = await acceptOrganizationInvite(props.organizationId, true)
+  if (!result.membership.pending_invite) {
+    accessConfigs()
+  }
+}
+
+async function declineInvite () {
+  const dialog = overlay.create(ConfirmDialog, {
+    props: { title: $t('confirm_decline_title'), description: $t('confirm_decline_description') }
+  }).open()
+  if (await dialog.result) {
+    const result = await acceptOrganizationInvite(props.organizationId, false)
+    if (result.membership.pending_invite) {
+      await loadOrganizations()
+      emits('close')
+    }
+  }
+}
+
 function accessConfigs () {
   navigateTo(`organization/${organization.value?.id}`)
   emits('close')
@@ -97,7 +118,7 @@ onMounted(() => {
             :icon="roleStyle.icon"
             variant="subtle"
             class="mt-1">
-            {{ roleStyle.label }}
+            {{ $t(roleStyle.label) }}
           </UBadge>
         </div>
       </div>
@@ -121,17 +142,40 @@ onMounted(() => {
         class="cursor-pointer"
         @click="accessConfigs"
       >
-        {{ $t('organization.configs') }}
+        {{ $t('organization.page') }}
       </UButton>
-      <UButton
-        :disabled="loading || (selectedOrganizationId === organizationId)"
-        variant="ghost"
-        color="secondary"
-        class="cursor-pointer"
-        @click="() => selectedOrganizationId = organizationId"
-      >
-        {{ $t('organization.select') }}
-      </UButton>
+      <template v-if="organization?.is_member">
+        <UButton
+          
+          :disabled="loading || (selectedOrganizationId === organizationId)"
+          variant="ghost"
+          color="secondary"
+          class="cursor-pointer"
+          @click="() => selectedOrganizationId = organizationId"
+        >
+          {{ $t('organization.select') }}
+        </UButton>
+      </template>
+      <template v-else>
+        <UButton
+          :disabled="loading"
+          variant="ghost"
+          color="error"
+          class="cursor-pointer"
+          @click="declineInvite"
+        >
+          {{ $t('organization.decline_invite') }}
+        </UButton>
+        <UButton
+          :disabled="loading"
+          variant="ghost"
+          color="primary"
+          class="cursor-pointer"
+          @click="acceptInvite"
+        >
+          {{ $t('organization.accept_invite') }}
+        </UButton>
+      </template>
     </template>
   </CardsBase>
 </template>

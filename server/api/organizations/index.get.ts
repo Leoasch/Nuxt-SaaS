@@ -1,11 +1,15 @@
 import { Organization } from '~~/server/database/models/Organization'
 import { OrganizationMember } from '~~/server/database/models/OrganizationMember'
+import type { Role } from '~~/shared/types'
+
+const ROLE_RANK: Record<Role, number> = { ADMIN: 0, MANAGER: 1, EMPLOYEE: 2 }
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event)
 
   const memberships = await OrganizationMember.findAll({
-    where: { user_id: user.id }
+    where: { user_id: user.id },
+    order: [['accepted_at', 'DESC']]
   })
 
   if (memberships.length === 0) {
@@ -22,17 +26,23 @@ export default defineEventHandler(async (event) => {
   )
 
   const organizations = await Organization.findAll({
-    where: { id: [...roleByOrganizationId.keys()] },
-    order: [['createdAt', 'ASC']],
+    where: { id: [...roleByOrganizationId.keys()] }
   })
 
   return {
-    organizations: organizations.map(organization => ({
-      id: organization.id,
-      name: organization.name,
-      document: organization.document,
-      role: roleByOrganizationId.get(organization.id)?.role,
-      is_member: roleByOrganizationId.get(organization.id)?.is_member,
-    }))
+    organizations: organizations
+      .map(organization => ({
+        id: organization.id,
+        name: organization.name,
+        document: organization.document,
+        role: roleByOrganizationId.get(organization.id)!.role,
+        is_member: roleByOrganizationId.get(organization.id)!.is_member,
+      }))
+      .sort((a, b) => {
+        if (a.is_member !== b.is_member) {
+          return a.is_member ? -1 : 1
+        }
+        return ROLE_RANK[a.role] - ROLE_RANK[b.role]
+      })
   }
 })

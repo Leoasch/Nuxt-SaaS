@@ -57,6 +57,13 @@ export async function inviteMember (organization_id: string, body: InviteMemberB
   })
 }
 
+export async function alterMemberRole (organization_id: string, body: InviteMemberBody) {
+  return await apiRequest<{ membership: Membership }>(orgRoute(organization_id) + `/members/${body.user_id}`, {
+    method: 'PUT',
+    body,
+  })
+}
+
 export async function getOrganizationInvites () {
   return await apiRequest<{ invites: Membership[] }>('/organizations/invites')
 }
@@ -65,5 +72,11 @@ export async function acceptOrganizationInvite (organization_id: string, accept:
   return await apiRequest<{ membership: Membership }>(orgRoute(organization_id) + '/accept', {
     method: 'POST',
     body: { accept }
+  })
+}
+
+export async function deleteMember (member: Membership) {
+  return await apiRequest<{ membership: Membership }>(orgRoute(member.organization_id) + `/members/${member.user_id}`, {
+    method: 'DELETE'
   })
 }

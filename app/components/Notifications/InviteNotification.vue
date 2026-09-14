@@ -35,7 +35,7 @@ async function declineInvite () {
 
 <template>
   <Notification>
-    <div class="flex gap-2">
+    <div class="flex  gap-2">
       <ULink 
         class="font-bold"
         :to="`/organization/${invite.organization_id}`"
@@ -45,23 +45,23 @@ async function declineInvite () {
         :icon="ROLE_STYLES[invite.role].icon"
         variant="subtle"
         class="shrink-0">
-        {{ ROLE_STYLES[invite.role].label }}
+        {{ $t(ROLE_STYLES[invite.role].label) }}
       </UBadge>
     </div>
     <div class="ml-auto mr-0 flex gap-1">
-      <UButton
-        icon="lucide:check"
-        color="primary"
-        variant="ghost"
-        class="cursor-pointer p-1"
-        @click="acceptInvite"
-      />
       <UButton
         icon="lucide:x"
         color="error"
         variant="ghost"
         class="cursor-pointer p-1"
         @click="declineInvite"
+      />
+      <UButton
+        icon="lucide:check"
+        color="primary"
+        variant="ghost"
+        class="cursor-pointer p-1"
+        @click="acceptInvite"
       />
     </div>
   </Notification>

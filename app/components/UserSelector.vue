@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import type { User } from '#auth-utils'
-import { searchUsers } from '~/api/users'
+import { getUser, searchUsers } from '~/api/users'
+
+defineProps<{
+  locked?: boolean
+}>()
 
 const DEBOUNCE_MS = 300
 
@@ -15,6 +19,25 @@ const open = ref(false)
 
 let debounceTimer: ReturnType<typeof setTimeout> | undefined
 let requestId = 0
+
+watch(user_id, async (value) => {
+  if (!value) {
+    selectedUser.value = null
+    return
+  }
+
+  if (selectedUser.value?.id === value) {
+    return
+  }
+
+  loading.value = true
+  try {
+    const result = await getUser(value)
+    selectedUser.value = result.user
+  } finally {
+    loading.value = false
+  }
+}, { immediate: true })
 
 async function search () {
   const currentRequest = ++requestId
@@ -104,7 +127,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
       >
 
       <UButton
-        v-if="selectedUser"
+        v-if="selectedUser && !locked"
         icon="lucide:x"
         color="neutral"
         variant="ghost"

@@ -15,7 +15,9 @@ export const PAYMENT_METHOD_ICONS: Record<string, string> = {
 }
 
 export const ROLE_STYLES: Record<Role, { label: string; color: 'error' | 'warning' | 'neutral'; icon: string; accent: string }> = {
-  ADMIN: { label: 'Admin', color: 'error', icon: 'i-lucide-shield-check', accent: 'border-l-error' },
-  MANAGER: { label: 'Manager', color: 'warning', icon: 'i-lucide-briefcase', accent: 'border-l-warning' },
-  EMPLOYEE: { label: 'Employee', color: 'neutral', icon: 'i-lucide-user', accent: 'border-l-neutral' },
+  ADMIN: { label: 'admin', color: 'error', icon: 'i-lucide-shield-check', accent: 'border-l-error' },
+  MANAGER: { label: 'manager', color: 'warning', icon: 'i-lucide-briefcase', accent: 'border-l-warning' },
+  EMPLOYEE: { label: 'employee', color: 'neutral', icon: 'i-lucide-user', accent: 'border-l-neutral' },
 }
+
+export const ROLE_RANK: Record<Role, number> = { ADMIN: 0, MANAGER: 1, EMPLOYEE: 2 }

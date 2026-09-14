@@ -34,7 +34,7 @@ onMounted( async () => {
     </template>
     <template #footer>
       <div class="flex flex-col w-full">
-        <div class="flex gap-2 w-full justify-end">
+        <div class="flex flex-wrap max-w-full gap-2 w-full justify-end">
           <slot name="footer-btns"/>
           <UButton
             v-if="canEdit"

@@ -14,7 +14,7 @@ import type { FindOptions, InferAttributes } from 'sequelize'
 export async function organizationAccessValidation (
   event: H3Event<globalThis.EventHandlerRequest>,
   requiredRoles: Role[] = [],
-  opts: { allowPending?: boolean } = {}
+  opts: { allowPending?: boolean, allowSelf?: boolean } = {}
 ) {
   const { user } = await requireUserSession(event)
 
@@ -68,7 +68,9 @@ export async function organizationAccessValidation (
     })
   }
 
-  if (requiredRoles.length > 0 && !requiredRoles.includes(membership.role)) {
+  const isSelf = !!opts.allowSelf && getRouterParam(event, 'member_id') === user.id
+
+  if (requiredRoles.length > 0 && !isSelf && !requiredRoles.includes(membership.role)) {
     throw createError({
       statusCode: 405,
       statusMessage: 'User does not have permission to execute that task.',

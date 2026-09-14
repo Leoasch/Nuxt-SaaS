@@ -3,7 +3,7 @@ import { OrganizationMember } from '~~/server/database/models/OrganizationMember
 import { accessMembership } from '~~/server/utils/accessValidation'
 
 export default defineEventHandler(async (event) => {
-  const { organization, membership: userMembership } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'])
+  const { organization, membership: userMembership } = await organizationAccessValidation(event, ['ADMIN', 'MANAGER'], { allowSelf: true })
 
   const { membership } = await accessMembership(event, organization.id)
 
