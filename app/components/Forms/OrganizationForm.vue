@@ -61,11 +61,11 @@ async function save () {
     :dismissible="false"
   >
     <template #body>
-      <div class="grid grid-cols-5 gap-6">
+      <div class="grid md:grid-cols-5 grid-cols-1 gap-6 max-w-full">
         <UFormField
           :label="$t('organization.name')"
           :error="errors.name"
-          class="col-span-3">
+          class="md:col-span-3">
           <UInput
             v-model="form.name"
             :placeholder="$t('organization.name')"
@@ -78,7 +78,7 @@ async function save () {
         <UFormField
           :label="$t('organization.document')"
           :error="errors.document"
-          class="col-span-2">
+          class="md:col-span-2">
           <UInput
             v-model="form.document"
             :placeholder="$t('organization.document')"

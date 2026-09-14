@@ -1,25 +1,23 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
 import { ROLE_STYLES } from '~/common'
-import type { Membership } from '~~/shared/types'
+import type { Membership, Organization } from '~~/shared/types'
 import { hasMinimumRole } from '~~/shared/utils/roles.ts'
 
 const props = defineProps<{
-  member: Membership
+  member: Membership,
+  organization: Organization
 }>()
 
 const { user } = useUserSession()
-const { organizations } = useOrganization()
 
-const userRole = computed(() => {
-  return organizations.value.find((org) => org.id === props.member.organization_id)?.role
-})
+const userRole = computed(() => props.organization.role)
 
 const roleCheck = () => {
-  return !!userRole.value && hasMinimumRole(userRole.value, props.member.role)
+  return !!userRole.value && hasMinimumRole(userRole.value, props.member.role) && hasMinimumRole(userRole.value, 'MANAGER')
 }
 
-const emits = defineEmits(['alter_permission', 'cancel_invite', 'member_quit', 'member_kick'])
+const emits = defineEmits(['alter_permission', 'cancel_invite', 'member_quit', 'member_kick', 'transfer_ownership'])
 
 const items = computed<DropdownMenuItem[]>(() => {
   const arr: DropdownMenuItem[] = []
@@ -56,6 +54,14 @@ const items = computed<DropdownMenuItem[]>(() => {
       label: $t('member.alter_permission'),
       icon: 'lucide:pencil',
       onSelect: () => emits('alter_permission')
+    })
+  }
+
+  if (userRole.value === 'OWNER' && !props.member.pending_invite) {
+    arr.push({
+      label: $t('member.transfer_ownership'),
+      icon: 'lucide:crown',
+      onSelect: () => emits('transfer_ownership')
     })
   }
 

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { acceptOrganizationInvite, deleteOrganization, getOrganizations } from '~/api/organization'
+import { acceptOrganizationInvite, getOrganizations } from '~/api/organization'
 import type { Organization } from '~~/shared/types'
 import { hasMinimumRole } from '~~/shared/utils/roles.ts'
 import OrganizationForm from '../Forms/OrganizationForm.vue'
-import ConfirmDeleteDialog from '../ConfirmDeleteDialog.vue'
 import { ROLE_STYLES } from '~/common.ts'
 import ConfirmDialog from '../ConfirmDialog.vue'
 
@@ -18,7 +17,6 @@ const overlay = useOverlay()
 const emits = defineEmits(['close'])
 const roleStyle = computed(() => organization.value ? ROLE_STYLES[organization.value.role] : null)
 const canEdit = computed(() => !!organization.value?.is_member && hasMinimumRole(organization.value.role, 'ADMIN'))
-const canDelete = computed(() => !!organization.value?.is_member && hasMinimumRole(organization.value.role, 'OWNER'))
 
 async function onLoad () {
   try {
@@ -39,28 +37,6 @@ async function onEdit () {
     }).open()
     if (await dialog.result) {
       await onLoad()
-    }
-  }
-}
-
-async function onDelete () {
-  const dialog = overlay.create(ConfirmDeleteDialog, {
-    props: {
-      title: $t('organization.confirm_delete.title'),
-      description: $t('organization.confirm_delete.description'),
-    }
-  }).open()
-  if (await dialog.result) {
-    if (organization.value) {
-      const result = await deleteOrganization(organization.value.id)
-      if (result.organization) {
-        useToast().add({
-          description: $t('organization.delete_success'),
-          color: 'success'
-        })
-        await loadOrganizations()
-        emits('close')
-      }
     }
   }
 }
@@ -98,11 +74,10 @@ onMounted(() => {
 <template>
   <CardsBase
     :loading
-    :can-delete="canDelete"
+    :can-delete="false"
     :can-edit="canEdit"
     @load="onLoad"
     @edit="onEdit"
-    @delete="onDelete"
   >
     <div
       v-if="organization"

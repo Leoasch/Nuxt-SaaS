@@ -31,16 +31,6 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (membership.user_id === userMembership.user_id) {
-    throw createError({
-      statusCode: 405,
-      statusMessage: 'User does not have permission to alter their own role.',
-      data: {
-        code: 'MEMBERSHIP.ALTER_SELF_NOT_ALLOWED',
-      },
-    }) 
-  }
-
   membership.role = role
   await membership.save()
   return { membership: membership }

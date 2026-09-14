@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { acceptOrganizationInvite, deleteMember, getOrganizationMembers, getOrganizations } from '~/api/organization'
+import type { DropdownMenuItem } from '@nuxt/ui'
+import { acceptOrganizationInvite, deleteMember, deleteOrganization, getOrganizationMembers, getOrganizations, transferOwnership } from '~/api/organization'
 import { ROLE_STYLES } from '~/common'
 import ConfirmDeleteDialog from '~/components/ConfirmDeleteDialog.vue'
 import ConfirmDialog from '~/components/ConfirmDialog.vue'
+import ConfirmTransferOwnershipDialog from '~/components/ConfirmTransferOwnershipDialog.vue'
 import InviteForm from '~/components/Forms/InviteForm.vue'
+import OrganizationForm from '~/components/Forms/OrganizationForm.vue'
 import type { Membership, Organization } from '~~/shared/types'
 import { hasMinimumRole } from '~~/shared/utils/roles.ts'
 
@@ -13,6 +16,7 @@ const organization = ref<Organization | null>(null)
 const members = ref<Membership[]>([])
 const loading = ref<boolean>(false)
 const overlay = useOverlay()
+const { user } = useUserSession()
 
 async function loadOrganization () {
   if (org_id) {
@@ -24,7 +28,6 @@ async function loadOrganization () {
 }
 
 async function loadMembers () {
-  const { user } = useUserSession()
   if (org_id && user.value) {
     const result = await getOrganizationMembers(org_id)
     if (result.memberships) {
@@ -40,6 +43,63 @@ const sortedMembers = computed(() => [...members.value].sort((a, b) => {
   return ROLE_RANK[a.role] - ROLE_RANK[b.role]
 }))
 
+const items = computed<DropdownMenuItem[]>(() => {
+  const arr: DropdownMenuItem[] = []
+  if (!organization.value) {
+    return arr
+  }
+  
+  if (hasMinimumRole(organization.value?.role, 'ADMIN')) {
+    arr.push({
+      label: 'organization.edit_organization',
+      icon: 'lucide:pencil',
+      onSelect: openEditForm
+    })
+  }
+
+  if (hasMinimumRole(organization.value?.role, 'OWNER')) {
+    arr.push({
+      label: 'organization.delete_organization',
+      color: 'error',
+      icon: 'lucide:trash',
+      onSelect: deleteOrganizationForm
+    })
+  }
+
+  return arr
+})
+
+async function deleteOrganizationForm () {
+  if (!organization.value) {
+    return
+  }
+  const dialog = overlay.create(ConfirmTransferOwnershipDialog, {
+    props: {
+      title: $t('organization.delete_organization_title'),
+      description: $t('organization.delete_organization_description'),
+      email: user.value?.email ?? ''
+    }
+  }).open()
+  if (await dialog.result) {
+    const result = await deleteOrganization(organization.value.id)
+    if (result.organization) {
+      navigateTo('/organizations')
+    }
+  }
+}
+
+async function openEditForm () {
+  if (organization.value) {
+    const dialog = overlay.create(OrganizationForm, {
+      props: { organization: organization.value }
+    }).open()
+    if (await dialog.result) {
+      await loadOrganization()
+    }
+  }
+}
+
+
 async function openInviteForm (member?: Membership) {
   if (!organization.value) {
     return
@@ -52,6 +112,7 @@ async function openInviteForm (member?: Membership) {
     }
   }).open()
   if (await dialog.result) {
+    await loadOrganization()
     await loadMembers()
   }
 }
@@ -109,6 +170,23 @@ async function quitOrganization (member: Membership) {
       navigateTo('/organizations')
     }
   )
+}
+
+async function transferOwnershipTo (member: Membership) {
+  if (!organization.value) {
+    return
+  }
+  const dialog = overlay.create(ConfirmTransferOwnershipDialog, {
+    props: {
+      title: $t('member.transfer_ownership_title'),
+      description: $t('member.transfer_ownership_description'),
+      email: member.user?.email ?? ''
+    }
+  }).open()
+  if (await dialog.result) {
+    await transferOwnership(member)
+    await Promise.all([loadOrganization(), loadMembers()])
+  }
 }
 
 async function acceptInvite () {
@@ -185,6 +263,19 @@ onMounted(async () => {
               </UBadge>
             </div>
           </div>
+
+          <UDropdownMenu
+            v-if="hasMinimumRole(organization.role, 'ADMIN')"
+            :items
+            class="shrink-0"
+          >
+            <UButton
+              icon="lucide:ellipsis-vertical"
+              color="neutral"
+              variant="ghost"
+              class="cursor-pointer"
+            />
+          </UDropdownMenu>
         </div>
 
         <div
@@ -223,10 +314,12 @@ onMounted(async () => {
                 v-for="member in sortedMembers"
                 :key="member.id"
                 :member
+                :organization
                 @alter_permission="() => openInviteForm(member)"
                 @cancel_invite="() => cancelInvitation(member)"
                 @member_kick="() => kickMember(member)"
                 @member_quit="() => quitOrganization(member)"
+                @transfer_ownership="() => transferOwnershipTo(member)"
               />
             </div>
           </div>

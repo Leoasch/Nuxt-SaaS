@@ -80,3 +80,10 @@ export async function deleteMember (member: Membership) {
     method: 'DELETE'
   })
 }
+
+export async function transferOwnership (member: Membership) {
+  return await apiRequest<{ membership: Membership, previousOwnerMembership: Membership }>(
+    orgRoute(member.organization_id) + `/members/${member.user_id}/transfer-ownership`,
+    { method: 'POST' }
+  )
+}
