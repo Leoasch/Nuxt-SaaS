@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   const user = await User.findOne({
     where: { id },
-    attributes: ['id', 'name', 'email']
+    attributes: ['id', 'name', 'email', 'avatarUrl', 'updatedAt']
   })
 
   if (!user) {
@@ -29,5 +29,12 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  return { user }
+  return {
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatarUrl: user.avatarUrl
+    }
+  }
 })

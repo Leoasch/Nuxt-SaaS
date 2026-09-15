@@ -7,6 +7,12 @@ export interface DatabaseModel {
   updatedAt?: string
 }
 
+export interface User extends DatabaseModel {
+  name: string
+  email: string
+  avatarUrl?: string | null
+}
+
 export interface Membership extends DatabaseModel {
   organization_id: string
   user_id: string

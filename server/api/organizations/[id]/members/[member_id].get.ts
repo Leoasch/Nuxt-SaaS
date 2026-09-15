@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     event, 
     organization.id, 
     undefined, 
-    { include: { model: User, as: 'user', attributes: ['id', 'name', 'email'] } }
+    { include: { model: User, as: 'user', attributes: ['id', 'name', 'email', 'avatarUrl'] } }
   )
   
   return { membership }

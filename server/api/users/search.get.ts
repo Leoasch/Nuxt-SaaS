@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   const term = `%${escapeLike(data.q)}%`
 
   const users = await User.findAll({
-    attributes: ['id', 'name', 'email'],
+    attributes: ['id', 'name', 'email', 'avatarUrl'],
     where: {
       [Op.or]: [
         { name: { [Op.iLike]: term } },

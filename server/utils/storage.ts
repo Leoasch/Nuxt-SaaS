@@ -51,6 +51,16 @@ export async function getObject (key: string): Promise<Readable> {
   return response.Body as Readable
 }
 
+export async function getObjectWithMeta (key: string) {
+  const response = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }))
+
+  return {
+    body: response.Body as Readable,
+    contentType: response.ContentType,
+    contentLength: response.ContentLength
+  }
+}
+
 export async function deleteObject (key: string) {
   await s3.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }))
 }

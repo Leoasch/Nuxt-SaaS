@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
   const memberships = await OrganizationMember.findAll({
     where: { organization_id: organization.id },
-    include: { model: User, as: 'user', attributes: ['id', 'name', 'email'] }
+    include: { model: User, as: 'user', attributes: ['id', 'name', 'email', 'avatarUrl'] }
   })
 
   return { memberships }

@@ -90,9 +90,10 @@ onUnmounted(() => clearTimeout(debounceTimer))
   <div class="relative">
     <div
       class="flex h-14.5 w-full min-w-0 items-center gap-3 rounded border border-accented p-2 focus-within:ring-2 focus-within:ring-primary/50">
-      <NameInitialsImage
+      <AvatarFrame
         v-if="selectedUser"
-        :name="selectedUser.name"
+        :text="selectedUser.name"
+        :image-url="selectedUser.avatarUrl"
         class="size-10"
       />
       <div
@@ -119,6 +120,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
       <input
         v-else
         v-model="search_query"
+        autocomplete="off"
         type="text"
         class="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-dimmed"
         :placeholder="$t('user.select.placeholder')"
@@ -147,8 +149,9 @@ onUnmounted(() => clearTimeout(debounceTimer))
         type="button"
         class="flex w-full min-w-0 cursor-pointer items-center gap-0.5 p-2 text-left hover:bg-accented/40"
         @mousedown.prevent="select(user)">
-        <NameInitialsImage
-          :name="user.name"
+        <AvatarFrame
+          :text="user.name"
+          :image-url="user.avatarUrl"
           class="size-10 shrink-0"
         />
         <div class="ml-3 flex min-w-0 flex-col">

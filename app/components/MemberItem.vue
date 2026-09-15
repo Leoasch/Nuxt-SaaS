@@ -74,8 +74,10 @@ const items = computed<DropdownMenuItem[]>(() => {
   <div
     class="flex w-full items-center gap-3 rounded border border-accented bg-accented/20 p-2 dark:bg-accented/30"
     :class="member.pending_invite ? 'opacity-60' : ''">
-    <NameInitialsImage
-      :name="member.user?.name ?? member.user_id"
+    <AvatarFrame
+      v-if="member.user"
+      :text="member.user?.name"
+      :image-url="member.user?.avatarUrl"
       class="size-10 shrink-0"
     />
     <div class="min-w-0 flex-1">

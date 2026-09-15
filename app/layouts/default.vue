@@ -13,7 +13,8 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
   [
     {
       label: 'Profile',
-      icon: 'i-lucide-user'
+      icon: 'i-lucide-user',
+      to: `/user/${sessionUser.value?.id}`
     },
     {
       label: 'Settings',
@@ -170,10 +171,11 @@ async function logout () {
             }"
           >
             <template #leading>
-              <NameInitialsImage
-                v-if="user.name"
-                :name="user.name"
-                class="size-5"/>
+              <AvatarFrame
+                v-if="sessionUser"
+                :text="sessionUser.name"
+                :image-url="sessionUser.avatarUrl"
+                class="size-5 shrink-0"/>
             </template>
           </UButton>
         </UDropdownMenu>
