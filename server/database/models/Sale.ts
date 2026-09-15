@@ -14,6 +14,8 @@ export class Sale extends Model<
   declare total: number
   declare payment_method: string
   declare canceled_at: CreationOptional<Date | null>
+  declare createdAt: CreationOptional<Date>
+  declare updatedAt: CreationOptional<Date>
 }
 
 Sale.init(
@@ -51,7 +53,9 @@ Sale.init(
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null
-    }
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
   },
   {
     sequelize,

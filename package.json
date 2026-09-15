@@ -16,11 +16,13 @@
     "@iconify-json/simple-icons": "^1.2.93",
     "@nuxt/ui": "^4.10.0",
     "@nuxtjs/i18n": "10.6.0",
+    "chart.js": "^4.5.1",
     "nuxt": "^4.5.2",
     "nuxt-auth-utils": "0.5.30",
     "pg": "^8.23.0",
     "sequelize": "^6.37.8",
     "tailwindcss": "^4.3.3",
+    "vue-chartjs": "^5.3.4",
     "zod": "^4.4.3"
   },
   "devDependencies": {

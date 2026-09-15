@@ -51,3 +51,25 @@ export async function deleteSale (org_id: string, id: string) {
 export async function cancelSale (org_id: string, id: string) {
   return await apiRequest<{ sale: Sale }>(orgRoute(org_id) + `/sales/${id}/cancel`, { method: 'POST' })
 }
+
+export type RevenueByDay = {
+  date: string
+  total: number
+}
+
+export async function getRevenue (org_id: string, days: 1 | 7 | 30 = 30) {
+  return await apiRequest<{ revenue: RevenueByDay[] }>(orgRoute(org_id) + '/sales/revenue', {
+    query: { days }
+  })
+}
+
+export type SalesSummary = {
+  totalRevenue: number
+  salesCount: number
+  avgOrderValue: number
+  activeCustomers: number
+}
+
+export async function getSalesSummary (org_id: string) {
+  return await apiRequest<SalesSummary>(orgRoute(org_id) + '/sales/summary')
+}
