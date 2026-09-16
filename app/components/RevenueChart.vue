@@ -16,7 +16,7 @@ const PERIODS = [
 ]
 
 const loading = ref(false)
-const revenue = ref<{ date: string, total: number }[]>([])
+const revenue = ref<{ date: string, total: number, count: number }[]>([])
 const selectedDays = ref<1 | 7 | 30>(30)
 const colorMode = useColorMode()
 
@@ -36,6 +36,8 @@ watch([() => props.orgId, selectedDays], load, { immediate: true })
 
 const priceFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
 const dayFormatter = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' })
+const hourFormatter = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' })
+const labelFormatter = computed(() => selectedDays.value === 1 ? hourFormatter : dayFormatter)
 
 const total = computed(() => revenue.value.reduce((sum, day) => sum + day.total, 0))
 
@@ -47,7 +49,7 @@ const surfaceColor = computed(() => isDark.value ? '#1a1a19' : '#fcfcfb')
 const pointRadius = computed(() => revenue.value.length <= 7 ? 3 : 0)
 
 const chartData = computed<ChartData<'line'>>(() => ({
-  labels: revenue.value.map(day => dayFormatter.format(new Date(`${day.date}T00:00:00`))),
+  labels: revenue.value.map(day => labelFormatter.value.format(new Date(day.date))),
   datasets: [
     {
       data: revenue.value.map(day => day.total),
@@ -90,7 +92,15 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
     legend: { display: false },
     tooltip: {
       callbacks: {
-        label: ctx => priceFormatter.format(ctx.parsed.y ?? 0)
+        label: ctx => priceFormatter.format(ctx.parsed.y ?? 0),
+        footer: items => {
+          const count = revenue.value[items[0]?.dataIndex ?? -1]?.count ?? 0
+          return (
+            !count ? $t('sales_amount_none') :
+              count === 1 ? $t('sales_amount_single') : 
+                $t('sales_amount_multiple', { amount: count })
+          )
+        }
       }
     }
   }
@@ -99,20 +109,21 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
 
 <template>
   <div class="flex flex-col gap-1 rounded border border-accented bg-accented/20 p-4 dark:bg-accented/30">
-    <div class="flex items-center justify-between gap-2">
-      <span class="text-sm text-dimmed">{{ $t(heading) }}</span>
-      <UButtonGroup size="xs">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <span class="min-w-0 truncate text-sm text-dimmed">{{ $t(heading) }}</span>
+      <div class="flex flex-wrap gap-1">
         <UButton
           v-for="period in PERIODS"
           :key="period.days"
+          size="xs"
           :color="selectedDays === period.days ? 'primary' : 'neutral'"
-          :variant="selectedDays === period.days ? 'solid' : 'outline'"
+          :variant="selectedDays === period.days ? 'outline' : 'subtle'"
           class="cursor-pointer"
           @click="selectedDays = period.days"
         >
           {{ $t(period.label) }}
         </UButton>
-      </UButtonGroup>
+      </div>
     </div>
     <div class=flex>
       <span class="text-2xl font-bold">{{ priceFormatter.format(total) }}</span>

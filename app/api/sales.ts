@@ -55,6 +55,7 @@ export async function cancelSale (org_id: string, id: string) {
 export type RevenueByDay = {
   date: string
   total: number
+  count: number
 }
 
 export async function getRevenue (org_id: string, days: 1 | 7 | 30 = 30) {
