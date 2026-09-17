@@ -15,8 +15,8 @@ const isPositiveStock = computed(() => props.movement.quantity >= 0)
        hover:scale-102 transition-all duration-300 
     "
     :class="isPositiveStock ? 
-      'bg-success-700/5 border-success-500/20 hover:bg-success-600/20' : 
-      'bg-error-700/5 border-error-500/20 hover:bg-error-600/20'"
+      'bg-success-700/15 border-success-500/50 hover:bg-success-600/20' : 
+      'bg-error-700/15 border-error-500/50 hover:bg-error-600/20'"
   >
 
     <div class="flex min-w-0 flex-1 flex-col justify-center">

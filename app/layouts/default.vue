@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
+import { THEME_PRESETS } from '~/utils/themeColors'
 
 const open = ref(false)
 const colorMode = useColorMode()
+const { isPresetActive, applyPreset } = useTheme()
 const { clear } = useUserSession()
 const { user: sessionUser } = useUserSession()
 const user = ref({
@@ -12,49 +14,64 @@ const user = ref({
 const userItems = computed<DropdownMenuItem[][]>(() => [
   [
     {
-      label: 'Profile',
+      label: $t('profile'),
       icon: 'i-lucide-user',
       to: `/user/${sessionUser.value?.id}`
     },
     {
-      label: 'Settings',
+      label: $t('settings'),
       icon: 'i-lucide-settings',
       to: '/settings'
     }
   ],
   [
     {
-      label: 'Appearance',
+      label: $t('theme'),
       icon: 'i-lucide-sun-moon',
       children: [
-        {
-          label: 'Light',
-          icon: 'i-lucide-sun',
-          type: 'checkbox',
-          checked: colorMode.value === 'light',
+        THEME_PRESETS.map(preset => ({
+          label: $t(preset.label),
+          type: 'checkbox' as const,
+          checked: isPresetActive(preset.colors),
           onUpdateChecked (checked: boolean) {
             if (checked) {
-              colorMode.preference = 'light'
+              applyPreset(preset.colors)
             }
           },
           onSelect (e: Event) {
             e.preventDefault()
           }
-        },
-        {
-          label: 'Dark',
-          icon: 'i-lucide-moon',
-          type: 'checkbox',
-          checked: colorMode.value === 'dark',
-          onUpdateChecked (checked: boolean) {
-            if (checked) {
-              colorMode.preference = 'dark'
+        })),
+        [
+          {
+            label: $t('theme.mode.light'),
+            icon: 'i-lucide-sun',
+            type: 'checkbox',
+            checked: colorMode.value === 'light',
+            onUpdateChecked (checked: boolean) {
+              if (checked) {
+                colorMode.preference = 'light'
+              }
+            },
+            onSelect (e: Event) {
+              e.preventDefault()
             }
           },
-          onSelect (e: Event) {
-            e.preventDefault()
+          {
+            label: $t('theme.mode.dark'),
+            icon: 'i-lucide-moon',
+            type: 'checkbox',
+            checked: colorMode.value === 'dark',
+            onUpdateChecked (checked: boolean) {
+              if (checked) {
+                colorMode.preference = 'dark'
+              }
+            },
+            onSelect (e: Event) {
+              e.preventDefault()
+            }
           }
-        }
+        ]
       ]
     }
   ],
@@ -66,7 +83,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
       target: '_blank'
     },
     {
-      label: 'Log out',
+      label: $t('logout'),
       icon: 'i-lucide-log-out',
       onSelect: logout
     }
