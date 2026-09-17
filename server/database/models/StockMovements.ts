@@ -8,7 +8,7 @@ export class StockMovement extends Model<
 > {
   declare id: CreationOptional<string>
   declare organization_id: string
-  declare user_id: string
+  declare user_id: string | null
   declare product_id: string
   declare quantity: number
   declare reason: string | null
@@ -27,7 +27,7 @@ StockMovement.init(
     },
     user_id: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     product_id: {
       type: DataTypes.STRING,

@@ -10,7 +10,7 @@ export class Sale extends Model<
   declare id: CreationOptional<string>
   declare organization_id: string
   declare customer_id: string | null
-  declare user_id: string
+  declare user_id: string | null
   declare total: number
   declare payment_method: string
   declare canceled_at: CreationOptional<Date | null>
@@ -31,8 +31,8 @@ Sale.init(
     },
     user_id: {
       type: DataTypes.STRING,
-      allowNull: false
-    }, 
+      allowNull: true
+    },
     customer_id: {
       type: DataTypes.STRING,
       allowNull: true

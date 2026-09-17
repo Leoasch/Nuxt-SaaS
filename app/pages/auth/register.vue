@@ -9,8 +9,6 @@ const name = ref('')
 const email = ref('')
 const password = ref('')
 const repeatPassword = ref('')
-const showPassword = ref(false)
-const showRepeatPassword = ref(false)
 
 const { errors, resetErrors, handleError } = useFormErrors(
   ['name', 'email', 'password', 'repeatPassword'] as const,
@@ -64,49 +62,13 @@ async function handleRegister () {
         :label="$t('password')"
         class="w-1/2"
         :error="errors.password">
-        <UInput
-          v-model="password"
-          class="w-full"
-          :placeholder="$t('password')"
-          :type="showPassword ? 'text' : 'password'"
-          :ui="{ trailing: 'pe-1' }">
-          <template #trailing>
-            <UButton
-              color="neutral"
-              variant="link"
-              size="sm"
-              :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-              :aria-label="showPassword ? 'Hide password' : 'Show password'"
-              :aria-pressed="showPassword"
-              aria-controls="password"
-              @click="showPassword = !showPassword"
-            />
-          </template>
-        </UInput>
+        <PasswordInput v-model="password"/>
       </UFormField>
       <UFormField
         :label="$t('repeat_password')"
         class="w-1/2"
         :error="errors.repeatPassword">
-        <UInput
-          v-model="repeatPassword"
-          class="w-full"
-          :placeholder="$t('repeat_password')"
-          :type="showRepeatPassword ? 'text' : 'password'"
-          :ui="{ trailing: 'pe-1' }">
-          <template #trailing>
-            <UButton
-              color="neutral"
-              variant="link"
-              size="sm"
-              :icon="showRepeatPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-              :aria-label="showRepeatPassword ? 'Hide password' : 'Show password'"
-              :aria-pressed="showRepeatPassword"
-              aria-controls="repeat_password"
-              @click="showRepeatPassword = !showRepeatPassword"
-            />
-          </template>
-        </UInput>
+        <PasswordInput v-model="repeatPassword"/>
       </UFormField>
       <div class="w-1/2 flex">
         <ULink

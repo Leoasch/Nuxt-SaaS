@@ -45,3 +45,10 @@ export async function updatePassword (body: ChangePasswordBody) {
     body
   })
 }
+
+export async function deleteAccount (password: string) {
+  return await apiRequest<{ success: true }>('/auth/delete-account', {
+    method: 'DELETE',
+    body: { password }
+  })
+}
