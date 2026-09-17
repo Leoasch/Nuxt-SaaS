@@ -18,7 +18,7 @@ export async function getOrganizations (id?: string) {
   if (!id) {
     return await apiRequest<{ organizations: Organization[] }>('/organizations')
   }
-  return await apiRequest<{ organization: Organization }>(`/organizations/${id}`)
+  return await apiRequest<{ organization: Organization }>(orgRoute(id))
 }
 
 export async function postOrganization (body: OrganizationBody) {
@@ -31,14 +31,14 @@ export async function postOrganization (body: OrganizationBody) {
 export async function editOrganization (body: OrganizationBody) {
   const { id, ...rest } = body
 
-  return await apiRequest<{ organization: Organization }>(`/organizations/${id}`, {
+  return await apiRequest<{ organization: Organization }>(orgRoute(id!), {
     method: 'PUT',
     body: rest,
   })
 }
 
 export async function deleteOrganization (id: string) {
-  return await apiRequest<{ organization: Organization }>(`/organizations/${id}`, { method: 'DELETE' })
+  return await apiRequest<{ organization: Organization }>(orgRoute(id), { method: 'DELETE' })
 }
 
 export async function getOrganizationMembers (organization_id: string): Promise<{ memberships: Membership[] }>

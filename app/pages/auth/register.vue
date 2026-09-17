@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { register } from '~/api/auth'
+
 definePageMeta({
   layout: 'no-auth',
 })
@@ -17,18 +19,15 @@ const { errors, resetErrors, handleError } = useFormErrors(
 
 const { fetch: fetchSession } = useUserSession()
 
-async function register () {
+async function handleRegister () {
   resetErrors()
 
   try {
-    await $fetch('/api/auth/register', {
-      method: 'POST',
-      body: {
-        name: name.value,
-        email: email.value,
-        password: password.value,
-        repeatPassword: repeatPassword.value,
-      },
+    await register({
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      repeatPassword: repeatPassword.value,
     })
 
     await fetchSession()
@@ -118,7 +117,7 @@ async function register () {
         <div class="w-full flex">
           <UButton
             class="m-auto"
-            @click="register">{{ $t('submit_register') }}</UButton>
+            @click="handleRegister">{{ $t('submit_register') }}</UButton>
         </div>
       </UFormField>
     </div>

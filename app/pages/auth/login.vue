@@ -1,26 +1,24 @@
 <script setup lang="ts">
+import { login } from '~/api/auth'
+
 definePageMeta({
   layout: 'no-auth',
 })
 
 const email = ref('')
 const password = ref('')
-const show = ref(false)
 
 const { errors, resetErrors, handleError } = useFormErrors(['email', 'password'] as const, 'login')
 
 const { fetch: fetchSession } = useUserSession()
 
-async function login () {
+async function handleLogin () {
   resetErrors()
 
   try {
-    await $fetch('/api/auth/login', {
-      method: 'POST',
-      body: {
-        email: email.value,
-        password: password.value,
-      },
+    await login({
+      email: email.value,
+      password: password.value,
     })
 
     await fetchSession()
@@ -48,26 +46,7 @@ async function login () {
         :label="$t('password')"
         class="w-1/2"
         :error="errors.password">
-        <UInput
-          v-model="password"
-          class="w-full"
-          :placeholder="$t('password')"
-          :type="show ? 'text' : 'password'"
-          :ui="{ trailing: 'pe-1' }">
-          <template #trailing>
-            <UButton
-              color="neutral"
-              variant="link"
-              size="sm"
-              :icon="show ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-              :aria-label="show ? 'Hide password' : 'Show password'"
-              :aria-pressed="show"
-              aria-controls="password"
-              @click="show = !show"
-            />
-          </template>
-
-        </UInput>
+        <PasswordInput v-model="password"/>
       </UFormField>
       <div class="w-1/2 flex">
         <ULink
@@ -78,7 +57,7 @@ async function login () {
         <div class="w-full flex">
           <UButton
             class="m-auto"
-            @click="login">{{ $t('submit_login') }}</UButton>
+            @click="handleLogin">{{ $t('submit_login') }}</UButton>
         </div>
       </UFormField>
     </div>

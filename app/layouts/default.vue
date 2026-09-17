@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
+import { logout } from '~/api/auth'
 import { THEME_PRESETS } from '~/utils/themeColors'
 
 const open = ref(false)
@@ -85,7 +86,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
     {
       label: $t('logout'),
       icon: 'i-lucide-log-out',
-      onSelect: logout
+      onSelect: handleLogout
     }
   ]
 ])
@@ -125,10 +126,8 @@ function getItems () {
   ] satisfies NavigationMenuItem[]
 }
 
-async function logout () {
-  await $fetch('/api/auth/logout', {
-    method: 'POST',
-  })
+async function handleLogout () {
+  await logout()
 
   await clear()
 

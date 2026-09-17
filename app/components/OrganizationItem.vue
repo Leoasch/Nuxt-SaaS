@@ -21,7 +21,7 @@ const roleStyle = computed(() => ROLE_STYLES[props.organization.role])
     variant="soft"
     :title="organization.name"
   >
-    <p class="min-h-5 truncate text-dimmed">{{ organization.document }}</p>
+    <p class="h-5 truncate leading-5 text-dimmed">{{ organization.document }}</p>
     <div class="flex flex-col items-start gap-2">
       <div class="flex gap-1">
         <UBadge

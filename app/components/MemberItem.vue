@@ -20,13 +20,33 @@ const roleCheck = () => {
 const emits = defineEmits(['alter_permission', 'cancel_invite', 'member_quit', 'member_kick', 'transfer_ownership'])
 
 const items = computed<DropdownMenuItem[]>(() => {
-  const arr: DropdownMenuItem[] = []
+  const arr: DropdownMenuItem[] = [{
+    label: $t('member.profile'),
+    icon: 'lucide:user-round',
+    to: `/user/${props.member.user_id}`,
+  }]
 
   if (props.member.role === 'OWNER') {
     return arr
   }
+  
+  if (roleCheck()) {
+    arr.push({
+      label: $t('member.alter_permission'),
+      icon: 'lucide:pencil',
+      onSelect: () => emits('alter_permission')
+    })
+  }
 
-  if (props.member.pending_invite) {
+  if (userRole.value === 'OWNER' && !props.member.pending_invite) {
+    arr.push({
+      label: $t('member.transfer_ownership'),
+      icon: 'lucide:crown',
+      onSelect: () => emits('transfer_ownership')
+    })
+  }
+
+  if (props.member.pending_invite && roleCheck()) {
     arr.push({
       label: $t('member.cancel_invite'),
       icon: 'lucide:user-round-x',
@@ -46,22 +66,6 @@ const items = computed<DropdownMenuItem[]>(() => {
       icon: 'lucide:square-arrow-right-exit',
       color: 'error',
       onSelect: () => emits('member_kick')
-    })
-  }
-
-  if (roleCheck()) {
-    arr.push({
-      label: $t('member.alter_permission'),
-      icon: 'lucide:pencil',
-      onSelect: () => emits('alter_permission')
-    })
-  }
-
-  if (userRole.value === 'OWNER' && !props.member.pending_invite) {
-    arr.push({
-      label: $t('member.transfer_ownership'),
-      icon: 'lucide:crown',
-      onSelect: () => emits('transfer_ownership')
     })
   }
 
