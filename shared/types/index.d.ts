@@ -59,7 +59,7 @@ export interface Customer extends DatabaseModel {
 
 export interface StockMovement extends DatabaseModel {
   organization_id: string
-  user_id: string
+  user_id: string | null
   product_id: string
   product_name?: string
   quantity: number
@@ -78,7 +78,7 @@ export interface SaleItem extends DatabaseModel {
 
 export interface Sale extends DatabaseModel {
   organization_id: string
-  user_id: string
+  user_id: string | null
   customer_id: string | null
   total: number
   payment_method: string
