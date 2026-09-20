@@ -1,3 +1,4 @@
+import { Customer } from '~~/server/database/models/Customer'
 import { Sale } from '~~/server/database/models/Sale'
 import { SaleItem } from '~~/server/database/models/SaleItem'
 import { organizationAccessValidation } from '~~/server/utils/accessValidation'
@@ -10,7 +11,10 @@ export default defineEventHandler(async (event) => {
   
   const { count, rows: sales } = await Sale.findAndCountAll({
     where: { organization_id: organization.id },
-    include: [{ model: SaleItem, as: 'sale_items' }],
+    include: [
+      { model: SaleItem, as: 'sale_items' },
+      { model: Customer, as: 'customer', attributes: ['id', 'name'] }
+    ],
     order: [['createdAt', 'DESC']],
     limit: paging.limit,
     offset: paging.index,

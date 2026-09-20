@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
         { document: { [Op.iLike]: term } }
       ]
     },
-    order: [['createdAt', 'ASC']],
+    order: [['createdAt', 'DESC']],
     limit: 10
   })
 

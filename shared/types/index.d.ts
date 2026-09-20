@@ -84,6 +84,7 @@ export interface Sale extends DatabaseModel {
   payment_method: string
   canceled_at: string | null
   sale_items: SaleItem[]
+  customer?: Pick<Customer, 'id' | 'name'> | null
 }
 
 export type SaleLine = {
@@ -101,3 +102,5 @@ export type PagingMetadata = {
   index: number
   pages: number
 }
+
+export type QueryPageParams = Pick<PagingMetadata, 'limit' | 'index'>

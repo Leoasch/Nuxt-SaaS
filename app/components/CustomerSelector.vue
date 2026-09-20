@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { searchCustomers } from '~/api/customers'
+import { getCustomers, searchCustomers } from '~/api/customers'
 import type { Customer } from '~~/shared/types'
 
 const DEBOUNCE_MS = 300
@@ -9,8 +9,9 @@ const search_query = ref('')
 const customer_id = defineModel<string | null>({ default: null })
 const emit = defineEmits<{ select: [customer: Customer | null] }>()
 const { selectedOrganizationId } = useOrganization()
-const { customers, loadCustomers } = useCustomers()
 
+// Own list instead of the customers page's shared one, which only holds whichever page is open there.
+const defaultCustomers = ref<Customer[]>([])
 const searchedCustomers = ref<Customer[]>([])
 const selectedCustomer = ref<Customer | null>(null)
 const loading = ref(false)
@@ -18,10 +19,21 @@ const open = ref(false)
 
 const displayedCustomers = computed(() => search_query.value.trim()
   ? searchedCustomers.value
-  : customers.value.slice(0, DEFAULT_LIMIT))
+  : defaultCustomers.value)
 
 let debounceTimer: ReturnType<typeof setTimeout> | undefined
 let requestId = 0
+
+async function loadDefaultCustomers () {
+  if (!selectedOrganizationId.value) {
+    defaultCustomers.value = []
+    return
+  }
+
+  const result = await getCustomers(selectedOrganizationId.value, { index: 0, limit: DEFAULT_LIMIT })
+
+  defaultCustomers.value = result.customers
+}
 
 async function search () {
   if (!selectedOrganizationId.value) {
@@ -59,8 +71,10 @@ watch(search_query, (value) => {
 watch(() => selectedOrganizationId.value, async () => {
   selectedCustomer.value = null
   searchedCustomers.value = []
-  await loadCustomers()
+  await loadDefaultCustomers()
 })
+
+onMounted(() => loadDefaultCustomers().catch(() => {}))
 
 function select (customer: Customer) {
   customer_id.value = customer.id

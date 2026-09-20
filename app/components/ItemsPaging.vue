@@ -3,6 +3,7 @@ const props = withDefaults(defineProps<{
   total: number
   limit?: number
   loading?: boolean
+  hidePagination?: boolean
 }>(), {
   limit: 10
 })
@@ -28,6 +29,7 @@ const page = computed({
       <slot/>
     </Loadable>
     <UPagination
+      v-if="!hidePagination"
       v-model:page="page"
       :total
       :items-per-page="limit"

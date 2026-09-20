@@ -1,4 +1,5 @@
 import { sequelize } from '~~/server/database'
+import { Customer } from '~~/server/database/models/Customer'
 import { Product } from '~~/server/database/models/Product'
 import { SaleItem } from '~~/server/database/models/SaleItem'
 import { StockMovement } from '~~/server/database/models/StockMovements'
@@ -53,7 +54,12 @@ export default defineEventHandler(async (event) => {
   const { sale: canceledSale } = await accessSale(
     event,
     organization.id,
-    { include: [{ model: SaleItem, as: 'sale_items', include: [{ model: Product, as: 'product', attributes: ['id', 'name'] }] }] }
+    {
+      include: [
+        { model: SaleItem, as: 'sale_items', include: [{ model: Product, as: 'product', attributes: ['id', 'name'] }] },
+        { model: Customer, as: 'customer', attributes: ['id', 'name'] }
+      ]
+    }
   )
 
   return { sale: canceledSale }

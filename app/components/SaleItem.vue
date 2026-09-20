@@ -6,9 +6,7 @@ const props = defineProps<{
   sale: Sale
 }>()
 
-const { customers } = useCustomers()
-
-const customer = computed(() => customers.value.find(c => c.id === props.sale.customer_id) ?? null)
+const customer = computed(() => props.sale.customer ?? null)
 
 const itemCount = computed(() => props.sale.sale_items?.length ?? 0)
 

@@ -1,4 +1,4 @@
-import type { PagingMetadata, StockMovement } from '~~/shared/types'
+import type { PagingMetadata, QueryPageParams, StockMovement } from '~~/shared/types'
 import { apiRequest, orgRoute } from '.'
 
 export type StockMVBody = {
@@ -7,13 +7,11 @@ export type StockMVBody = {
   product_id?: string | null
 }
 
-export type QueryParams = Pick<PagingMetadata, 'limit' | 'index'>
-
 type StockMVPage = { stockMovements: StockMovement[], page: PagingMetadata }
 
-export async function getStockMV(org_id: string, params?: QueryParams): Promise<StockMVPage>
+export async function getStockMV(org_id: string, params: QueryPageParams): Promise<StockMVPage>
 export async function getStockMV(org_id: string, id: string): Promise<{ stockMovement: StockMovement }>
-export async function getStockMV (org_id: string, idOrParams?: string | QueryParams) {
+export async function getStockMV (org_id: string, idOrParams: string | QueryPageParams) {
   if (typeof idOrParams === 'string') {
     return await apiRequest<{ stockMovement: StockMovement }>(orgRoute(org_id) + `/stock/${idOrParams}`)
   }
@@ -22,7 +20,7 @@ export async function getStockMV (org_id: string, idOrParams?: string | QueryPar
   })
 }
 
-export async function getProductStockMV (org_id: string, product_id: string, params?: QueryParams) {
+export async function getProductStockMV (org_id: string, product_id: string, params?: QueryPageParams) {
   return await apiRequest<StockMVPage>(orgRoute(org_id) + '/stock', {
     query: { product_id, ...params }
   })

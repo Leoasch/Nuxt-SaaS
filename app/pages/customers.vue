@@ -5,7 +5,7 @@ import type { Customer, DisplayType } from '~~/shared/types'
 
 const DEBOUNCE_MS = 300
 
-const { customers, loadCustomers } = useCustomers()
+const { customers, loadCustomers, paging } = useCustomers()
 const { selectedOrganizationId, selectedOrganization } = useOrganization()
 const loading = ref(false)
 
@@ -21,11 +21,6 @@ async function loadData () {
     loading.value = false
   }
 }
-
-watch(() => selectedOrganizationId.value, async () => {
-  search_query.value = ''
-  await loadData()
-})
 
 const displayType = ref<DisplayType>('list')
 
@@ -78,6 +73,20 @@ watch(search_query, (value) => {
   debounceTimer = setTimeout(search, DEBOUNCE_MS)
 })
 
+
+watch(() => [selectedOrganizationId.value], async () => {
+  search_query.value = ''
+  
+  if (paging.value.index !== 0) {
+    paging.value.index = 0
+    return
+  }
+
+  await loadData()
+})
+
+watch(() => paging.value.index, loadData)
+
 onUnmounted(() => clearTimeout(debounceTimer))
 </script>
 <template>
@@ -121,8 +130,12 @@ onUnmounted(() => clearTimeout(debounceTimer))
           class="ml-auto"/>
       </div>
       <ItemsPaging
+        v-model="paging.index"
+        :total="paging.count"
+        :limit="paging.limit"
         :loading
-        :total="10">
+        :hide-pagination="!!search_query.trim()"
+      >
         <p
           v-if="search_query.trim() && !searching && displayedCustomers.length === 0"
           class="text-dimmed text-sm">

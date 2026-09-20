@@ -1,4 +1,4 @@
-import type { Customer } from '~~/shared/types'
+import type { Customer, PagingMetadata, QueryPageParams } from '~~/shared/types'
 import { apiRequest, orgRoute } from '.'
 
 export type CustomerBody = {
@@ -9,14 +9,16 @@ export type CustomerBody = {
   document: string | null
 }
 
-export async function getCustomers(org_id: string): Promise<{ customers: Customer[] }>
+export async function getCustomers(org_id: string, params: QueryPageParams): Promise<{ customers: Customer[], page: PagingMetadata }>
 export async function getCustomers(org_id: string, id: string): Promise<{ customer: Customer }>
-export async function getCustomers (org_id: string, id?: string) {
+export async function getCustomers (org_id: string, idOrParams: string | QueryPageParams) {
 
-  if (!id) {
-    return await apiRequest<{ customers: Customer[] }>(orgRoute(org_id) + '/customers')
+  if (typeof idOrParams === 'string') {
+    return await apiRequest<{ customer: Customer }>(orgRoute(org_id) + `/customers/${idOrParams}`)
   }
-  return await apiRequest<{ customer: Customer }>(orgRoute(org_id) + `/customers/${id}`)
+  return await apiRequest<{ customers: Customer[], page: PagingMetadata }>(orgRoute(org_id) + '/customers', {
+    query: idOrParams
+  })
 }
 
 export async function searchCustomers (org_id: string, query: string) {
