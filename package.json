@@ -7,6 +7,7 @@
     "dev": "nuxt dev",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "seed": "tsx --tsconfig .nuxt/tsconfig.server.json server/seed/run.ts",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck"
   },
@@ -26,8 +27,10 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@adonisjs/hash": "^9.1.1",
     "@nuxt/eslint": "^1.17.0",
     "eslint": "^10.8.1",
+    "tsx": "^4.23.13",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.9"
   },

@@ -35,6 +35,22 @@ Make sure to install the dependencies:
 pnpm install
 ```
 
+## Database, storage and demo data
+
+Postgres and MinIO (S3) run from the compose file; the defaults in `.env.example` match it, so no extra configuration is needed:
+
+```bash
+cp .env.example .env
+docker compose up -d
+pnpm seed
+```
+
+`pnpm seed` fills the database with 10 users, 3 organizations (electronics, home & kitchen, fashion) with memberships and pending invites, ~75 customers, 90 products with real photos that match each product, and 90 days of sales, cancellations and stock movements. Product photos come from [DummyJSON](https://dummyjson.com) and are cached in `.data/seed-cache`, so only the first run needs internet access.
+
+- Running it again does nothing while the seed data exists. `pnpm seed --reset` deletes only what the seeder created and builds it again (your own data is never touched); it is also how you refresh the dates, since the sales are generated relative to the day you run it.
+- It refuses to run with `NODE_ENV=production` unless you pass `--force`.
+- Every seeded user has the password `Password123!`, for example `ana@seed.example.com` (owner of TechNova), `felipe@seed.example.com` (employee), `julia@seed.example.com` (two pending invites) or `lucas@seed.example.com` (no organization). The full list is printed when the seeder finishes.
+
 ## Development Server
 
 Start the development server on `http://localhost:3000`:
