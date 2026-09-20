@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SaleCard from '~/components/Cards/SaleCard.vue'
 
-const { sales, loadSales } = useSales()
+const { sales, loadSales, paging } = useSales()
 const { selectedOrganizationId, selectedOrganization } = useOrganization()
 const overlay = useOverlay()
 const loading = ref(false)
@@ -16,8 +16,15 @@ async function loadData () {
 }
 
 watch(() => [selectedOrganizationId.value], async () => {
+  if (paging.value.index !== 0) {
+    paging.value.index = 0
+    return
+  }
+
   await loadData()
 })
+
+watch(() => paging.value.index, loadData)
 
 function openCard (id: string) {
   overlay.create(SaleCard, { props: { saleId: id } }).open()
@@ -52,7 +59,12 @@ function openCard (id: string) {
       </div>
     </template>
     <template v-else>
-      <Loadable :loading>
+      <ItemsPaging
+        v-model="paging.index"
+        :total="paging.count"
+        :limit="paging.limit"
+        :loading
+      >
         <p
           v-if="sales.length === 0"
           class="text-dimmed text-sm">
@@ -71,7 +83,7 @@ function openCard (id: string) {
             </template>
           </div>
         </template>
-      </Loadable>
+      </ItemsPaging>
     </template>
   </UContainer>
 </template>

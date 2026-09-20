@@ -1,4 +1,4 @@
-import type { Sale } from '~~/shared/types'
+import type { PagingMetadata, Sale } from '~~/shared/types'
 import { apiRequest, orgRoute } from '.'
 
 export type SaleLineBody = {
@@ -13,12 +13,29 @@ export type SaleBody = {
   products: SaleLineBody[]
 }
 
-export async function getSales(org_id: string): Promise<{ sales: Sale[] }>
-export async function getSales(org_id: string, id: string): Promise<{ sale: Sale }>
-export async function getSales (org_id: string, id?: string) {
+export type QueryParams = {
+  limit: number
+  index: number
+}
+
+const defaultParams: QueryParams = {
+  limit: 25,
+  index: 0
+}
+
+export async function getSales(org_id: string, params: QueryParams): Promise<{ sales: Sale[], page: PagingMetadata }>
+export async function getSales(org_id: string, id: string, params: QueryParams): Promise<{ sale: Sale }>
+export async function getSales (org_id: string, idOrParams?: string | QueryParams, params: QueryParams = defaultParams) {
+  const id = typeof idOrParams === 'string' ? idOrParams : undefined
+
+  if (typeof idOrParams !== 'string' && idOrParams) {
+    params = idOrParams
+  }
 
   if (!id) {
-    return await apiRequest<{ sales: Sale[] }>(orgRoute(org_id) + '/sales')
+    return await apiRequest<{ sales: Sale[], page: PagingMetadata }>(orgRoute(org_id) + '/sales', {
+      query: params
+    })
   }
   return await apiRequest<{ sale: Sale }>(orgRoute(org_id) + `/sales/${id}`)
 }

@@ -94,3 +94,10 @@ export type SaleLine = {
 }
 
 export type DisplayType = 'list' | 'grid'
+
+export type PagingMetadata = {
+  count: number
+  limit: number
+  index: number
+  pages: number
+}

@@ -1,21 +1,21 @@
-import z from 'zod'
 import { Sale } from '~~/server/database/models/Sale'
 import { SaleItem } from '~~/server/database/models/SaleItem'
 import { organizationAccessValidation } from '~~/server/utils/accessValidation'
-
-const searchQuerySchema = z.object({
-})
+import { getPagingParams, makePage } from '~~/server/utils/paging'
 
 export default defineEventHandler(async (event) => {
   const { organization } = await organizationAccessValidation(event)
 
-  const { data } = parseQuery(event, searchQuerySchema)
-
-  const sales = await Sale.findAll({
-    where: { organization_id: organization.id, ...data },
+  const paging = getPagingParams(event)
+  
+  const { count, rows: sales } = await Sale.findAndCountAll({
+    where: { organization_id: organization.id },
     include: [{ model: SaleItem, as: 'sale_items' }],
     order: [['createdAt', 'DESC']],
+    limit: paging.limit,
+    offset: paging.index,
+    distinct: true
   })
 
-  return { sales }
+  return { sales, page: makePage(count, paging) }
 })

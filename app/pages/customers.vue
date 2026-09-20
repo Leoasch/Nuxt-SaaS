@@ -120,7 +120,9 @@ onUnmounted(() => clearTimeout(debounceTimer))
           v-model="displayType"
           class="ml-auto"/>
       </div>
-      <Loadable :loading>
+      <ItemsPaging
+        :loading
+        :total="10">
         <p
           v-if="search_query.trim() && !searching && displayedCustomers.length === 0"
           class="text-dimmed text-sm">
@@ -157,7 +159,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
             />
           </div>
         </div>
-      </Loadable>
+      </ItemsPaging>
     </template>
   </UContainer>
 </template>
