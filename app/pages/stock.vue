@@ -2,7 +2,7 @@
 import StockMovementItem from '~/components/StockMovementItem.vue'
 import StockMovementCard from '~/components/Cards/StockMovementCard.vue'
 
-const { stock, loadStock, productFilter } = useStock()
+const { stock, loadStock, productFilter, paging } = useStock()
 const { selectedOrganizationId, selectedOrganization } = useOrganization()
 const overlay = useOverlay()
 const loading = ref(false)
@@ -29,8 +29,15 @@ watch(() => selectedOrganizationId.value, async () => {
 })
 
 watch(() => [productFilter.value, selectedOrganizationId.value], async () => {
+  if (paging.value.index !== 0) {
+    paging.value.index = 0
+    return
+  }
+
   await loadData()
 })
+
+watch(() => paging.value.index, loadData)
 
 </script>
 <template>
@@ -65,7 +72,12 @@ watch(() => [productFilter.value, selectedOrganizationId.value], async () => {
         v-model="productFilter"
         class="w-100 max-w-full mb-4"
       />
-      <Loadable :loading>
+      <ItemsPaging
+        v-model="paging.index"
+        :total="paging.count"
+        :limit="paging.limit"
+        :loading
+      >
         <p
           v-if="stock.length === 0"
           class="text-dimmed text-sm">
@@ -83,7 +95,7 @@ watch(() => [productFilter.value, selectedOrganizationId.value], async () => {
             />
           </template>
         </div>
-      </Loadable>
+      </ItemsPaging>
     </template>
   </UContainer>
 </template>
