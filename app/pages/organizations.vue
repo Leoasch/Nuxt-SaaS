@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import OrganizationCard from '~/components/Cards/OrganizationCard.vue'
-
-const { organizations, loadOrganizations } = useOrganization()
-const overlay = useOverlay()
+const { organizations, loadOrganizations, paging } = useOrganization()
 const loading = ref(false)
 
 async function loadData () {
@@ -14,13 +11,11 @@ async function loadData () {
   }
 }
 
-function openOrganizationCard (id: string) {
-  overlay.create(OrganizationCard, { props: { organizationId: id } }).open()
-}
+watch(() => paging.value.index, loadData)
 
 </script>
 <template>
-  <UContainer>
+  <UContainer class="size-full flex flex-col">
     <div class="flex">
       <h1 class="font-bold text-2xl">{{ $t('organizations') }}</h1>
       <UButton
@@ -36,7 +31,12 @@ function openOrganizationCard (id: string) {
       <CreateOrganizationBtn class="ml-auto mr-2"/>
     </div>
     <USeparator class="py-3"/>
-    <Loadable :loading>
+    <ItemsPaging
+      v-model="paging.index"
+      :total="paging.count"
+      :limit="paging.limit"
+      :loading
+    >
       <p
         v-if="organizations.length === 0"
         class="text-dimmed text-sm">
@@ -50,10 +50,10 @@ function openOrganizationCard (id: string) {
           :key="organization.id">
           <OrganizationItem
             :organization
-            @click="() => openOrganizationCard(organization.id)"
+            @click="() => navigateTo(`/organization/${organization.id}`)"
           />
         </template>
       </div>
-    </Loadable>
+    </ItemsPaging>
   </UContainer>
 </template>

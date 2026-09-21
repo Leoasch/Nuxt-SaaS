@@ -5,12 +5,17 @@ import { organizationAccessValidation } from '~~/server/utils/accessValidation'
 export default defineEventHandler(async (event) => {
   const { organization } = await organizationAccessValidation(event)
 
-  const products = await Product.findAll({
+  const paging = getPagingParams(event)
+  
+  const { count, rows: products } = await Product.findAndCountAll({
     where: { organization_id: organization.id },
     order: [['createdAt', 'ASC']],
-    include: { model: ProductImage, as: 'images', attributes: ['id'] }
+    include: { model: ProductImage, as: 'images', attributes: ['id'] },
+    limit: paging.limit,
+    offset: paging.index,
+    distinct: true
   })
 
 
-  return { products }
+  return { products, page: makePage(count, paging) }
 })

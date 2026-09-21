@@ -17,6 +17,7 @@ const members = ref<Membership[]>([])
 const loading = ref<boolean>(false)
 const overlay = useOverlay()
 const { user } = useUserSession()
+const { loadOrganizations, paging } = useOrganization()
 
 async function loadOrganization () {
   if (org_id) {
@@ -82,7 +83,10 @@ async function deleteOrganizationForm () {
   }).open()
   if (await dialog.result) {
     const result = await deleteOrganization(organization.value.id)
+
     if (result.organization) {
+      paging.value.index = 0
+      await loadOrganizations()
       navigateTo('/organizations')
     }
   }

@@ -12,13 +12,25 @@ export type InviteMemberBody = {
   role: Role
 }
 
-export async function getOrganizations (): Promise<{ organizations: Organization[] }>
+export async function getOrganizations(params: QueryPageParams): Promise<{ organizations: Organization[], page: PagingMetadata }>
 export async function getOrganizations (id: string): Promise<{ organization: Organization }>
-export async function getOrganizations (id?: string) {
-  if (!id) {
-    return await apiRequest<{ organizations: Organization[] }>('/organizations')
+export async function getOrganizations (idOrParams: string | QueryPageParams) {
+  if (typeof idOrParams === 'string') {
+    return await apiRequest<{ organization: Organization }>(orgRoute(idOrParams))
   }
-  return await apiRequest<{ organization: Organization }>(orgRoute(id))
+  return await apiRequest < { organizations: Organization[], page: PagingMetadata }>('/organizations', {
+    query: idOrParams
+  })
+}
+
+export async function searchOrganizations (query: string) {
+  return await apiRequest<{ organizations: Organization[] }>('/organizations/search', {
+    query: { q: query }
+  })
+}
+
+export async function getOwnedOrganizations () {
+  return await apiRequest<{ organizations: Organization[] }>('/organizations/owned')
 }
 
 export async function postOrganization (body: OrganizationBody) {

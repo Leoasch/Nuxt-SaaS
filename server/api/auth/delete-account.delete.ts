@@ -1,11 +1,11 @@
 import { z } from 'zod'
 import { sequelize } from '~~/server/database'
-import { Organization } from '~~/server/database/models/Organization'
 import { OrganizationMember } from '~~/server/database/models/OrganizationMember'
 import { Sale } from '~~/server/database/models/Sale'
 import { StockMovement } from '~~/server/database/models/StockMovements'
 import { User } from '~~/server/database/models/User'
 import { parseBody } from '~~/server/utils/accessValidation'
+import { findOwnedOrganizations } from '~~/server/utils/ownedOrganizations'
 import { deleteObject } from '~~/server/utils/storage'
 
 const deleteAccountSchema = z.object({
@@ -42,15 +42,9 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const ownedMemberships = await OrganizationMember.findAll({
-    where: { user_id: user.id, role: 'OWNER' }
-  })
+  const ownedOrganizations = await findOwnedOrganizations(user.id)
 
-  if (ownedMemberships.length > 0) {
-    const ownedOrganizations = await Organization.findAll({
-      where: { id: ownedMemberships.map(membership => membership.organization_id) }
-    })
-
+  if (ownedOrganizations.length > 0) {
     throw createError({
       statusCode: 405,
       statusMessage: 'Transfer ownership or delete these organizations before deleting your account.',

@@ -12,14 +12,15 @@ export type ProductBody = {
   minimum_stock: number;
 }
 
-export async function getProducts(org_id: string): Promise<{ products: Product[] }>
+export async function getProducts(org_id: string, params: QueryPageParams): Promise<{ products: Product[], page: PagingMetadata }>
 export async function getProducts(org_id: string, id: string): Promise<{ product: Product }>
-export async function getProducts (org_id: string, id?: string) {
-
-  if (!id) {
-    return await apiRequest<{ products: Product[] }>(orgRoute(org_id) + '/products')
+export async function getProducts (org_id: string, idOrParams: string | QueryPageParams) {
+  if (typeof idOrParams === 'string') {
+    return await apiRequest<{ product: Product }>(orgRoute(org_id) + `/products/${idOrParams}`)
   }
-  return await apiRequest<{ product: Product }>(orgRoute(org_id) + `/products/${id}`)
+  return await apiRequest<{ products: Product[], page: PagingMetadata }>(orgRoute(org_id) + '/products', {
+    query: idOrParams
+  })
 }
 
 export async function searchProducts (org_id: string, query: string) {

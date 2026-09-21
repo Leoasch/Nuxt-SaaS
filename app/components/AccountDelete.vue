@@ -1,14 +1,24 @@
 <script setup lang="ts">
+import { getOwnedOrganizations } from '~/api/organization'
 import ConfirmDeleteAccountDialog from '~/components/ConfirmDeleteAccountDialog.vue'
 
-const { organizations } = useOrganization()
 const { clear } = useUserSession()
 const overlay = useOverlay()
+const loading = ref(false)
+
+async function loadBlockingOrganizations () {
+  try {
+    const result = await getOwnedOrganizations()
+    return result.organizations.map(org => org.name)
+  } catch {
+    return []
+  }
+}
 
 async function handleDelete () {
-  const blockingOrganizations = organizations.value
-    .filter(org => org.role === 'OWNER' && org.is_member)
-    .map(org => org.name)
+  loading.value = true
+  const blockingOrganizations = await loadBlockingOrganizations()
+  loading.value = false
 
   const dialog = overlay.create(ConfirmDeleteAccountDialog, {
     props: { blockingOrganizations }
@@ -26,15 +36,14 @@ async function handleDelete () {
 </script>
 
 <template>
-  <div>
-    <UButton
-      color="error"
-      variant="subtle"
-      icon="lucide:trash-2"
-      class="cursor-pointer"
-      @click="handleDelete"
-    >
-      {{ $t('account.delete_button') }}
-    </UButton>
-  </div>
+  <UButton
+    color="error"
+    variant="subtle"
+    icon="lucide:trash-2"
+    class="cursor-pointer"
+    :loading="loading"
+    @click="handleDelete"
+  >
+    {{ $t('account.delete_button') }}
+  </UButton>
 </template>

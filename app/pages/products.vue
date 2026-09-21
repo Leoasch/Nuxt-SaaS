@@ -5,7 +5,7 @@ import type { DisplayType, Product } from '~~/shared/types'
 
 const DEBOUNCE_MS = 300
 
-const { products, loadProducts } = useProducts()
+const { products, loadProducts, paging } = useProducts()
 const { selectedOrganizationId, selectedOrganization } = useOrganization()
 const overlay = useOverlay()
 const loading = ref(false)
@@ -23,10 +23,17 @@ async function loadData () {
   }
 }
 
-watch(() => selectedOrganizationId.value, async () => {
+watch(() => [selectedOrganizationId.value], async () => {
   search_query.value = ''
+  if (paging.value.index !== 0) {
+    paging.value.index = 0
+    return
+  }
+
   await loadData()
 })
+
+watch(() => paging.value.index, loadData)
 
 const displayType = ref<DisplayType>('list')
 
@@ -121,7 +128,12 @@ onUnmounted(() => clearTimeout(debounceTimer))
           v-model="displayType"
           class="ml-auto"/>
       </div>
-      <Loadable :loading>
+      <ItemsPaging
+        v-model="paging.index"
+        :total="paging.count"
+        :limit="paging.limit"
+        :loading
+      >
         <p
           v-if="search_query.trim() && !searching && displayedProducts.length === 0"
           class="text-dimmed text-sm">
@@ -148,7 +160,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
             />
           </template>
         </div>
-      </Loadable>
+      </ItemsPaging>
     </template>
   </UContainer>
 </template>

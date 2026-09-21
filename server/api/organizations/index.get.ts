@@ -22,11 +22,17 @@ export default defineEventHandler(async (event) => {
     }])
   )
 
-  const organizations = await Organization.findAll({
-    where: { id: [...roleByOrganizationId.keys()] }
+  const paging = getPagingParams(event)
+
+  const { count, rows: organizations } = await Organization.findAndCountAll({
+    where: { id: [...roleByOrganizationId.keys()] },
+    order: [['createdAt', 'ASC']],
+    limit: paging.limit,
+    offset: paging.index,
   })
 
   return {
+    page: makePage(count, paging),
     organizations: organizations
       .map(organization => ({
         id: organization.id,
