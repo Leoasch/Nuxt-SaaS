@@ -17,6 +17,16 @@ export default function useFormErrors<Field extends string, TopKey extends strin
   }
 
   function handleError (error: any) {
+    for (const field of fields) {
+      bag[field] = undefined
+    }
+
+    if (error?.statusCode === 429) {
+      const retryAfter = error?.data?.retryAfter
+      bag[topKey] = retryAfter ? `${t('errors.RATE_LIMITED')} (${retryAfter}s)` : t('errors.RATE_LIMITED')
+      return
+    }
+
     const fieldErrors = error?.data?.data?.fields
     const code = error?.data?.data?.code
 

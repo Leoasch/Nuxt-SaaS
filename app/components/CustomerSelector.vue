@@ -10,7 +10,6 @@ const customer_id = defineModel<string | null>({ default: null })
 const emit = defineEmits<{ select: [customer: Customer | null] }>()
 const { selectedOrganizationId } = useOrganization()
 
-// Own list instead of the customers page's shared one, which only holds whichever page is open there.
 const defaultCustomers = ref<Customer[]>([])
 const searchedCustomers = ref<Customer[]>([])
 const selectedCustomer = ref<Customer | null>(null)

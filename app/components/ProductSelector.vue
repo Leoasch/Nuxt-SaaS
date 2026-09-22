@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { searchProducts } from '~/api/products'
+import { getProducts, searchProducts } from '~/api/products'
 import type { Product } from '~~/shared/types'
 
 const DEBOUNCE_MS = 300
@@ -9,8 +9,8 @@ const search_query = ref('')
 const product_id = defineModel<string | null>({ default: null })
 const emit = defineEmits<{ select: [product: Product | null] }>()
 const { selectedOrganizationId } = useOrganization()
-const { products, loadProducts } = useProducts()
 
+const defaultProducts = ref<Product[]>([])
 const searchedProducts = ref<Product[]>([])
 const selectedProduct = ref<Product | null>(null)
 const loading = ref(false)
@@ -18,10 +18,21 @@ const open = ref(false)
 
 const displayedProducts = computed(() => search_query.value.trim()
   ? searchedProducts.value
-  : products.value.slice(0, DEFAULT_LIMIT))
+  : defaultProducts.value)
 
 let debounceTimer: ReturnType<typeof setTimeout> | undefined
 let requestId = 0
+
+async function loadDefaultProducts () {
+  if (!selectedOrganizationId.value) {
+    defaultProducts.value = []
+    return
+  }
+
+  const result = await getProducts(selectedOrganizationId.value, { index: 0, limit: DEFAULT_LIMIT })
+
+  defaultProducts.value = result.products
+}
 
 async function search () {
   if (!selectedOrganizationId.value) {
@@ -59,8 +70,10 @@ watch(search_query, (value) => {
 watch(() => selectedOrganizationId.value, async () => {
   selectedProduct.value = null
   searchedProducts.value = []
-  await loadProducts()
+  await loadDefaultProducts()
 })
+
+onMounted(() => loadDefaultProducts().catch(() => {}))
 
 function select (product: Product) {
   product_id.value = product.id
