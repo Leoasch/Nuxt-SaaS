@@ -23,7 +23,6 @@ export default function () {
       if (result?.page) {
         paging.value = result.page
 
-        // The requested page no longer exists (e.g. its last customer was deleted): go back to the last one.
         if (result.customers.length === 0 && result.page.count > 0) {
           paging.value.index = (result.page.pages - 1) * result.page.limit
         }

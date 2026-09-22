@@ -10,7 +10,9 @@
       </div>
       <div class="p-4">
         <h1 class="text-2xl font-bold mb-1">{{ $t('security.account') }}</h1>
-        <AccountDelete class="p-2"/>
+        <div class="p-2">
+          <AccountDelete/>
+        </div>
       </div>
     </PageSection>
   </UContainer>
