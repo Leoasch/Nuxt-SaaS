@@ -13,6 +13,8 @@ const { errors, resetErrors, handleError } = useFormErrors(['email', 'password']
 const { fetch: fetchSession } = useUserSession()
 
 async function handleLogin () {
+  console.log('handleLogin')
+  
   resetErrors()
 
   try {
@@ -27,6 +29,13 @@ async function handleLogin () {
     handleError(error)
   }
 }
+
+defineShortcuts({
+  enter: {
+    usingInput: true,
+    handler: () => handleLogin()
+  },
+})
 </script>
 
 <template>
@@ -40,17 +49,29 @@ async function handleLogin () {
         <UInput
           v-model="email"
           placeholder="example@gmail.com"
-          class="w-full"/>
+          class="w-full"
+          :ui="{
+            base: 'p-3'
+          }"
+        />
       </UFormField>
       <UFormField
         :label="$t('password')"
         class="w-1/2"
         :error="errors.password">
-        <PasswordInput v-model="password"/>
+        <PasswordInput
+          v-model="password"
+          class="w-full"
+          :ui="{
+            base: 'p-3'
+          }"/>
       </UFormField>
-      <div class="w-1/2 flex">
+      <div class="w-1/2 flex sm:flex-row flex-col">
         <ULink
-          class="ml-auto mr-0 cursor-pointer"
+          class="sm:mr-auto sm:ml-0 cursor-pointer"
+          to="/auth/forgot-password">{{ $t('forgot_password_link') }}</ULink>
+        <ULink
+          class="sm:ml-auto sm:mr-0 cursor-pointer"
           to="/auth/register">{{ $t('register_invite') }}</ULink>
       </div>
       <UFormField :error="errors.login">

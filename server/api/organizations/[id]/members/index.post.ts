@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { OrganizationMember } from '~~/server/database/models/OrganizationMember'
 import { User } from '~~/server/database/models/User'
 import { organizationAccessValidation, parseBody } from '~~/server/utils/accessValidation'
+import { sendMail } from '~~/server/utils/mailer'
 
 const addMemberSchema = z.object({
   user_id: z.string(),
@@ -9,7 +10,7 @@ const addMemberSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  const { organization, membership } = await organizationAccessValidation(event, ['MANAGER'])
+  const { organization, membership, user: inviter } = await organizationAccessValidation(event, ['MANAGER'])
 
   const result = await parseBody(event, addMemberSchema)
 
@@ -57,6 +58,18 @@ export default defineEventHandler(async (event) => {
     role,
     user_id
   })
+
+  try {
+    const config = useRuntimeConfig()
+    const rendered = await renderEmail('OrganizationInvite', {
+      organizationName: organization.name,
+      inviterName: inviter.name,
+      loginUrl: `${config.appUrl}/auth/login`
+    })
+    await sendMail(user.email, { subject: rendered.subject ?? `You've been invited to join ${organization.name}`, html: rendered.html, text: rendered.text })
+  } catch (error) {
+    console.error('Failed to send organization invite email', error)
+  }
 
   return { membership: newMembership }
 })

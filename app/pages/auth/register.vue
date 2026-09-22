@@ -34,6 +34,12 @@ async function handleRegister () {
     handleError(error)
   }
 }
+
+defineShortcuts({
+  enter: {
+    handler: () => handleRegister()
+  },
+})
 </script>
 
 <template>
@@ -47,7 +53,11 @@ async function handleRegister () {
         <UInput
           v-model="name"
           placeholder="Jane Doe"
-          class="w-full"/>
+          class="w-full"
+          :ui="{
+            base: 'p-3'
+          }"
+        />
       </UFormField>
       <UFormField
         :label="$t('email')"
@@ -56,19 +66,35 @@ async function handleRegister () {
         <UInput
           v-model="email"
           placeholder="example@gmail.com"
-          class="w-full"/>
+          class="w-full"
+          :ui="{
+            base: 'p-3'
+          }"
+        />
       </UFormField>
       <UFormField
         :label="$t('password')"
         class="w-1/2"
         :error="errors.password">
-        <PasswordInput v-model="password"/>
+        <PasswordInput
+          v-model="password" 
+          class="w-full"
+          :ui="{
+            base: 'p-3'
+          }"
+        />
       </UFormField>
       <UFormField
         :label="$t('repeat_password')"
         class="w-1/2"
         :error="errors.repeatPassword">
-        <PasswordInput v-model="repeatPassword"/>
+        <PasswordInput
+          v-model="repeatPassword"
+          class="w-full"
+          :ui="{
+            base: 'p-3'
+          }"
+        />
       </UFormField>
       <div class="w-1/2 flex">
         <ULink

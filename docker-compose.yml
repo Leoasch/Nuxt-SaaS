@@ -25,3 +25,10 @@ services:
             - "9001:9001"
         volumes:
             - ./minio-data:/data
+
+    mailpit:
+        image: axllent/mailpit:v1.31.2
+        restart: unless-stopped
+        ports:
+            - "1025:1025"
+            - "8025:8025"

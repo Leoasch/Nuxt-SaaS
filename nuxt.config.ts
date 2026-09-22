@@ -5,7 +5,8 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxtjs/i18n',
     'nuxt-auth-utils',
-    'nuxt-api-shield'
+    'nuxt-api-shield',
+    '@lupinum/nuxt-email'
   ],
 
   devtools: {
@@ -25,6 +26,13 @@ export default defineNuxtConfig({
     s3Bucket: '',
     s3AccessKeyId: '',
     s3SecretAccessKey: '',
+    mailHost: '',
+    mailPort: 1025,
+    mailSecure: false,
+    mailUser: '',
+    mailPassword: '',
+    mailFrom: 'no-reply@nuxt-saas.local',
+    appUrl: 'http://localhost:3000',
     public: {
       nuxtApiShield: {
         security: {
@@ -55,6 +63,8 @@ export default defineNuxtConfig({
       { path: '/api/auth/register', max: 5, duration: 60, ban: 900 },
       { path: '/api/auth/change-password', max: 5, duration: 60, ban: 900 },
       { path: '/api/auth/delete-account', max: 5, duration: 60, ban: 900 },
+      { path: '/api/auth/forgot-password', max: 5, duration: 60, ban: 900 },
+      { path: '/api/auth/reset-password', max: 5, duration: 60, ban: 900 },
       { path: '/api' },
     ],
   },

@@ -12,6 +12,8 @@ export class User extends Model<
   declare passwordHash: string
   declare avatarKey: string | null
   declare avatarUrl: string | null
+  declare resetPasswordTokenHash: string | null
+  declare resetPasswordTokenExpiresAt: Date | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 }
@@ -46,6 +48,16 @@ User.init(
       get (this: User) {
         return this.avatarKey ? `/api/users/${this.id}/avatar?v=${this.updatedAt.getTime()}` : null
       }
+    },
+    resetPasswordTokenHash: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null
+    },
+    resetPasswordTokenExpiresAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE

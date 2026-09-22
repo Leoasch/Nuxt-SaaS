@@ -12,83 +12,95 @@ const user = ref({
   name: sessionUser.value?.name,
 })
 
-const userItems = computed<DropdownMenuItem[][]>(() => [
-  [
-    {
-      label: $t('profile'),
-      icon: 'i-lucide-user',
-      to: `/user/${sessionUser.value?.id}`
-    },
-    {
-      label: $t('settings'),
-      icon: 'i-lucide-settings',
-      to: '/settings'
-    }
-  ],
-  [
-    {
-      label: $t('theme'),
-      icon: 'i-lucide-sun-moon',
-      children: [
-        THEME_PRESETS.map(preset => ({
-          label: $t(preset.label),
-          type: 'checkbox' as const,
-          checked: isPresetActive(preset.colors),
+const route = useRoute()
+
+const isSettingsRoute = computed(() => route.name === 'settings')
+
+const accountItems = computed<DropdownMenuItem[]>(() => [
+  {
+    label: $t('profile'),
+    icon: 'i-lucide-user',
+    to: `/user/${sessionUser.value?.id}`
+  },
+  {
+    label: $t('settings'),
+    icon: 'i-lucide-settings',
+    onSelect: () => navigateTo('/settings'),
+    class: 'cursor-pointer',
+    active: isSettingsRoute.value
+  }
+])
+
+const themeGroup = computed<DropdownMenuItem[]>(() => [
+  {
+    label: $t('theme'),
+    icon: 'i-lucide-sun-moon',
+    children: [
+      THEME_PRESETS.map(preset => ({
+        label: $t(preset.label),
+        type: 'checkbox' as const,
+        checked: isPresetActive(preset.colors),
+        onUpdateChecked (checked: boolean) {
+          if (checked) {
+            applyPreset(preset.colors)
+          }
+        },
+        onSelect (e: Event) {
+          e.preventDefault()
+        }
+      })),
+      [
+        {
+          label: $t('theme.mode.light'),
+          icon: 'i-lucide-sun',
+          type: 'checkbox',
+          checked: colorMode.value === 'light',
           onUpdateChecked (checked: boolean) {
             if (checked) {
-              applyPreset(preset.colors)
+              colorMode.preference = 'light'
             }
           },
           onSelect (e: Event) {
             e.preventDefault()
           }
-        })),
-        [
-          {
-            label: $t('theme.mode.light'),
-            icon: 'i-lucide-sun',
-            type: 'checkbox',
-            checked: colorMode.value === 'light',
-            onUpdateChecked (checked: boolean) {
-              if (checked) {
-                colorMode.preference = 'light'
-              }
-            },
-            onSelect (e: Event) {
-              e.preventDefault()
+        },
+        {
+          label: $t('theme.mode.dark'),
+          icon: 'i-lucide-moon',
+          type: 'checkbox',
+          checked: colorMode.value === 'dark',
+          onUpdateChecked (checked: boolean) {
+            if (checked) {
+              colorMode.preference = 'dark'
             }
           },
-          {
-            label: $t('theme.mode.dark'),
-            icon: 'i-lucide-moon',
-            type: 'checkbox',
-            checked: colorMode.value === 'dark',
-            onUpdateChecked (checked: boolean) {
-              if (checked) {
-                colorMode.preference = 'dark'
-              }
-            },
-            onSelect (e: Event) {
-              e.preventDefault()
-            }
+          onSelect (e: Event) {
+            e.preventDefault()
           }
-        ]
+        }
       ]
-    }
-  ],
-  [
-    {
-      label: 'GitHub',
-      icon: 'i-simple-icons-github',
-      to: 'https://github.com/Leoasch/Nuxt-SaaS',
-      target: '_blank'
-    },
-    {
-      label: $t('logout'),
-      icon: 'i-lucide-log-out',
-      onSelect: handleLogout
-    }
-  ]
+    ]
+  }
+])
+
+const miscItems = computed<DropdownMenuItem[]>(() => [
+  {
+    label: 'GitHub',
+    icon: 'i-simple-icons-github',
+    to: 'https://github.com/Leoasch/Nuxt-SaaS',
+    target: '_blank'
+  },
+  {
+    label: $t('logout'),
+    icon: 'i-lucide-log-out',
+    onSelect: handleLogout
+  }
+])
+
+const userItems = computed<DropdownMenuItem[][]>(() => [
+  accountItems.value,
+  themeGroup.value,
+  miscItems.value
 ])
 
 function getItems () {

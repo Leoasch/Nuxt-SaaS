@@ -67,19 +67,25 @@ watch(() => formOpen.value, (newVal) => {
         :label="$t('security.old_password')" 
         :error="errors.oldPassword"
       >
-        <PasswordInput v-model="form.oldPassword"/>
+        <PasswordInput
+          v-model="form.oldPassword"
+          class="w-full"/>
       </UFormField>
       <UFormField 
         :label="$t('security.new_password')"
         :error="errors.newPassword"  
       >
-        <PasswordInput v-model="form.newPassword"/>
+        <PasswordInput
+          v-model="form.newPassword"
+          class="w-full"/>
       </UFormField>
       <UFormField 
         :label="$t('security.repeat_new_password')"
         :error="errors.repeatNewPassword"  
       >
-        <PasswordInput v-model="form.repeatNewPassword"/>
+        <PasswordInput
+          v-model="form.repeatNewPassword"
+          class="w-full"/>
       </UFormField>
 
       <UFormField :error="errors.changePassword">

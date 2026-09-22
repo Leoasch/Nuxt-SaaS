@@ -19,11 +19,8 @@ export default function () {
   }
 
   function persist (colors: ThemeColors) {
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(colors))
-    } catch {
-      // localStorage unavailable (private mode, blocked storage) - theme still applies for this session
-    }
+    const cookie = useCookie<ThemeColors>(THEME_STORAGE_KEY, { maxAge: 60 * 60 * 24 * 365 })
+    cookie.value = colors
   }
 
   function applyPreset (colors: ThemeColors) {
