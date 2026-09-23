@@ -2,6 +2,9 @@
 import type { ChangePasswordBody } from '~/api/auth'
 import { updatePassword } from '~/api/auth'
 
+const { user, fetch: fetchSession } = useUserSession()
+const hasPassword = computed(() => user.value?.hasPassword !== false)
+
 const formOpen = ref(false)
 const loading = ref(false)
 const displaySuccessMessage = ref(false)
@@ -21,6 +24,7 @@ async function changePassword () {
     if (result.success) {
       formOpen.value = false
       displaySuccessMessage.value = true
+      await fetchSession()
     }
   } catch (error: any) {
     handleError(error)
@@ -51,7 +55,7 @@ watch(() => formOpen.value, (newVal) => {
         icon="lucide:key-round"
         @click="formOpen = true"
       >
-        {{ $t('security.change_password') }}
+        {{ hasPassword ? $t('security.change_password') : $t('security.set_password') }}
       </UButton>
       <div
         v-if="displaySuccessMessage"
@@ -63,8 +67,9 @@ watch(() => formOpen.value, (newVal) => {
     <UForm
       v-else
       class="flex max-w-sm flex-col gap-4">
-      <UFormField 
-        :label="$t('security.old_password')" 
+      <UFormField
+        v-if="hasPassword"
+        :label="$t('security.old_password')"
         :error="errors.oldPassword"
       >
         <PasswordInput

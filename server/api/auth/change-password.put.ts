@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { parseBody } from '~~/server/utils/accessValidation'
 
 const changePasswordSchema = z.object({
-  oldPassword: z.string(),
+  oldPassword: z.string().optional(),
   newPassword: z.string().min(8).max(128),
   repeatNewPassword: z.string()
 }).refine(
@@ -34,18 +34,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const passwordValid = await verifyPassword(
-    user.passwordHash,
-    oldPassword
-  )
+  if (user.passwordHash) {
+    const passwordValid = !!oldPassword && await verifyPassword(user.passwordHash, oldPassword)
 
-  if (!passwordValid) {
-    throw createError({
-      statusCode: 401,
-      data: {
-        code: 'AUTH_INVALID_CREDENTIALS'
-      }
-    })
+    if (!passwordValid) {
+      throw createError({
+        statusCode: 401,
+        data: {
+          code: 'AUTH_INVALID_CREDENTIALS'
+        }
+      })
+    }
   }
 
   const passwordHash = await hashPassword(newPassword)
@@ -56,7 +55,8 @@ export default defineEventHandler(async (event) => {
     user: {
       id: user.id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      hasPassword: true
     }
   })
 

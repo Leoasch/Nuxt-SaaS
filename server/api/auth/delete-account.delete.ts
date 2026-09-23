@@ -31,6 +31,16 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (!user.passwordHash) {
+    throw createError({
+      statusCode: 405,
+      statusMessage: 'Set a password before deleting your account.',
+      data: {
+        code: 'ACCOUNT.PASSWORD_REQUIRED',
+      },
+    })
+  }
+
   const passwordValid = await verifyPassword(user.passwordHash, password)
 
   if (!passwordValid) {

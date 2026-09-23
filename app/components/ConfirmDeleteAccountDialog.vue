@@ -11,6 +11,9 @@ const password = ref('')
 const loading = ref(false)
 const isBlocked = computed(() => props.blockingOrganizations.length > 0)
 
+const { user } = useUserSession()
+const needsPassword = computed(() => user.value?.hasPassword === false)
+
 const { errors, resetErrors, handleError } = useFormErrors(['password'] as const, 'delete_account')
 
 async function handleConfirm () {
@@ -53,6 +56,12 @@ async function handleConfirm () {
           </ul>
         </div>
 
+        <div
+          v-else-if="needsPassword"
+          class="rounded border border-warning/50 bg-warning/10 p-3 text-sm">
+          {{ $t('account.set_password_first') }}
+        </div>
+
         <UFormField
           v-else
           :label="$t('password')"
@@ -81,7 +90,7 @@ async function handleConfirm () {
           color="error"
           class="ml-auto mr-0"
           :loading="loading"
-          :disabled="isBlocked || !password"
+          :disabled="isBlocked || needsPassword || !password"
           @click="handleConfirm"
         >
           {{ $t('account.delete_confirm') }}

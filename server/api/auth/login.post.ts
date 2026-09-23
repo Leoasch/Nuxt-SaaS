@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     where: { email }
   })
 
-  if (!user) {
+  if (!user || !user.passwordHash) {
     throw createError({
       statusCode: 401,
       data: {
@@ -43,7 +43,8 @@ export default defineEventHandler(async (event) => {
     user: {
       id: user.id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      hasPassword: true
     }
   })
 

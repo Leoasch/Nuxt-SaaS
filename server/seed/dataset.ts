@@ -86,6 +86,7 @@ export async function buildDataset (now: Date): Promise<SeedDataset> {
       email: def.email,
       passwordHash,
       avatarKey: null,
+      googleId: null,
       resetPasswordTokenHash: null,
       resetPasswordTokenExpiresAt: null,
       createdAt,

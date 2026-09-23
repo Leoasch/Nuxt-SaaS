@@ -9,7 +9,8 @@ export class User extends Model<
   declare id: CreationOptional<string>
   declare name: string
   declare email: string
-  declare passwordHash: string
+  declare passwordHash: string | null
+  declare googleId: string | null
   declare avatarKey: string | null
   declare avatarUrl: string | null
   declare resetPasswordTokenHash: string | null
@@ -31,12 +32,16 @@ User.init(
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
+      allowNull: false
     },
     passwordHash: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
+    },
+    googleId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null
     },
     avatarKey: {
       type: DataTypes.STRING,
@@ -65,6 +70,10 @@ User.init(
   {
     sequelize,
     tableName: 'users',
-    timestamps: true
+    timestamps: true,
+    indexes: [
+      { name: 'users_email_unique', unique: true, fields: ['email'] },
+      { name: 'users_google_id_unique', unique: true, fields: ['googleId'] }
+    ]
   }
 )
