@@ -11,8 +11,19 @@ export default function () {
   }))
 
   const organizations = useState<Organization[]>('organizations', () => [])
-  const selectedOrganizationId = useCookie<string | null>('selectedOrganizationId', { default: () => null })
   const selectedOrganization = useState<Organization | null>('selectedOrganization', () => null)
+
+  const { user } = useUserSession()
+  const selection = useCookie<{ userId: string, organizationId: string } | null>('organizationSelection', { default: () => null })
+  const selectedOrganizationId = computed<string | null>({
+    get: () => {
+      const current = selection.value
+      return current && user.value && current.userId === user.value.id ? current.organizationId : null
+    },
+    set: (organizationId) => {
+      selection.value = organizationId && user.value ? { userId: user.value.id, organizationId } : null
+    }
+  })
   const loadingOrganizationId = useState<string | null>('selectedOrganizationLoadingId', () => null)
 
   async function fetchOrganizations () {
