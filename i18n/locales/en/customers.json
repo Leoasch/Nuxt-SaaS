@@ -1,0 +1,36 @@
+{
+  "customer": {
+    "create": "New customer",
+    "no_customers": "No customers yet.",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "document": "Document number",
+    "title": {
+      "create": "New customer",
+      "edit": "Edit customer"
+    },
+    "save": {
+      "create": "Create customer",
+      "edit": "Save changes"
+    },
+    "card": {
+      "customer_since": "Customer since {date}"
+    },
+    "confirm_delete": {
+      "title": "Delete this customer?",
+      "description": "This permanently deletes the customer. This can't be undone."
+    },
+    "delete_success": "Customer deleted.",
+    "search": {
+      "placeholder": "Search customers",
+      "empty": "No customers found"
+    },
+    "select": {
+      "placeholder": "Search for a customer"
+    },
+    "selector": {
+      "clear": "Clear selection"
+    }
+  }
+}

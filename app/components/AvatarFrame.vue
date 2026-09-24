@@ -15,7 +15,7 @@ defineProps<{
     <img
       v-else
       :src="imageUrl"
-      alt="user-avatar"
+      :alt="$t('profile.avatar_alt', { name: text })"
       class="size-full shrink-0 object-cover rounded-full"
     >
   </div>

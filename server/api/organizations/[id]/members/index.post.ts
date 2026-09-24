@@ -3,6 +3,7 @@ import { OrganizationMember } from '~~/server/database/models/OrganizationMember
 import { User } from '~~/server/database/models/User'
 import { organizationAccessValidation, parseBody } from '~~/server/utils/accessValidation'
 import { sendMail } from '~~/server/utils/mailer'
+import { emailMessages } from '~~/shared/emails/messages'
 
 const addMemberSchema = z.object({
   user_id: z.string(),
@@ -61,12 +62,14 @@ export default defineEventHandler(async (event) => {
 
   try {
     const config = useRuntimeConfig()
+    const locale = toAppLocale(user.locale)
+    const params = { organizationName: organization.name, inviterName: inviter.name }
     const rendered = await renderEmail('OrganizationInvite', {
-      organizationName: organization.name,
-      inviterName: inviter.name,
-      loginUrl: `${config.appUrl}/auth/login`
+      ...params,
+      loginUrl: `${config.appUrl}/auth/login`,
+      locale
     })
-    await sendMail(user.email, { subject: rendered.subject ?? `You've been invited to join ${organization.name}`, html: rendered.html, text: rendered.text })
+    await sendMail(user.email, { subject: rendered.subject ?? emailMessages(locale).organizationInvite.subject(params), html: rendered.html, text: rendered.text })
   } catch (error) {
     console.error('Failed to send organization invite email', error)
   }

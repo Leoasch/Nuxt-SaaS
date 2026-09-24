@@ -29,7 +29,7 @@ const roleStyle = computed(() => ROLE_STYLES[props.organization.role])
           :icon="roleStyle.icon"
           variant="subtle"
         >
-          {{ $t(roleStyle.label) }}
+          {{ $t('role.' + organization.role) }}
         </UBadge>
         <UBadge
           color="neutral"
@@ -37,7 +37,7 @@ const roleStyle = computed(() => ROLE_STYLES[props.organization.role])
           variant="subtle"
           :class="organization.is_member ? 'invisible' : ''"
         >
-          {{ $t('pending') }}
+          {{ $t('member.pending') }}
         </UBadge>
       </div>
     </div>

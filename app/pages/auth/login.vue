@@ -46,16 +46,16 @@ defineShortcuts({
 </script>
 
 <template>
-  <div class="flex-1 flex flex-col w-full mt-5">
-    <h1 class="w-full text-center text-2xl">{{ $t('login') }}</h1>
+  <div class="flex-1 flex flex-col w-full mt-10">
+    <h1 class="w-full text-center text-2xl">{{ $t('auth.login.title') }}</h1>
     <div class="flex flex-col items-center mt-5 gap-4 w-100 max-w-full m-auto">
       <UFormField
-        :label="$t('email')"
+        :label="$t('auth.email')"
         class="w-full"
         :error="errors.email">
         <UInput
           v-model="email"
-          placeholder="example@gmail.com"
+          :placeholder="$t('auth.email_placeholder')"
           class="w-full"
           :ui="{
             base: 'p-3'
@@ -63,7 +63,7 @@ defineShortcuts({
         />
       </UFormField>
       <UFormField
-        :label="$t('password')"
+        :label="$t('auth.password')"
         class="w-full"
         :error="errors.password">
         <PasswordInput
@@ -73,23 +73,24 @@ defineShortcuts({
             base: 'p-3'
           }"/>
       </UFormField>
-      <div class="w-full flex sm:flex-row flex-col">
-        <ULink
-          class="sm:mr-auto sm:ml-0 cursor-pointer"
-          to="/auth/forgot-password">{{ $t('forgot_password_link') }}</ULink>
-        <ULink
-          class="sm:ml-auto sm:mr-0 cursor-pointer"
-          to="/auth/register">{{ $t('register_invite') }}</ULink>
-      </div>
-      <UFormField :error="errors.login ?? (oauthError ? $t('errors.' + oauthError) : undefined)">
+      <UFormField
+        :error="errors.login ?? (oauthError ? $t('errors.' + oauthError) : undefined)"
+        class="w-full">
         <div class="w-full flex">
           <UButton
-            class="m-auto"
-            @click="handleLogin">{{ $t('submit_login') }}</UButton>
+            class="m-auto w-full flex justify-center"
+            :ui="{
+              base: 'p-2.5'
+            }"
+            @click="handleLogin">{{ $t('auth.login.submit') }}</UButton>
         </div>
       </UFormField>
-      <div class="w-full">
+      <div class="w-full flex flex-col gap-4">
         <GoogleAuthButton/>
+        <div class="w-full flex flex-col items-center">
+          <ULink to="/auth/forgot-password">{{ $t('auth.login.forgot_password') }}</ULink>
+          <ULink to="/auth/register">{{ $t('auth.login.register_link') }}</ULink>
+        </div>
       </div>
     </div>
   </div>

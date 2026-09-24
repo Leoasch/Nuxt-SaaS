@@ -1,0 +1,75 @@
+{
+  "organization": {
+    "create": "New organization",
+    "no_organizations": "You're not part of any organization yet. Create one or accept an invite to get started.",
+    "name": "Name",
+    "document": "Document number",
+    "title": {
+      "create": "New organization",
+      "edit": "Edit organization"
+    },
+    "save": {
+      "create": "Create organization",
+      "edit": "Save changes"
+    },
+    "edit_organization": "Edit organization",
+    "delete_organization": "Delete organization",
+    "delete_organization_title": "Delete this organization?",
+    "delete_organization_description": "This permanently deletes the organization with all of its products, customers, sales and stock movements, and removes every member. This can't be undone.",
+    "members": "Members",
+    "no_members": "This organization has no members yet.",
+    "invite_text": "You've been invited to join this organization.",
+    "accept_invite": "Accept invite",
+    "decline_invite": "Decline invite",
+    "confirm_decline_title": "Decline this invite?",
+    "confirm_decline_description": "You won't be able to join this organization unless someone invites you again.",
+    "not_found": "This organization doesn't exist or you don't have access to it.",
+    "page": "Open page",
+    "select_button": "Select",
+    "select": {
+      "placeholder": "Select an organization"
+    },
+    "search": {
+      "empty": "No organizations found"
+    },
+    "no_pending_invites": "No pending invites"
+  },
+  "member": {
+    "pending": "Pending",
+    "profile": "View profile",
+    "alter_permission": "Change role",
+    "transfer_ownership": "Transfer ownership",
+    "cancel_invite": "Cancel invite",
+    "quit": "Leave organization",
+    "kick": "Remove member",
+    "kick_title": "Remove this member?",
+    "kick_description": "They'll lose access to this organization. You can invite them again later.",
+    "cancel_invite_title": "Cancel this invite?",
+    "cancel_invite_description": "The user won't be able to join unless they're invited again.",
+    "confirm_exit_title": "Leave this organization?",
+    "confirm_exit_description": "You'll lose access to this organization until someone invites you again.",
+    "transfer_ownership_title": "Transfer ownership?",
+    "transfer_ownership_description": "This member becomes the owner of the organization and you become an admin. Only the new owner can transfer it back.",
+    "invite": {
+      "button": "Invite member",
+      "title": "Invite member",
+      "edit_title": "Change role",
+      "user": "User",
+      "role": "Role",
+      "not_allowed": "Only managers and above can invite members.",
+      "save": "Send invite",
+      "save_role": "Save role"
+    }
+  },
+  "user": {
+    "select": {
+      "placeholder": "Search by name or email"
+    },
+    "selector": {
+      "clear": "Clear selection"
+    },
+    "search": {
+      "empty": "No users found"
+    }
+  }
+}

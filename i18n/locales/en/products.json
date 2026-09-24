@@ -1,0 +1,67 @@
+{
+  "product": {
+    "create": "New product",
+    "no_products": "No products yet.",
+    "name": "Name",
+    "sku": "SKU",
+    "sku_value": "SKU: {sku}",
+    "barcode": "Barcode",
+    "barcode_value": "Barcode: {barcode}",
+    "cost_price": "Cost price",
+    "sale_price": "Sale price",
+    "minimum_stock": "Minimum stock",
+    "title": {
+      "create": "New product",
+      "edit": "Edit product"
+    },
+    "save": {
+      "create": "Create product",
+      "edit": "Save changes"
+    },
+    "confirm_delete": {
+      "title": "Delete this product?",
+      "description": "This permanently deletes the product and its images. This can't be undone."
+    },
+    "delete_success": "Product deleted.",
+    "search": {
+      "placeholder": "Search products",
+      "empty": "No products found"
+    },
+    "select": {
+      "placeholder": "Search for a product"
+    },
+    "selector": {
+      "clear": "Clear selection"
+    }
+  },
+  "images": {
+    "add": "Add images",
+    "none": "No images yet",
+    "alt": "{name}, image {n}",
+    "preview": "Image preview",
+    "view": "View image",
+    "remove": "Remove image",
+    "size": {
+      "b": "{size} B",
+      "kb": "{size} KB",
+      "mb": "{size} MB"
+    }
+  },
+  "stock": {
+    "create": "New movement",
+    "no_movements": "No stock movements yet.",
+    "title": {
+      "create": "New stock movement"
+    },
+    "save": {
+      "create": "Save movement"
+    },
+    "product": "Product",
+    "quantity": "Quantity",
+    "reason": "Reason",
+    "reasons": {
+      "sale": "Sale {id}",
+      "sale_canceled": "Sale {id} canceled"
+    }
+  }
+}

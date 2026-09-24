@@ -24,6 +24,7 @@ const { errors, resetErrors, handleError } = useFormErrors([
   'stock_quantity',
   'minimum_stock'
 ] as const, 'save')
+const { toastApiError } = useApiError()
 const { loadProducts } = useProducts()
 
 const type = computed(() => props.product ? 'edit' : 'create')
@@ -80,15 +81,8 @@ async function save () {
     await loadProducts()
     emit('close', true)
   } catch (error: any) {
-
     handleError(error)
-    if (errors.save) {
-      useToast().add({
-        description: `${ $t('save.error') }: ${$t(errors.save)}`,
-        color: 'error'
-      })
-    }
-
+    toastApiError(error, $t('common.save_failed'))
   } finally {
     loading.value = false
   }

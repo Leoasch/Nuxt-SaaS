@@ -34,10 +34,8 @@ async function load () {
 
 watch([() => props.orgId, selectedDays], load, { immediate: true })
 
-const priceFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
-const dayFormatter = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit' })
-const hourFormatter = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' })
-const labelFormatter = computed(() => selectedDays.value === 1 ? hourFormatter : dayFormatter)
+const { t, n, d } = useI18n()
+const labelFormat = computed(() => selectedDays.value === 1 ? 'time' : 'dayMonth')
 
 const total = computed(() => revenue.value.reduce((sum, day) => sum + day.total, 0))
 
@@ -49,7 +47,7 @@ const surfaceColor = computed(() => isDark.value ? '#1a1a19' : '#fcfcfb')
 const pointRadius = computed(() => revenue.value.length <= 7 ? 3 : 0)
 
 const chartData = computed<ChartData<'line'>>(() => ({
-  labels: revenue.value.map(day => labelFormatter.value.format(new Date(day.date))),
+  labels: revenue.value.map(day => d(new Date(day.date), labelFormat.value)),
   datasets: [
     {
       data: revenue.value.map(day => day.total),
@@ -84,7 +82,7 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       border: { display: false },
       ticks: {
         color: textColor.value,
-        callback: value => priceFormatter.format(Number(value ?? 0))
+        callback: value => n(Number(value ?? 0), 'currency')
       }
     }
   },
@@ -92,14 +90,10 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
     legend: { display: false },
     tooltip: {
       callbacks: {
-        label: ctx => priceFormatter.format(ctx.parsed.y ?? 0),
-        footer: items => {
+        label: ctx => n(ctx.parsed.y ?? 0, 'currency'),
+        footer: (items) => {
           const count = revenue.value[items[0]?.dataIndex ?? -1]?.count ?? 0
-          return (
-            !count ? $t('sales_amount_none') :
-              count === 1 ? $t('sales_amount_single') : 
-                $t('sales_amount_multiple', { amount: count })
-          )
+          return t('dashboard.sales_count', count)
         }
       }
     }
@@ -126,12 +120,13 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       </div>
     </div>
     <div class=flex>
-      <span class="text-2xl font-bold">{{ priceFormatter.format(total) }}</span>
+      <span class="text-2xl font-bold">{{ $n(total, 'currency') }}</span>
       <UButton
         icon="lucide:refresh-cw"
         color="neutral"
         variant="ghost"
         class="cursor-pointer ml-2"
+        :aria-label="$t('common.refresh')"
         :ui="{
           leadingIcon: 'hover:rotate-90 transition-transform duration-300'
         }"

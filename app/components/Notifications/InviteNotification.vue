@@ -11,22 +11,35 @@ const props = defineProps<{
 
 const overlay = useOverlay()
 const emits = defineEmits(['remove'])
+const { toastApiError } = useApiError()
 
 async function acceptInvite () {
-  const result = await acceptOrganizationInvite(props.invite.organization_id, true)
-  if (!result.membership.pending_invite) {
-    emits('remove')
+  try {
+    const result = await acceptOrganizationInvite(props.invite.organization_id, true)
+    if (!result.membership.pending_invite) {
+      emits('remove')
+    }
+  } catch (error) {
+    toastApiError(error)
   }
 }
 
 async function declineInvite () {
   const dialog = overlay.create(ConfirmDialog, {
-    props: { title: $t('confirm_decline_title'), description: $t('confirm_decline_description') }
+    props: {
+      title: $t('organization.confirm_decline_title'),
+      description: $t('organization.confirm_decline_description'),
+      confirmLabel: $t('organization.decline_invite')
+    }
   }).open()
   if (await dialog.result) {
-    const result = await acceptOrganizationInvite(props.invite.organization_id, false)
-    if (result.membership.pending_invite) {
-      emits('remove')
+    try {
+      const result = await acceptOrganizationInvite(props.invite.organization_id, false)
+      if (result.membership.pending_invite) {
+        emits('remove')
+      }
+    } catch (error) {
+      toastApiError(error)
     }
   }
 }
@@ -36,7 +49,7 @@ async function declineInvite () {
 <template>
   <Notification>
     <div class="flex  gap-2">
-      <ULink 
+      <ULink
         class="font-bold"
         :to="`/organization/${invite.organization_id}`"
       >{{ invite.organization?.name }}</ULink>
@@ -45,7 +58,7 @@ async function declineInvite () {
         :icon="ROLE_STYLES[invite.role].icon"
         variant="subtle"
         class="shrink-0">
-        {{ $t(ROLE_STYLES[invite.role].label) }}
+        {{ $t('role.' + invite.role) }}
       </UBadge>
     </div>
     <div class="ml-auto mr-0 flex gap-1">
@@ -54,6 +67,7 @@ async function declineInvite () {
         color="error"
         variant="ghost"
         class="cursor-pointer p-1"
+        :aria-label="$t('organization.decline_invite')"
         @click="declineInvite"
       />
       <UButton
@@ -61,6 +75,7 @@ async function declineInvite () {
         color="primary"
         variant="ghost"
         class="cursor-pointer p-1"
+        :aria-label="$t('organization.accept_invite')"
         @click="acceptInvite"
       />
     </div>

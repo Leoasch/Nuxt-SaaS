@@ -9,6 +9,7 @@ const props = defineProps<{
 defineEmits(['remove'])
 
 const overlay = useOverlay()
+const { t, n } = useI18n()
 
 const imageUrl = computed(() => props.entry.type === 'new'
   ? URL.createObjectURL(props.entry.file)
@@ -22,11 +23,11 @@ const fileSize = computed(() => {
   const size = props.entry.type === 'new' ? props.entry.file.size : props.entry.size
 
   if (size < 1024) {
-    return `${size} B`
+    return t('images.size.b', { size: n(size, 'integer') })
   } else if (size < 1024 * 1024) {
-    return `${(size / 1024).toFixed(2)} KB`
+    return t('images.size.kb', { size: n(size / 1024, 'decimal') })
   } else {
-    return `${(size / (1024 * 1024)).toFixed(2)} MB`
+    return t('images.size.mb', { size: n(size / (1024 * 1024), 'decimal') })
   }
 })
 
@@ -54,6 +55,7 @@ function displayImage () {
           color="secondary"
           class="cursor-pointer"
           variant="ghost"
+          :aria-label="$t('images.view')"
           @click="displayImage"
         />
         <UButton
@@ -61,6 +63,7 @@ function displayImage () {
           color="error"
           class="cursor-pointer"
           variant="ghost"
+          :aria-label="$t('images.remove')"
           @click="() => $emit('remove')"
         />
       </div>

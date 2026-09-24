@@ -1,0 +1,36 @@
+{
+  "customer": {
+    "create": "Novo cliente",
+    "no_customers": "Nenhum cliente ainda.",
+    "name": "Nome",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "document": "Documento",
+    "title": {
+      "create": "Novo cliente",
+      "edit": "Editar cliente"
+    },
+    "save": {
+      "create": "Criar cliente",
+      "edit": "Salvar alterações"
+    },
+    "card": {
+      "customer_since": "Cliente desde {date}"
+    },
+    "confirm_delete": {
+      "title": "Excluir este cliente?",
+      "description": "Isso exclui o cliente permanentemente. Esta ação não pode ser desfeita."
+    },
+    "delete_success": "Cliente excluído.",
+    "search": {
+      "placeholder": "Buscar clientes",
+      "empty": "Nenhum cliente encontrado"
+    },
+    "select": {
+      "placeholder": "Buscar um cliente"
+    },
+    "selector": {
+      "clear": "Limpar seleção"
+    }
+  }
+}

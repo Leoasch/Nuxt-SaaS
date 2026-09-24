@@ -19,33 +19,32 @@ async function load () {
 
 watch(() => props.orgId, load, { immediate: true })
 
-const priceFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
-const countFormatter = new Intl.NumberFormat('pt-BR')
+const { n } = useI18n()
 
 const tiles = computed(() => [
   {
     key: 'revenue',
     icon: 'lucide:banknote',
     label: 'dashboard.kpi_revenue',
-    value: priceFormatter.format(summary.value?.totalRevenue ?? 0)
+    value: n(summary.value?.totalRevenue ?? 0, 'currency')
   },
   {
     key: 'sales',
     icon: 'lucide:shopping-cart',
     label: 'dashboard.kpi_sales',
-    value: countFormatter.format(summary.value?.salesCount ?? 0)
+    value: n(summary.value?.salesCount ?? 0, 'integer')
   },
   {
     key: 'avg',
     icon: 'lucide:receipt',
     label: 'dashboard.kpi_avg_order_value',
-    value: priceFormatter.format(summary.value?.avgOrderValue ?? 0)
+    value: n(summary.value?.avgOrderValue ?? 0, 'currency')
   },
   {
     key: 'customers',
     icon: 'lucide:users',
     label: 'dashboard.kpi_active_customers',
-    value: countFormatter.format(summary.value?.activeCustomers ?? 0)
+    value: n(summary.value?.activeCustomers ?? 0, 'integer')
   }
 ])
 </script>

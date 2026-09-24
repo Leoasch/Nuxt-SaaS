@@ -35,7 +35,8 @@ export default defineEventHandler(async (event) => {
   const user = await User.create({
     name,
     email,
-    passwordHash
+    passwordHash,
+    locale: getRequestLocale(event)
   })
 
   await setUserSession(event, {

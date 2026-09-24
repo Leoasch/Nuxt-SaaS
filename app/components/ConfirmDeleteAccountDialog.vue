@@ -14,7 +14,11 @@ const isBlocked = computed(() => props.blockingOrganizations.length > 0)
 const { user } = useUserSession()
 const needsPassword = computed(() => user.value?.hasPassword === false)
 
-const { errors, resetErrors, handleError } = useFormErrors(['password'] as const, 'delete_account')
+const { errors, resetErrors, handleError } = useFormErrors(
+  ['password'] as const,
+  'delete_account',
+  { overrides: { AUTH_INVALID_CREDENTIALS: 'account.wrong_password' } }
+)
 
 async function handleConfirm () {
   resetErrors()
@@ -64,7 +68,7 @@ async function handleConfirm () {
 
         <UFormField
           v-else
-          :label="$t('password')"
+          :label="$t('common.password')"
           :error="errors.password ?? errors.delete_account">
           <UInput
             v-model="password"
@@ -84,7 +88,7 @@ async function handleConfirm () {
           :disabled="loading"
           @click="$emit('close', false)"
         >
-          {{ $t('cancel') }}
+          {{ $t('common.cancel') }}
         </UButton>
         <UButton
           color="error"

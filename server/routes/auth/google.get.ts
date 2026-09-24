@@ -9,6 +9,7 @@ const googleHandler = defineOAuthGoogleEventHandler({
     }
 
     const email = String(googleUser.email).toLowerCase()
+    const locale = getRequestLocale(event)
 
     let user = await User.findOne({ where: { googleId: googleUser.sub } })
 
@@ -19,16 +20,19 @@ const googleHandler = defineOAuthGoogleEventHandler({
 
       if (user) {
         user.googleId = googleUser.sub
-        await user.save()
       } else {
         user = await User.create({
           name: googleUser.name || email.split('@')[0],
           email,
           googleId: googleUser.sub,
-          passwordHash: null
+          passwordHash: null,
+          locale
         })
       }
     }
+
+    user.locale = locale
+    await user.save()
 
     await replaceUserSession(event, {
       user: {

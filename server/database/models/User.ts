@@ -15,6 +15,7 @@ export class User extends Model<
   declare avatarUrl: string | null
   declare resetPasswordTokenHash: string | null
   declare resetPasswordTokenExpiresAt: Date | null
+  declare locale: string | null
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 }
@@ -61,6 +62,11 @@ User.init(
     },
     resetPasswordTokenExpiresAt: {
       type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
+    },
+    locale: {
+      type: DataTypes.STRING(10),
       allowNull: true,
       defaultValue: null
     },

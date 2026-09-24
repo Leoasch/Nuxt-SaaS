@@ -44,7 +44,7 @@ onMounted( async () => {
             color="warning"
             class="cursor-pointer"
             @click="$emit('edit')"
-          >{{ $t('edit') }}</UButton>
+          >{{ $t('common.edit') }}</UButton>
           <UButton 
             v-if="canDelete"
             icon="lucide:trash" 
@@ -53,7 +53,7 @@ onMounted( async () => {
             color="error"
             class="cursor-pointer"
             @click="$emit('delete')"
-          >{{ $t('delete') }}</UButton>
+          >{{ $t('common.delete') }}</UButton>
         </div>
       </div>
     </template>

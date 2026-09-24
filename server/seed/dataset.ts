@@ -89,6 +89,7 @@ export async function buildDataset (now: Date): Promise<SeedDataset> {
       googleId: null,
       resetPasswordTokenHash: null,
       resetPasswordTokenExpiresAt: null,
+      locale: null,
       createdAt,
       updatedAt: createdAt
     })

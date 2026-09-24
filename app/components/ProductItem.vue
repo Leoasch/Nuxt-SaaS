@@ -6,10 +6,6 @@ const props = defineProps<{
   displayType: DisplayType
 }>()
 
-const priceFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
-
-const formattedPrice = computed(() => priceFormatter.format(props.product.sale_price))
-
 const isLowStock = computed(() => props.product.stock_quantity <= props.product.minimum_stock)
 </script>
 
@@ -20,6 +16,7 @@ const isLowStock = computed(() => props.product.stock_quantity <= props.product.
     <ImageCarousel
       :images="product.images!"
       :product-id="product.id"
+      :product-name="product.name"
       :org-id="product.organization_id"
       :class="displayType === 'grid' ? 'aspect-square w-full' : 'size-20 shrink-0'"
     />
@@ -28,13 +25,13 @@ const isLowStock = computed(() => props.product.stock_quantity <= props.product.
       <h1 class="truncate font-bold">{{ product.name }}</h1>
       <p
         v-if="product.sku"
-        class="truncate text-xs text-dimmed">SKU: {{ product.sku }}</p>
+        class="truncate text-xs text-dimmed">{{ $t('product.sku_value', { sku: product.sku }) }}</p>
     </div>
 
     <div
       class="flex items-center gap-2 mr-2"
       :class="displayType === 'grid' ? 'justify-between' : 'shrink-0'">
-      <span class="font-bold">{{ formattedPrice }}</span>
+      <span class="font-bold">{{ $n(product.sale_price, 'currency') }}</span>
       <UBadge
         :color="isLowStock ? 'error' : 'neutral'"
         variant="subtle"

@@ -1,0 +1,104 @@
+{
+  "errors": {
+    "UNKNOWN": "Something went wrong. Please try again.",
+    "UNAUTHORIZED": "Your session has expired. Please log in again.",
+    "RATE_LIMITED": "Too many attempts. Please wait a moment and try again.",
+    "RATE_LIMITED_RETRY": "Too many attempts. Please try again in {seconds} seconds.",
+    "VALIDATION_ERROR": "Some fields are invalid. Please review them and try again.",
+    "INVALID_ID": "The requested item doesn't exist.",
+    "PRODUCT_ID_MISSING": "Select a product.",
+    "AUTH_INVALID_CREDENTIALS": "Incorrect email or password.",
+    "AUTH_INVALID_RESET_TOKEN": "This reset link is invalid or has expired. Request a new one.",
+    "GOOGLE_AUTH_CANCELLED": "Google sign-in was cancelled.",
+    "GOOGLE_AUTH_FAILED": "Google sign-in failed. Please try again.",
+    "GOOGLE_EMAIL_UNVERIFIED": "The email on your Google account isn't verified.",
+    "ACCOUNT": {
+      "PASSWORD_REQUIRED": "Set a password before deleting your account.",
+      "OWNS_ORGANIZATIONS": "Transfer or delete the organizations you own before deleting your account."
+    },
+    "USER": {
+      "NOT_FOUND": "User not found.",
+      "NOT_ALLOWED": "You can only change your own profile.",
+      "EMAIL_TAKEN": "This email is already in use."
+    },
+    "AVATAR": {
+      "NOT_FOUND": "Profile picture not found.",
+      "EMPTY": "Choose an image to upload.",
+      "INVALID_TYPE": "Use a PNG, JPEG, WebP, GIF or AVIF image.",
+      "TOO_LARGE": "The image is too large. The limit is 5 MB."
+    },
+    "ORGANIZATION": {
+      "NOT_FOUND": "Organization not found.",
+      "NOT_ALLOWED": "You don't have permission to do this in this organization."
+    },
+    "MEMBERSHIP": {
+      "PENDING": "This invite hasn't been accepted yet.",
+      "NOT_FOUND": "Member not found.",
+      "NOT_ALLOWED": "You don't have permission to manage this member or role.",
+      "ALREADY_EXISTS": "This user is already a member of the organization.",
+      "ALREADY_ACCEPTED": "This invite has already been accepted.",
+      "ALREADY_OWNER": "You already own this organization.",
+      "OWNER_CANNOT_BE_REMOVED": "The organization owner can't be removed."
+    },
+    "CUSTOMER": {
+      "NOT_FOUND": "Customer not found."
+    },
+    "PRODUCT": {
+      "NOT_FOUND": "Product not found."
+    },
+    "PRODUCT_IMAGE": {
+      "NOT_FOUND": "Image not found.",
+      "EMPTY": "Choose an image to upload.",
+      "INVALID_TYPE": "Use PNG, JPEG, WebP, GIF or AVIF images.",
+      "TOO_LARGE": "One of the images is too large. The limit is 5 MB per image."
+    },
+    "SALE": {
+      "NOT_FOUND": "Sale not found.",
+      "ALREADY_CANCELED": "This sale has already been canceled."
+    },
+    "STOCK": {
+      "NOT_FOUND": "Stock movement not found."
+    }
+  },
+  "validation": {
+    "invalid": "Invalid value",
+    "required": "This field is required",
+    "invalid_type": "Invalid value",
+    "invalid_value": "Choose one of the available options",
+    "invalid_item": "Some entries are invalid",
+    "invalid_format": {
+      "default": "Invalid format",
+      "email": "Enter a valid email address"
+    },
+    "too_small": {
+      "default": "Too small",
+      "string": "Must be at least {minimum} character | Must be at least {minimum} characters",
+      "number": "Must be at least {minimum}",
+      "int": "Must be at least {minimum}",
+      "array": "Add at least {minimum} item | Add at least {minimum} items"
+    },
+    "too_big": {
+      "default": "Too large",
+      "string": "Must be at most {maximum} character | Must be at most {maximum} characters",
+      "number": "Must be at most {maximum}",
+      "int": "Must be at most {maximum}",
+      "array": "Add at most {maximum} item | Add at most {maximum} items"
+    },
+    "email": {
+      "email_already_in_use": "This email is already in use"
+    },
+    "repeatPassword": {
+      "password_do_not_match": "Passwords don't match"
+    },
+    "repeatNewPassword": {
+      "password_do_not_match": "Passwords don't match"
+    },
+    "token": {
+      "required": "This reset link is incomplete. Request a new one."
+    },
+    "products": {
+      "too_small": "Add at least one product",
+      "invalid_item": "Check each product's quantity and price"
+    }
+  }
+}

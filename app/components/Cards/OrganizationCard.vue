@@ -13,6 +13,7 @@ const props = defineProps<{
 const organization = ref<Organization | null>(null)
 const loading = ref(false)
 const { loadOrganizations, selectedOrganizationId } = useOrganization()
+const { toastApiError } = useApiError()
 const overlay = useOverlay()
 const emits = defineEmits(['close'])
 const roleStyle = computed(() => organization.value ? ROLE_STYLES[organization.value.role] : null)
@@ -42,21 +43,33 @@ async function onEdit () {
 }
 
 async function acceptInvite () {
-  const result = await acceptOrganizationInvite(props.organizationId, true)
-  if (!result.membership.pending_invite) {
-    accessConfigs()
+  try {
+    const result = await acceptOrganizationInvite(props.organizationId, true)
+    if (!result.membership.pending_invite) {
+      accessConfigs()
+    }
+  } catch (error) {
+    toastApiError(error)
   }
 }
 
 async function declineInvite () {
   const dialog = overlay.create(ConfirmDialog, {
-    props: { title: $t('confirm_decline_title'), description: $t('confirm_decline_description') }
+    props: {
+      title: $t('organization.confirm_decline_title'),
+      description: $t('organization.confirm_decline_description'),
+      confirmLabel: $t('organization.decline_invite')
+    }
   }).open()
   if (await dialog.result) {
-    const result = await acceptOrganizationInvite(props.organizationId, false)
-    if (result.membership.pending_invite) {
-      await loadOrganizations()
-      emits('close')
+    try {
+      const result = await acceptOrganizationInvite(props.organizationId, false)
+      if (result.membership.pending_invite) {
+        await loadOrganizations()
+        emits('close')
+      }
+    } catch (error) {
+      toastApiError(error)
     }
   }
 }
@@ -95,7 +108,7 @@ onMounted(() => {
             :icon="roleStyle.icon"
             variant="subtle"
             class="mt-1">
-            {{ $t(roleStyle.label) }}
+            {{ $t('role.' + organization.role) }}
           </UBadge>
         </div>
       </div>
@@ -130,7 +143,7 @@ onMounted(() => {
           class="cursor-pointer"
           @click="() => selectedOrganizationId = organizationId"
         >
-          {{ $t('organization.select') }}
+          {{ $t('organization.select_button') }}
         </UButton>
       </template>
       <template v-else>

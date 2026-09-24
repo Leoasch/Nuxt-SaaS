@@ -43,16 +43,16 @@ defineShortcuts({
 </script>
 
 <template>
-  <div class="flex-1 flex flex-col w-full mt-5">
-    <h1 class="w-full text-center text-2xl">{{ $t('register') }}</h1>
+  <div class="flex-1 flex flex-col w-full mt-10">
+    <h1 class="w-full text-center text-2xl">{{ $t('auth.register.title') }}</h1>
     <div class="flex flex-col items-center mt-5 gap-4 w-100 max-w-full m-auto">
       <UFormField
-        :label="$t('name')"
+        :label="$t('auth.name')"
         class="w-full"
         :error="errors.name">
         <UInput
           v-model="name"
-          placeholder="Jane Doe"
+          :placeholder="$t('auth.name_placeholder')"
           class="w-full"
           :ui="{
             base: 'p-3'
@@ -60,12 +60,12 @@ defineShortcuts({
         />
       </UFormField>
       <UFormField
-        :label="$t('email')"
+        :label="$t('auth.email')"
         class="w-full"
         :error="errors.email">
         <UInput
           v-model="email"
-          placeholder="example@gmail.com"
+          :placeholder="$t('auth.email_placeholder')"
           class="w-full"
           :ui="{
             base: 'p-3'
@@ -73,7 +73,7 @@ defineShortcuts({
         />
       </UFormField>
       <UFormField
-        :label="$t('password')"
+        :label="$t('auth.password')"
         class="w-full"
         :error="errors.password">
         <PasswordInput
@@ -85,7 +85,7 @@ defineShortcuts({
         />
       </UFormField>
       <UFormField
-        :label="$t('repeat_password')"
+        :label="$t('auth.repeat_password')"
         class="w-full"
         :error="errors.repeatPassword">
         <PasswordInput
@@ -96,20 +96,23 @@ defineShortcuts({
           }"
         />
       </UFormField>
-      <div class="w-full flex">
-        <ULink
-          class="ml-auto mr-0 cursor-pointer"
-          to="/auth/login">{{ $t('login_invite') }}</ULink>
-      </div>
-      <UFormField :error="errors.register">
+      <UFormField
+        :error="errors.register"
+        class="w-full">
         <div class="w-full flex">
           <UButton
-            class="m-auto"
-            @click="handleRegister">{{ $t('submit_register') }}</UButton>
+            class="m-auto w-full flex justify-center"
+            :ui="{
+              base: 'p-2.5'
+            }"
+            @click="handleRegister">{{ $t('auth.register.submit') }}</UButton>
         </div>
       </UFormField>
-      <div class="w-full">
+      <div class="w-full flex flex-col gap-4">
         <GoogleAuthButton/>
+        <div class="w-full flex justify-center">
+          <ULink to="/auth/login">{{ $t('auth.register.login_link') }}</ULink>
+        </div>
       </div>
     </div>
   </div>

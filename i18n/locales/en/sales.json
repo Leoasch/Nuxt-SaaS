@@ -1,0 +1,60 @@
+{
+  "sale": {
+    "create": "New sale",
+    "no_sales": "No sales yet.",
+    "title": {
+      "create": "New sale"
+    },
+    "save": {
+      "create": "Register sale"
+    },
+    "customer": "Customer",
+    "walk_in_customer": "Walk-in customer",
+    "payment_method_label": "Payment method",
+    "payment_method": {
+      "cash": "Cash",
+      "credit_card": "Credit card",
+      "debit_card": "Debit card",
+      "pix": "Pix",
+      "other": "Other"
+    },
+    "products": "Products",
+    "add_product": "Add product",
+    "remove_product": "Remove product",
+    "quantity": "Quantity",
+    "unit_price": "Unit price",
+    "total": "Total",
+    "total_value": "Total: {total}",
+    "items_count": "{n} item | {n} items",
+    "canceled": "Canceled",
+    "canceled_at": "Canceled on {date}",
+    "unknown_product": "Deleted product",
+    "cancel_success": "Sale canceled.",
+    "confirm_cancel": {
+      "title": "Cancel this sale?",
+      "description": "The sale is marked as canceled and its products go back into stock. This can't be undone.",
+      "keep": "Keep sale"
+    },
+    "card": {
+      "created_at": "Created on {date}",
+      "cancel": "Cancel sale"
+    },
+    "error": {
+      "no_products": "Add at least one product",
+      "no_payment_method": "Choose a payment method"
+    }
+  },
+  "dashboard": {
+    "kpi_revenue": "Revenue (30 days)",
+    "kpi_sales": "Sales (30 days)",
+    "kpi_avg_order_value": "Average order value (30 days)",
+    "kpi_active_customers": "Active customers (30 days)",
+    "period_1d": "24h",
+    "period_7d": "7d",
+    "period_30d": "30d",
+    "revenue_last_1_day": "Revenue in the last 24 hours",
+    "revenue_last_7_days": "Revenue in the last 7 days",
+    "revenue_last_30_days": "Revenue in the last 30 days",
+    "sales_count": "No sales | 1 sale | {n} sales"
+  }
+}

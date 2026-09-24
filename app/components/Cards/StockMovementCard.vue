@@ -30,10 +30,11 @@ async function onLoad () {
   }
 }
 
-const dateFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long', timeStyle: 'short' })
+const { d } = useI18n()
+const { formatReason } = useStockReason()
 
 const isPositiveStock = computed(() => (movement.value?.quantity ?? 0) >= 0)
-const formattedDate = computed(() => movement.value?.createdAt ? dateFormatter.format(new Date(movement.value.createdAt)) : '')
+const formattedDate = computed(() => movement.value?.createdAt ? d(new Date(movement.value.createdAt), 'dateTime') : '')
 </script>
 
 <template>
@@ -72,7 +73,7 @@ const formattedDate = computed(() => movement.value?.createdAt ? dateFormatter.f
         <UIcon
           name="lucide:message-square-text"
           class="size-4 shrink-0 mt-0.5 text-dimmed"/>
-        <span class="min-w-0 wrap-break-word">{{ movement.reason }}</span>
+        <span class="min-w-0 wrap-break-word">{{ formatReason(movement.reason) }}</span>
       </div>
 
       <span

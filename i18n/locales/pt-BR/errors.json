@@ -1,0 +1,104 @@
+{
+  "errors": {
+    "UNKNOWN": "Algo deu errado. Tente novamente.",
+    "UNAUTHORIZED": "Sua sessão expirou. Entre novamente.",
+    "RATE_LIMITED": "Muitas tentativas. Aguarde um momento e tente novamente.",
+    "RATE_LIMITED_RETRY": "Muitas tentativas. Tente novamente em {seconds} segundos.",
+    "VALIDATION_ERROR": "Alguns campos são inválidos. Revise-os e tente novamente.",
+    "INVALID_ID": "O item solicitado não existe.",
+    "PRODUCT_ID_MISSING": "Selecione um produto.",
+    "AUTH_INVALID_CREDENTIALS": "E-mail ou senha incorretos.",
+    "AUTH_INVALID_RESET_TOKEN": "Este link de redefinição é inválido ou expirou. Solicite um novo.",
+    "GOOGLE_AUTH_CANCELLED": "O login com o Google foi cancelado.",
+    "GOOGLE_AUTH_FAILED": "Não foi possível entrar com o Google. Tente novamente.",
+    "GOOGLE_EMAIL_UNVERIFIED": "O e-mail da sua conta Google não está verificado.",
+    "ACCOUNT": {
+      "PASSWORD_REQUIRED": "Defina uma senha antes de excluir sua conta.",
+      "OWNS_ORGANIZATIONS": "Transfira ou exclua as organizações das quais você é proprietário antes de excluir sua conta."
+    },
+    "USER": {
+      "NOT_FOUND": "Usuário não encontrado.",
+      "NOT_ALLOWED": "Você só pode alterar o seu próprio perfil.",
+      "EMAIL_TAKEN": "Este e-mail já está em uso."
+    },
+    "AVATAR": {
+      "NOT_FOUND": "Foto de perfil não encontrada.",
+      "EMPTY": "Escolha uma imagem para enviar.",
+      "INVALID_TYPE": "Use uma imagem PNG, JPEG, WebP, GIF ou AVIF.",
+      "TOO_LARGE": "A imagem é grande demais. O limite é 5 MB."
+    },
+    "ORGANIZATION": {
+      "NOT_FOUND": "Organização não encontrada.",
+      "NOT_ALLOWED": "Você não tem permissão para fazer isso nesta organização."
+    },
+    "MEMBERSHIP": {
+      "PENDING": "Este convite ainda não foi aceito.",
+      "NOT_FOUND": "Membro não encontrado.",
+      "NOT_ALLOWED": "Você não tem permissão para gerenciar este membro ou cargo.",
+      "ALREADY_EXISTS": "Este usuário já é membro da organização.",
+      "ALREADY_ACCEPTED": "Este convite já foi aceito.",
+      "ALREADY_OWNER": "Você já é o proprietário desta organização.",
+      "OWNER_CANNOT_BE_REMOVED": "O proprietário da organização não pode ser removido."
+    },
+    "CUSTOMER": {
+      "NOT_FOUND": "Cliente não encontrado."
+    },
+    "PRODUCT": {
+      "NOT_FOUND": "Produto não encontrado."
+    },
+    "PRODUCT_IMAGE": {
+      "NOT_FOUND": "Imagem não encontrada.",
+      "EMPTY": "Escolha uma imagem para enviar.",
+      "INVALID_TYPE": "Use imagens PNG, JPEG, WebP, GIF ou AVIF.",
+      "TOO_LARGE": "Uma das imagens é grande demais. O limite é 5 MB por imagem."
+    },
+    "SALE": {
+      "NOT_FOUND": "Venda não encontrada.",
+      "ALREADY_CANCELED": "Esta venda já foi cancelada."
+    },
+    "STOCK": {
+      "NOT_FOUND": "Movimentação de estoque não encontrada."
+    }
+  },
+  "validation": {
+    "invalid": "Valor inválido",
+    "required": "Este campo é obrigatório",
+    "invalid_type": "Valor inválido",
+    "invalid_value": "Escolha uma das opções disponíveis",
+    "invalid_item": "Alguns itens são inválidos",
+    "invalid_format": {
+      "default": "Formato inválido",
+      "email": "Informe um e-mail válido"
+    },
+    "too_small": {
+      "default": "Valor muito baixo",
+      "string": "Deve ter pelo menos {minimum} caractere | Deve ter pelo menos {minimum} caracteres",
+      "number": "Deve ser no mínimo {minimum}",
+      "int": "Deve ser no mínimo {minimum}",
+      "array": "Adicione pelo menos {minimum} item | Adicione pelo menos {minimum} itens"
+    },
+    "too_big": {
+      "default": "Valor muito alto",
+      "string": "Deve ter no máximo {maximum} caractere | Deve ter no máximo {maximum} caracteres",
+      "number": "Deve ser no máximo {maximum}",
+      "int": "Deve ser no máximo {maximum}",
+      "array": "Adicione no máximo {maximum} item | Adicione no máximo {maximum} itens"
+    },
+    "email": {
+      "email_already_in_use": "Este e-mail já está em uso"
+    },
+    "repeatPassword": {
+      "password_do_not_match": "As senhas não coincidem"
+    },
+    "repeatNewPassword": {
+      "password_do_not_match": "As senhas não coincidem"
+    },
+    "token": {
+      "required": "Este link de redefinição está incompleto. Solicite um novo."
+    },
+    "products": {
+      "too_small": "Adicione pelo menos um produto",
+      "invalid_item": "Confira a quantidade e o preço de cada produto"
+    }
+  }
+}

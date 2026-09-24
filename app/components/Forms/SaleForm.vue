@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SelectItem } from '@nuxt/ui'
 import { postSale, type SaleBody } from '~/api/sales'
-import { emptyLine, priceFormatter } from '~/common'
+import { emptyLine } from '~/common'
 import type { Product, SaleLine } from '~~/shared/types'
 
 const props = defineProps<{
@@ -10,11 +10,12 @@ const props = defineProps<{
 
 const PAYMENT_METHODS = ['cash', 'credit_card', 'debit_card', 'pix', 'other'] as const
 
-const { errors, resetErrors, handleError } = useFormErrors([
+const { errors, resetErrors, handleError, setError } = useFormErrors([
   'customer_id',
   'payment_method',
   'products'
 ] as const, 'save')
+const { toastApiError } = useApiError()
 const { loadSales } = useSales()
 
 const loading = ref(false)
@@ -61,12 +62,12 @@ async function save () {
       }))
 
     if (products.length === 0) {
-      errors.products = $t('sale.error.no_products')
+      setError('products', 'sale.error.no_products')
       return
     }
 
     if (!payment_method.value) {
-      errors.payment_method = $t('sale.error.no_payment_method')
+      setError('payment_method', 'sale.error.no_payment_method')
       return
     }
 
@@ -81,15 +82,8 @@ async function save () {
     await loadSales()
     emit('close')
   } catch (error: any) {
-
     handleError(error)
-    if (errors.save) {
-      useToast().add({
-        description: `${ $t('save.error') }: ${$t(errors.save)}`,
-        color: 'error'
-      })
-    }
-
+    toastApiError(error, $t('common.save_failed'))
   } finally {
     loading.value = false
   }
@@ -114,12 +108,12 @@ async function save () {
             <CustomerSelector v-model="customer_id"/>
           </UFormField>
           <UFormField
-            :label="$t('sale.payment_method.label')"
+            :label="$t('sale.payment_method_label')"
             :error="errors.payment_method">
             <USelect
               v-model="payment_method"
               :items="paymentMethodItems"
-              :placeholder="$t('sale.payment_method.label')"
+              :placeholder="$t('sale.payment_method_label')"
               class="w-full"
               :ui="{ base: 'h-[58px]' }"
             />
@@ -151,7 +145,7 @@ async function save () {
     </template>
     <template #footer>
       <div class="flex w-full flex-wrap items-center justify-between gap-2">
-        <span class="text-lg font-bold">{{ $t('sale.total') }}: {{ priceFormatter.format(total) }}</span>
+        <span class="text-lg font-bold">{{ $t('sale.total_value', { total: $n(total, 'currency') }) }}</span>
         <UButton
           :loading="loading"
           @click="save">

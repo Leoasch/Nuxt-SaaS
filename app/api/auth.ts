@@ -1,4 +1,5 @@
 import type { User } from '~~/shared/types'
+import type { AppLocale } from '~~/shared/utils/locales'
 import { apiRequest } from '.'
 
 export type RegisterBody = {
@@ -50,6 +51,13 @@ export async function deleteAccount (password: string) {
   return await apiRequest<{ success: true }>('/auth/delete-account', {
     method: 'DELETE',
     body: { password }
+  })
+}
+
+export async function updateLocale (locale: AppLocale) {
+  return await apiRequest<{ success: true }>('/auth/locale', {
+    method: 'PUT',
+    body: { locale }
   })
 }
 

@@ -8,6 +8,8 @@ const colorMode = useColorMode()
 const { isPresetActive, applyPreset } = useTheme()
 const { clear } = useUserSession()
 const { user: sessionUser } = useUserSession()
+const { toastApiError } = useApiError()
+const { locale, locales, changeLocale } = useAppLocale()
 const user = ref({
   name: sessionUser.value?.name,
 })
@@ -18,12 +20,12 @@ const isSettingsRoute = computed(() => route.name === 'settings')
 
 const accountItems = computed<DropdownMenuItem[]>(() => [
   {
-    label: $t('profile'),
+    label: $t('nav.profile'),
     icon: 'i-lucide-user',
     to: `/user/${sessionUser.value?.id}`
   },
   {
-    label: $t('settings'),
+    label: $t('nav.settings'),
     icon: 'i-lucide-settings',
     onSelect: () => navigateTo('/settings'),
     class: 'cursor-pointer',
@@ -33,7 +35,7 @@ const accountItems = computed<DropdownMenuItem[]>(() => [
 
 const themeGroup = computed<DropdownMenuItem[]>(() => [
   {
-    label: $t('theme'),
+    label: $t('nav.theme'),
     icon: 'i-lucide-sun-moon',
     children: [
       THEME_PRESETS.map(preset => ({
@@ -80,6 +82,23 @@ const themeGroup = computed<DropdownMenuItem[]>(() => [
         }
       ]
     ]
+  },
+  {
+    label: $t('nav.language'),
+    icon: 'i-lucide-languages',
+    children: locales.value.map(option => ({
+      label: option.name ?? option.code,
+      type: 'checkbox' as const,
+      checked: locale.value === option.code,
+      onUpdateChecked (checked: boolean) {
+        if (checked) {
+          changeLocale(option.code)
+        }
+      },
+      onSelect (e: Event) {
+        e.preventDefault()
+      }
+    }))
   }
 ])
 
@@ -91,7 +110,7 @@ const miscItems = computed<DropdownMenuItem[]>(() => [
     target: '_blank'
   },
   {
-    label: $t('logout'),
+    label: $t('nav.logout'),
     icon: 'i-lucide-log-out',
     onSelect: handleLogout
   }
@@ -106,32 +125,32 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
 function getItems () {
   return [
     {
-      label: $t('dashboard'),
+      label: $t('nav.dashboard'),
       icon: 'i-lucide-layout-dashboard',
       to: '/'
     },
     {
-      label: $t('my_organizations'),
+      label: $t('nav.my_organizations'),
       icon: 'i-lucide-building-2',
       to: '/organizations'
     },
     {
-      label: $t('products'),
+      label: $t('nav.products'),
       icon: 'i-lucide-package',
       to: '/products'
     },
     {
-      label: $t('customers'),
+      label: $t('nav.customers'),
       icon: 'i-lucide-users',
       to: '/customers'
     },
     {
-      label: $t('sales'),
+      label: $t('nav.sales'),
       icon: 'i-lucide-shopping-cart',
       to: '/sales'
     },
     {
-      label: $t('stock'),
+      label: $t('nav.stock'),
       icon: 'i-lucide-warehouse',
       to: '/stock'
     },
@@ -139,7 +158,12 @@ function getItems () {
 }
 
 async function handleLogout () {
-  await logout()
+  try {
+    await logout()
+  } catch (error) {
+    toastApiError(error)
+    return
+  }
 
   await clear()
 
@@ -166,7 +190,7 @@ async function handleLogout () {
           color="neutral"
           variant="ghost"
           class="ml-auto lg:hidden"
-          aria-label="Close sidebar"
+          :aria-label="$t('nav.close_sidebar')"
           @click="close"
         />
       </template>
@@ -216,7 +240,7 @@ async function handleLogout () {
           icon="i-lucide-panel-left"
           color="neutral"
           variant="ghost"
-          aria-label="Toggle sidebar"
+          :aria-label="$t('nav.toggle_sidebar')"
           @click="open = !open"
         />
         <OrganizationSelector class="mr-4 ml-auto w-60"/>

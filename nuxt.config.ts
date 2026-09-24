@@ -1,4 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { DEFAULT_LOCALE, LOCALE_COOKIE } from './shared/utils/locales'
+
+const LOCALE_FILES = ['common.json', 'errors.json', 'auth.json', 'settings.json', 'organizations.json', 'products.json', 'customers.json', 'sales.json']
+
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
@@ -14,6 +18,30 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
+
+  i18n: {
+    strategy: 'no_prefix',
+    defaultLocale: DEFAULT_LOCALE,
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: LOCALE_COOKIE,
+      fallbackLocale: DEFAULT_LOCALE
+    },
+    locales: [
+      {
+        code: 'pt-BR',
+        language: 'pt-BR',
+        name: 'Português',
+        files: LOCALE_FILES.map(file => `pt-BR/${file}`)
+      },
+      {
+        code: 'en',
+        language: 'en-US',
+        name: 'English',
+        files: LOCALE_FILES.map(file => `en/${file}`)
+      }
+    ]
+  },
 
   runtimeConfig: {
     databaseHost: '',

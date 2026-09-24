@@ -20,6 +20,9 @@ const userForm = ref({
 const pendingAvatarFile = ref<File | null>(null)
 const avatarCleared = ref(false)
 
+const { errors, resetErrors, handleError, setError } = useFormErrors(['name', 'email'] as const, 'save')
+const { toastApiError } = useApiError()
+
 async function loadUser () {
   loading.value = true
   try {
@@ -49,6 +52,7 @@ async function handleSave () {
     return
   }
 
+  resetErrors()
   saving.value = true
   try {
     const result = await editUser(user.value.id, userForm.value)
@@ -70,12 +74,21 @@ async function handleSave () {
     }
 
     isEditing.value = false
+  } catch (error: any) {
+    handleError(error)
+
+    if (error?.data?.data?.code === 'USER.EMAIL_TAKEN') {
+      setError('email', 'errors.USER.EMAIL_TAKEN')
+    } else if (!errors.name && !errors.email) {
+      toastApiError(error, $t('common.save_failed'))
+    }
   } finally {
     saving.value = false
   }
 }
 
 watch(() => isEditing.value, () => {
+  resetErrors()
   userForm.value.name = user.value?.name ?? ''
   userForm.value.email = user.value?.email ?? ''
   pendingAvatarFile.value = null
@@ -105,30 +118,41 @@ onMounted(() => {
             <h1 class="text-dimmed">{{ user.email }}</h1>
           </template>
           <template v-else>
-            <div class="border-b border-accented flex mb-2">
-              <input
-                v-model="userForm.name"
-                class="font-bold text-xl w-full outline-0">
-              <UIcon 
-                name="lucide:pencil"
-                class="opacity-70"
-              />
-            </div>
             <div class="border-b border-accented flex">
               <input
-                v-model="userForm.email"
-                class="w-full outline-0">
-              <UIcon 
+                v-model="userForm.name"
+                :aria-label="$t('profile.name')"
+                :placeholder="$t('profile.name')"
+                class="font-bold text-xl w-full outline-0">
+              <UIcon
                 name="lucide:pencil"
                 class="opacity-70"
               />
             </div>
+            <p
+              v-if="errors.name"
+              class="text-sm text-error">{{ errors.name }}</p>
+            <div class="border-b border-accented flex mt-2">
+              <input
+                v-model="userForm.email"
+                :aria-label="$t('profile.email')"
+                :placeholder="$t('profile.email')"
+                class="w-full outline-0">
+              <UIcon
+                name="lucide:pencil"
+                class="opacity-70"
+              />
+            </div>
+            <p
+              v-if="errors.email"
+              class="text-sm text-error">{{ errors.email }}</p>
           </template>
         </div>
         <UButton
           v-if="canEdit"
           icon="lucide:edit"
           variant="ghost"
+          :aria-label="$t('profile.edit')"
           :disabled="saving"
           class="cursor-pointer absolute top-2 right-2"
           color="neutral"
@@ -142,7 +166,7 @@ onMounted(() => {
           class="cursor-pointer absolute bottom-2 right-2"
           color="success"
           @click="handleSave"
-        >{{ $t('save') }}</UButton>
+        >{{ $t('common.save') }}</UButton>
       </template>
     </div>
   </UContainer>

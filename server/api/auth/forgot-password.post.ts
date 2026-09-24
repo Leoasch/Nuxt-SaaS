@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { User } from '~~/server/database/models/User'
 import { parseBody } from '~~/server/utils/accessValidation'
 import { sendMail } from '~~/server/utils/mailer'
+import { emailMessages } from '~~/shared/emails/messages'
 
 const forgotPasswordSchema = z.object({ email: z.email() })
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000
@@ -22,8 +23,9 @@ export default defineEventHandler(async (event) => {
     try {
       const config = useRuntimeConfig()
       const resetUrl = `${config.appUrl}/auth/reset-password?token=${token}`
-      const rendered = await renderEmail('ForgotPassword', { resetUrl })
-      await sendMail(user.email, { subject: rendered.subject ?? 'Reset your password', html: rendered.html, text: rendered.text })
+      const locale = getRequestLocale(event)
+      const rendered = await renderEmail('ForgotPassword', { resetUrl, locale })
+      await sendMail(user.email, { subject: rendered.subject ?? emailMessages(locale).forgotPassword.subject, html: rendered.html, text: rendered.text })
     } catch (error) {
       console.error('Failed to send password reset email', error)
     }

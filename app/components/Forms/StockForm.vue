@@ -6,11 +6,12 @@ const props = defineProps<{
   orgId: string
 }>()
 
-const { errors, resetErrors, handleError } = useFormErrors([
+const { errors, resetErrors, handleError, setError } = useFormErrors([
   'quantity',
   'reason',
   'product'
 ] as const, 'save')
+const { toastApiError } = useApiError()
 const { loadStock } = useStock()
 
 const loading = ref(false)
@@ -34,15 +35,15 @@ async function save () {
     await loadStock()
     emit('close')
   } catch (error: any) {
-
     handleError(error)
-    if (errors.save) {
-      useToast().add({
-        description: `${ $t('save.error') }: ${$t(errors.save)}`,
-        color: 'error'
-      })
+
+    // the product comes from the query string, so the server reports it as a top-level code
+    const code = error?.data?.data?.code
+    if (code === 'PRODUCT_ID_MISSING' || code === 'PRODUCT.NOT_FOUND') {
+      setError('product', `errors.${code}`)
     }
 
+    toastApiError(error, $t('common.save_failed'))
   } finally {
     loading.value = false
   }

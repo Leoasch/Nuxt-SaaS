@@ -2,7 +2,9 @@
 
 defineProps<{
   title: string,
-  description: string
+  description: string,
+  confirmLabel?: string,
+  cancelLabel?: string
 }>()
 
 defineEmits(['close'])
@@ -27,14 +29,14 @@ defineEmits(['close'])
           variant="ghost"
           @click="$emit('close', false)"
         >
-          {{ $t('cancel.delete') }}
+          {{ cancelLabel ?? $t('common.cancel') }}
         </UButton>
         <UButton
           color="error"
           class="ml-auto mr-0"
           @click="$emit('close', true)"
         >
-          {{ $t('confirm.delete') }}
+          {{ confirmLabel ?? $t('common.delete') }}
         </UButton>
       </div>
     </template>

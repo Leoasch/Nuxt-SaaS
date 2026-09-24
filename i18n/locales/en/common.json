@@ -1,0 +1,50 @@
+{
+  "app": {
+    "title": "Nuxt SaaS",
+    "description": "A SaaS application for testing"
+  },
+  "common": {
+    "save": "Save",
+    "save_failed": "Couldn't save your changes",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "edit": "Edit",
+    "delete": "Delete",
+    "refresh": "Refresh",
+    "more_actions": "More actions",
+    "increase": "Increase",
+    "decrease": "Decrease",
+    "list_view": "List view",
+    "grid_view": "Grid view",
+    "or": "or",
+    "password": "Password",
+    "show_password": "Show password",
+    "hide_password": "Hide password",
+    "type_to_confirm": "Type {value} to confirm.",
+    "select_organization_first": "Select an organization first."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "my_organizations": "My organizations",
+    "products": "Products",
+    "customers": "Customers",
+    "sales": "Sales",
+    "stock": "Stock",
+    "profile": "Profile",
+    "settings": "Settings",
+    "theme": "Theme",
+    "language": "Language",
+    "logout": "Log out",
+    "close_sidebar": "Close sidebar",
+    "toggle_sidebar": "Toggle sidebar"
+  },
+  "role": {
+    "OWNER": "Owner",
+    "ADMIN": "Admin",
+    "MANAGER": "Manager",
+    "EMPLOYEE": "Employee"
+  },
+  "page": {
+    "no_organization_selected": "Select an organization to see this page."
+  }
+}

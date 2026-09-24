@@ -1,0 +1,60 @@
+{
+  "sale": {
+    "create": "Nova venda",
+    "no_sales": "Nenhuma venda ainda.",
+    "title": {
+      "create": "Nova venda"
+    },
+    "save": {
+      "create": "Registrar venda"
+    },
+    "customer": "Cliente",
+    "walk_in_customer": "Cliente avulso",
+    "payment_method_label": "Forma de pagamento",
+    "payment_method": {
+      "cash": "Dinheiro",
+      "credit_card": "Cartão de crédito",
+      "debit_card": "Cartão de débito",
+      "pix": "Pix",
+      "other": "Outro"
+    },
+    "products": "Produtos",
+    "add_product": "Adicionar produto",
+    "remove_product": "Remover produto",
+    "quantity": "Quantidade",
+    "unit_price": "Preço unitário",
+    "total": "Total",
+    "total_value": "Total: {total}",
+    "items_count": "{n} item | {n} itens",
+    "canceled": "Cancelada",
+    "canceled_at": "Cancelada em {date}",
+    "unknown_product": "Produto excluído",
+    "cancel_success": "Venda cancelada.",
+    "confirm_cancel": {
+      "title": "Cancelar esta venda?",
+      "description": "A venda é marcada como cancelada e seus produtos voltam para o estoque. Esta ação não pode ser desfeita.",
+      "keep": "Manter venda"
+    },
+    "card": {
+      "created_at": "Registrada em {date}",
+      "cancel": "Cancelar venda"
+    },
+    "error": {
+      "no_products": "Adicione pelo menos um produto",
+      "no_payment_method": "Escolha uma forma de pagamento"
+    }
+  },
+  "dashboard": {
+    "kpi_revenue": "Receita (30 dias)",
+    "kpi_sales": "Vendas (30 dias)",
+    "kpi_avg_order_value": "Ticket médio (30 dias)",
+    "kpi_active_customers": "Clientes ativos (30 dias)",
+    "period_1d": "24h",
+    "period_7d": "7d",
+    "period_30d": "30d",
+    "revenue_last_1_day": "Receita nas últimas 24 horas",
+    "revenue_last_7_days": "Receita nos últimos 7 dias",
+    "revenue_last_30_days": "Receita nos últimos 30 dias",
+    "sales_count": "Nenhuma venda | 1 venda | {n} vendas"
+  }
+}

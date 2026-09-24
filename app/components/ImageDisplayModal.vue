@@ -9,7 +9,7 @@ defineProps<{
     <template #content>
       <img
         :src="imageUrl"
-        :alt="imageUrl"
+        :alt="$t('images.preview')"
       >
     </template>
   </UModal>

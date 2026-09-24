@@ -12,11 +12,15 @@ const itemCount = computed(() => props.sale.sale_items?.length ?? 0)
 
 const paymentMethodIcon = computed(() => PAYMENT_METHOD_ICONS[props.sale.payment_method] ?? 'lucide:circle-dollar-sign')
 
-const priceFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
-const dateFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+const { t, te, n, d } = useI18n()
 
-const formattedTotal = computed(() => priceFormatter.format(props.sale.total))
-const formattedDate = computed(() => props.sale.createdAt ? dateFormatter.format(new Date(props.sale.createdAt)) : '')
+// payment_method is free text on the server, so unknown values are shown as-is
+const paymentMethodLabel = computed(() => te(`sale.payment_method.${props.sale.payment_method}`)
+  ? t(`sale.payment_method.${props.sale.payment_method}`)
+  : props.sale.payment_method)
+
+const formattedTotal = computed(() => n(props.sale.total, 'currency'))
+const formattedDate = computed(() => props.sale.createdAt ? d(new Date(props.sale.createdAt), 'dateTime') : '')
 </script>
 
 <template>
@@ -53,13 +57,13 @@ const formattedDate = computed(() => props.sale.createdAt ? dateFormatter.format
         <span
           v-if="formattedDate"
           class="truncate">{{ formattedDate }}</span>
-        <span class="shrink-0">{{ itemCount }} {{ $t('sale.items_count') }}</span>
+        <span class="shrink-0">{{ $t('sale.items_count', itemCount) }}</span>
         <UBadge
           color="neutral"
           variant="subtle"
           :icon="paymentMethodIcon"
           class="ml-auto shrink-0">
-          {{ $t(`sale.payment_method.${sale.payment_method}`) }}
+          {{ paymentMethodLabel }}
         </UBadge>
       </div>
     </div>

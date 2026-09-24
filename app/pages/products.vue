@@ -91,13 +91,14 @@ onUnmounted(() => clearTimeout(debounceTimer))
 <template>
   <UContainer class="size-full flex flex-col">
     <div class="flex max-h-full max-w-full">
-      <h1 class="font-bold text-2xl">{{ $t('products') }}</h1>
+      <h1 class="font-bold text-2xl">{{ $t('nav.products') }}</h1>
       <UButton
         v-if="selectedOrganization"
         icon="lucide:refresh-cw"
         color="neutral"
         variant="ghost"
         class="cursor-pointer ml-3"
+        :aria-label="$t('common.refresh')"
         :ui="{
           leadingIcon: 'hover:rotate-90 transition-transform duration-300'
         }"

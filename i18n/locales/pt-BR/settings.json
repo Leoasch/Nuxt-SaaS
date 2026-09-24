@@ -1,0 +1,83 @@
+{
+  "theme": {
+    "title": "Tema",
+    "advanced_options": "Opções avançadas",
+    "mode": {
+      "light": "Claro",
+      "dark": "Escuro"
+    },
+    "preset": {
+      "nuxt": "Nuxt",
+      "ocean": "Oceano",
+      "violet": "Violeta",
+      "sunset": "Pôr do sol",
+      "slate": "Ardósia"
+    },
+    "slot": {
+      "primary": "Primária",
+      "secondary": "Secundária",
+      "success": "Sucesso",
+      "info": "Informação",
+      "warning": "Aviso",
+      "error": "Erro",
+      "neutral": "Neutra"
+    },
+    "color": {
+      "red": "Vermelho",
+      "orange": "Laranja",
+      "amber": "Âmbar",
+      "yellow": "Amarelo",
+      "lime": "Lima",
+      "green": "Verde",
+      "emerald": "Esmeralda",
+      "teal": "Verde-azulado",
+      "cyan": "Ciano",
+      "sky": "Azul-celeste",
+      "blue": "Azul",
+      "indigo": "Índigo",
+      "violet": "Violeta",
+      "purple": "Roxo",
+      "fuchsia": "Fúcsia",
+      "pink": "Rosa",
+      "rose": "Rosé",
+      "slate": "Ardósia",
+      "gray": "Cinza",
+      "zinc": "Zinco",
+      "neutral": "Neutro",
+      "stone": "Pedra"
+    }
+  },
+  "language": {
+    "title": "Idioma",
+    "description": "Escolha o idioma do aplicativo. Os e-mails que você receber também usarão este idioma."
+  },
+  "security": {
+    "title": "Segurança",
+    "password": "Senha",
+    "account": "Conta",
+    "change_password": "Alterar senha",
+    "set_password": "Definir uma senha",
+    "password_changed_successfully": "Sua senha foi atualizada.",
+    "old_password": "Senha atual",
+    "new_password": "Nova senha",
+    "repeat_new_password": "Repita a nova senha",
+    "wrong_current_password": "Sua senha atual está incorreta."
+  },
+  "account": {
+    "delete_button": "Excluir conta",
+    "delete_title": "Excluir sua conta?",
+    "delete_description": "Isso exclui sua conta permanentemente e remove você de todas as organizações das quais participa. As vendas e movimentações de estoque que você registrou são mantidas. Esta ação não pode ser desfeita.",
+    "delete_blocked": "Você é proprietário destas organizações. Transfira a propriedade ou exclua-as antes de excluir sua conta:",
+    "set_password_first": "Você entra com o Google e ainda não tem uma senha. Defina uma acima antes de excluir sua conta.",
+    "delete_confirm": "Excluir minha conta",
+    "wrong_password": "Senha incorreta."
+  },
+  "profile": {
+    "name": "Nome",
+    "email": "E-mail",
+    "edit": "Editar perfil",
+    "avatar_alt": "Foto de perfil de {name}",
+    "upload_avatar": "Enviar uma foto de perfil",
+    "remove_avatar": "Remover foto de perfil"
+  }
+}

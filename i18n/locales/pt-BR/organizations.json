@@ -1,0 +1,75 @@
+{
+  "organization": {
+    "create": "Nova organização",
+    "no_organizations": "Você ainda não participa de nenhuma organização. Crie uma ou aceite um convite para começar.",
+    "name": "Nome",
+    "document": "Documento",
+    "title": {
+      "create": "Nova organização",
+      "edit": "Editar organização"
+    },
+    "save": {
+      "create": "Criar organização",
+      "edit": "Salvar alterações"
+    },
+    "edit_organization": "Editar organização",
+    "delete_organization": "Excluir organização",
+    "delete_organization_title": "Excluir esta organização?",
+    "delete_organization_description": "Isso exclui permanentemente a organização com todos os seus produtos, clientes, vendas e movimentações de estoque, e remove todos os membros. Esta ação não pode ser desfeita.",
+    "members": "Membros",
+    "no_members": "Esta organização ainda não tem membros.",
+    "invite_text": "Você foi convidado para participar desta organização.",
+    "accept_invite": "Aceitar convite",
+    "decline_invite": "Recusar convite",
+    "confirm_decline_title": "Recusar este convite?",
+    "confirm_decline_description": "Você não poderá participar desta organização a menos que alguém o convide novamente.",
+    "not_found": "Esta organização não existe ou você não tem acesso a ela.",
+    "page": "Abrir página",
+    "select_button": "Selecionar",
+    "select": {
+      "placeholder": "Selecione uma organização"
+    },
+    "search": {
+      "empty": "Nenhuma organização encontrada"
+    },
+    "no_pending_invites": "Nenhum convite pendente"
+  },
+  "member": {
+    "pending": "Pendente",
+    "profile": "Ver perfil",
+    "alter_permission": "Alterar cargo",
+    "transfer_ownership": "Transferir propriedade",
+    "cancel_invite": "Cancelar convite",
+    "quit": "Sair da organização",
+    "kick": "Remover membro",
+    "kick_title": "Remover este membro?",
+    "kick_description": "Ele perderá o acesso a esta organização. Você pode convidá-lo novamente depois.",
+    "cancel_invite_title": "Cancelar este convite?",
+    "cancel_invite_description": "O usuário não poderá participar a menos que seja convidado novamente.",
+    "confirm_exit_title": "Sair desta organização?",
+    "confirm_exit_description": "Você perderá o acesso a esta organização até que alguém o convide novamente.",
+    "transfer_ownership_title": "Transferir a propriedade?",
+    "transfer_ownership_description": "Este membro passa a ser o proprietário da organização e você passa a ser administrador. Somente o novo proprietário pode transferi-la de volta.",
+    "invite": {
+      "button": "Convidar membro",
+      "title": "Convidar membro",
+      "edit_title": "Alterar cargo",
+      "user": "Usuário",
+      "role": "Cargo",
+      "not_allowed": "Somente gerentes ou cargos acima podem convidar membros.",
+      "save": "Enviar convite",
+      "save_role": "Salvar cargo"
+    }
+  },
+  "user": {
+    "select": {
+      "placeholder": "Buscar por nome ou e-mail"
+    },
+    "selector": {
+      "clear": "Limpar seleção"
+    },
+    "search": {
+      "empty": "Nenhum usuário encontrado"
+    }
+  }
+}

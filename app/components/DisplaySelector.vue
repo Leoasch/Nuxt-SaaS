@@ -11,6 +11,9 @@ const displayType = defineModel<DisplayType>({ default: () => 'list' })
         flex items-center justify-center w-full p-1 cursor-pointer hover:bg-accented/40 transition-all duration-300
         ${displayType === 'list' ? 'bg-accented/30' : ''}
       `"
+      role="button"
+      :aria-label="$t('common.list_view')"
+      :aria-pressed="displayType === 'list'"
       @click="() => displayType = 'list'">
       <UIcon
         :class="`
@@ -26,6 +29,9 @@ const displayType = defineModel<DisplayType>({ default: () => 'list' })
         flex items-center justify-center w-full p-1 cursor-pointer hover:bg-accented/40 transition-all duration-300
         ${displayType === 'grid' ? 'bg-accented/30' : ''}
       `"
+      role="button"
+      :aria-label="$t('common.grid_view')"
+      :aria-pressed="displayType === 'grid'"
       @click="() => displayType = 'grid'">
       <UIcon
         :class="`

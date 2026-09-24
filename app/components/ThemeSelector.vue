@@ -76,7 +76,7 @@ const slotLabels: Record<ColorSlot | 'neutral', string> = {
                   class="flex size-8 cursor-pointer items-center justify-center rounded-full border-2 transition-transform hover:scale-110"
                   :class="currentColors[slot] === option ? 'border-primary' : 'border-transparent'"
                   :style="{ backgroundColor: COLOR_SWATCH[option] }"
-                  :aria-label="option"
+                  :aria-label="$t('theme.color.' + option)"
                   @click="setSlot(slot, option)">
                   <UIcon
                     v-if="currentColors[slot] === option"

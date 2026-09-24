@@ -1,6 +1,6 @@
 <template>
   <div class="w-full flex flex-col gap-4 ">
-    <USeparator :label="$t('or')"/>
+    <USeparator :label="$t('common.or')"/>
     <UButton
       to="/auth/google"
       external
@@ -11,7 +11,7 @@
         base: 'p-3'
       }"
       block>
-      {{ $t('continue_with_google') }}
+      {{ $t('auth.continue_with_google') }}
     </UButton>
   </div>
 </template>

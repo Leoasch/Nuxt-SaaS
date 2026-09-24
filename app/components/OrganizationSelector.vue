@@ -155,7 +155,7 @@ onUnmounted(() => {
               :icon="ROLE_STYLES[organization.role].icon"
               variant="subtle"
               class="shrink-0 mr-auto">
-              {{ $t(ROLE_STYLES[organization.role].label) }}
+              {{ $t('role.' + organization.role) }}
             </UBadge>
           </div>
         </button>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { deleteProduct, getProductImages, getProducts } from '~/api/products'
-import { priceFormatter } from '~/common'
 import type { Product, ProductImage } from '~~/shared/types'
 import ProductForm from '../Forms/ProductForm.vue'
 import ConfirmDeleteDialog from '../ConfirmDeleteDialog.vue'
@@ -16,6 +15,8 @@ const { selectedOrganizationId } = useOrganization()
 const { loadProducts } = useProducts()
 const overlay = useOverlay()
 const emits = defineEmits(['close'])
+const { n } = useI18n()
+const { toastApiError } = useApiError()
 
 async function onLoad () {
   try {
@@ -61,22 +62,26 @@ async function onDelete () {
   }).open()
   if (await dialog.result) {
     if (product.value) {
-      const result = await deleteProduct(product.value.organization_id, product.value.id)
-      if (result.product) {
-        useToast().add({
-          description: $t('product.delete_success'),
-          color: 'success'
-        })
-        await loadProducts()
-        emits('close')
+      try {
+        const result = await deleteProduct(product.value.organization_id, product.value.id)
+        if (result.product) {
+          useToast().add({
+            description: $t('product.delete_success'),
+            color: 'success'
+          })
+          await loadProducts()
+          emits('close')
+        }
+      } catch (error) {
+        toastApiError(error)
       }
     }
   }
 }
 
 const isLowStock = computed(() => !!product.value && product.value.stock_quantity <= product.value.minimum_stock)
-const formattedSalePrice = computed(() => product.value ? priceFormatter.format(product.value.sale_price) : '')
-const formattedCostPrice = computed(() => product.value ? priceFormatter.format(product.value.cost_price) : '')
+const formattedSalePrice = computed(() => product.value ? n(product.value.sale_price, 'currency') : '')
+const formattedCostPrice = computed(() => product.value ? n(product.value.cost_price, 'currency') : '')
 </script>
 
 <template>
@@ -93,6 +98,7 @@ const formattedCostPrice = computed(() => product.value ? priceFormatter.format(
         <ImageCarousel
           :images="images"
           :product-id="product.id"
+          :product-name="product.name"
           :org-id="product.organization_id"
           class="size-24 shrink-0"
         />
@@ -119,7 +125,7 @@ const formattedCostPrice = computed(() => product.value ? priceFormatter.format(
           <UIcon
             name="lucide:hash"
             class="size-4 shrink-0 text-dimmed"/>
-          <span class="truncate">{{ $t('product.sku') }}: {{ product.sku }}</span>
+          <span class="truncate">{{ $t('product.sku_value', { sku: product.sku }) }}</span>
         </div>
         <div
           v-if="product.barcode"
@@ -127,7 +133,7 @@ const formattedCostPrice = computed(() => product.value ? priceFormatter.format(
           <UIcon
             name="lucide:barcode"
             class="size-4 shrink-0 text-dimmed"/>
-          <span class="truncate">{{ $t('product.barcode') }}: {{ product.barcode }}</span>
+          <span class="truncate">{{ $t('product.barcode_value', { barcode: product.barcode }) }}</span>
         </div>
       </div>
 

@@ -13,6 +13,7 @@ const { errors, resetErrors, handleError } = useFormErrors([
   'phone',
   'document',
 ] as const, 'save')
+const { toastApiError } = useApiError()
 const { loadCustomers } = useCustomers()
 
 const type = computed(() => props.customer ? 'edit' : 'create')
@@ -42,15 +43,8 @@ async function save () {
     await loadCustomers()
     emit('close', true)
   } catch (error: any) {
-
     handleError(error)
-    if (errors.save) {
-      useToast().add({
-        description: `${ $t('save.error') }: ${$t(errors.save)}`,
-        color: 'error'
-      })
-    }
-
+    toastApiError(error, $t('common.save_failed'))
   } finally {
     loading.value = false
   }

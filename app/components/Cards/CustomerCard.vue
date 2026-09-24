@@ -14,6 +14,8 @@ const { selectedOrganizationId } = useOrganization()
 const { loadCustomers } = useCustomers()
 const overlay = useOverlay()
 const emits = defineEmits(['close'])
+const { d } = useI18n()
+const { toastApiError } = useApiError()
 
 async function onLoad () {
   try {
@@ -44,8 +46,7 @@ async function onEdit () {
   }
 }
 
-const dateFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' })
-const formattedCreatedAt = computed(() => customer.value?.createdAt ? dateFormatter.format(new Date(customer.value.createdAt)) : '')
+const formattedCreatedAt = computed(() => customer.value?.createdAt ? d(new Date(customer.value.createdAt), 'longDate') : '')
 
 async function onDelete () {
   const dialog = overlay.create(ConfirmDeleteDialog, {
@@ -56,14 +57,18 @@ async function onDelete () {
   }).open()
   if (await dialog.result) {
     if (customer.value) {
-      const result = await deleteCustomer(customer.value?.organization_id, customer.value.id)
-      if (result.customer) {
-        useToast().add({
-          description: $t('customer.delete_success'),
-          color: 'success'
-        })
-        await loadCustomers()
-        emits('close')
+      try {
+        const result = await deleteCustomer(customer.value?.organization_id, customer.value.id)
+        if (result.customer) {
+          useToast().add({
+            description: $t('customer.delete_success'),
+            color: 'success'
+          })
+          await loadCustomers()
+          emits('close')
+        }
+      } catch (error) {
+        toastApiError(error)
       }
     }
   }
@@ -90,7 +95,7 @@ async function onDelete () {
           <h1 class="truncate text-lg font-bold">{{ customer.name }}</h1>
           <span
             v-if="formattedCreatedAt"
-            class="text-xs text-dimmed">{{ $t('customer.card.customer_since') }} {{ formattedCreatedAt }}</span>
+            class="text-xs text-dimmed">{{ $t('customer.card.customer_since', { date: formattedCreatedAt }) }}</span>
         </div>
       </div>
 

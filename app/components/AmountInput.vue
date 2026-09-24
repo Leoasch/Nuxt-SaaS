@@ -3,6 +3,7 @@
 const props = defineProps<{
   helpers?: boolean
   min?: number
+  label?: string
 }>()
 
 const model = defineModel<number>({ default: () => 1 })
@@ -38,28 +39,39 @@ function onBlur () {
 
 <template>
   <div class="flex items-center gap-1">
-    <UIcon
+    <button
       v-if="helpers"
-      name="lucide:minus"
-      class="size-6 bg-error-500"
-      :class="canSubtract ? '' : 'bg-neutral-500 cursor-not-allowed'"
-      @click="subtract"
-    />
+      type="button"
+      class="flex"
+      :aria-label="$t('common.decrease')"
+      @click="subtract">
+      <UIcon
+        name="lucide:minus"
+        class="size-6 bg-error-500"
+        :class="canSubtract ? '' : 'bg-neutral-500 cursor-not-allowed'"
+      />
+    </button>
     <UInput
       v-model.number="model"
       type="number"
       :min="min"
+      :aria-label="label"
       class="w-16 sm:w-20 text-center"
       :ui="{
         base: 'text-center py-2 px-4 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
       }"
       @blur="onBlur"
     />
-    <UIcon
+    <button
       v-if="helpers"
-      name="lucide:plus"
-      class="size-6 bg-success-500"
-      @click="add"
-    />
+      type="button"
+      class="flex"
+      :aria-label="$t('common.increase')"
+      @click="add">
+      <UIcon
+        name="lucide:plus"
+        class="size-6 bg-success-500"
+      />
+    </button>
   </div>
 </template>

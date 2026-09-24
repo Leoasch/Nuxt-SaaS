@@ -7,6 +7,7 @@ const props = defineProps<{
 }>()
 
 const { errors, resetErrors, handleError } = useFormErrors(['name', 'document'] as const, 'save')
+const { toastApiError } = useApiError()
 const { loadOrganizations } = useOrganization()
 
 const type = computed(() => props.organization ? 'edit' : 'create')
@@ -36,15 +37,8 @@ async function save () {
       emit('close', true)
     }    
   } catch (error: any) {
-
     handleError(error)
-    if (errors.save) {
-      useToast().add({
-        description: `${ $t('save.error') }: ${$t(errors.save)}`,
-        color: 'error'
-      })
-    }
-
+    toastApiError(error, $t('common.save_failed'))
   } finally {
     loading.value = false
   }

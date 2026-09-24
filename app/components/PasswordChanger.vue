@@ -8,7 +8,11 @@ const hasPassword = computed(() => user.value?.hasPassword !== false)
 const formOpen = ref(false)
 const loading = ref(false)
 const displaySuccessMessage = ref(false)
-const { errors, resetErrors, handleError } = useFormErrors(['oldPassword', 'newPassword', 'repeatNewPassword'] as const, 'changePassword')
+const { errors, resetErrors, handleError } = useFormErrors(
+  ['oldPassword', 'newPassword', 'repeatNewPassword'] as const,
+  'changePassword',
+  { overrides: { AUTH_INVALID_CREDENTIALS: 'security.wrong_current_password' } }
+)
 
 const form = ref<ChangePasswordBody>({
   oldPassword: '',
@@ -103,7 +107,7 @@ watch(() => formOpen.value, (newVal) => {
             class="cursor-pointer"
             @click="changePassword"
           >
-            {{ $t('save') }}
+            {{ $t('common.save') }}
           </UButton>
           <UButton
             :disabled="loading"
@@ -112,7 +116,7 @@ watch(() => formOpen.value, (newVal) => {
             class="cursor-pointer"
             @click="formOpen = false"
           >
-            {{ $t('cancel') }}
+            {{ $t('common.cancel') }}
           </UButton>
         </div>
       </UFormField>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { emptyLine, priceFormatter } from '~/common'
+import { emptyLine } from '~/common'
 import type { SaleLine } from '~~/shared/types'
 
 defineProps<{
@@ -34,6 +34,7 @@ defineEmits<{ select: [product: Product | null], delete: [] }>()
       <AmountInput
         v-model="line.quantity"
         :min="1"
+        :label="$t('sale.quantity')"
         helpers
       />
       <PriceInput
@@ -42,12 +43,13 @@ defineEmits<{ select: [product: Product | null], delete: [] }>()
         :placeholder="$t('sale.unit_price')"
       />
       <span class="w-20 shrink-0 text-right text-sm text-dimmed sm:w-28">
-        {{ priceFormatter.format(lineTotal(line)) }}
+        {{ $n(lineTotal(line), 'currency') }}
       </span>
       <UButton
         icon="lucide:trash-2"
         color="error"
         variant="ghost"
+        :aria-label="$t('sale.remove_product')"
         :disabled="!canDelete"
         @click="() => $emit('delete')"
       />

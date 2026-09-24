@@ -34,13 +34,14 @@ function openCard (id: string) {
 <template>
   <UContainer class="size-full flex flex-col">
     <div class="flex">
-      <h1 class="font-bold text-2xl">{{ $t('sales') }}</h1>
+      <h1 class="font-bold text-2xl">{{ $t('nav.sales') }}</h1>
       <template v-if="selectedOrganization">
         <UButton
           icon="lucide:refresh-cw"
           color="neutral"
           variant="ghost"
           class="cursor-pointer ml-3"
+          :aria-label="$t('common.refresh')"
           :ui="{
             leadingIcon: 'hover:rotate-90 transition-transform duration-300'
           }"
@@ -68,7 +69,7 @@ function openCard (id: string) {
         <p
           v-if="sales.length === 0"
           class="text-dimmed text-sm">
-          {{ $t('sales.no_sales') }}
+          {{ $t('sale.no_sales') }}
         </p>
         <template v-else>
           <div

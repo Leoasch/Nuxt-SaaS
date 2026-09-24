@@ -1,5 +1,15 @@
 <script setup>
+import { en, pt_br } from '@nuxt/ui/locale'
+
+const { t, locale, localeProperties } = useI18n()
+
+const UI_LOCALES = { 'pt-BR': pt_br, 'en': en }
+const uiLocale = computed(() => UI_LOCALES[locale.value] ?? pt_br)
+
 useHead({
+  htmlAttrs: {
+    lang: () => localeProperties.value.language
+  },
   meta: [
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
   ],
@@ -8,19 +18,16 @@ useHead({
   ]
 })
 
-const title = 'Nuxt SaaS'
-const description = 'Uma aplicação SaaS para teste'
-
 useSeoMeta({
-  title,
-  description,
-  ogTitle: title,
-  ogDescription: description
+  title: () => t('app.title'),
+  description: () => t('app.description'),
+  ogTitle: () => t('app.title'),
+  ogDescription: () => t('app.description')
 })
 </script>
 
 <template>
-  <UApp>
+  <UApp :locale="uiLocale">
     <UMain class="h-dvh w-dvw">
       <NuxtLayout>
         <NuxtPage/>

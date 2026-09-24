@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cancelSale, getSales } from '~/api/sales'
-import { PAYMENT_METHOD_ICONS, priceFormatter } from '~/common'
+import { PAYMENT_METHOD_ICONS } from '~/common'
 import CustomerCard from './CustomerCard.vue'
 import ConfirmDeleteDialog from '../ConfirmDeleteDialog.vue'
 
@@ -14,7 +14,14 @@ const { selectedOrganizationId } = useOrganization()
 const { loadSales } = useSales()
 const customer = computed(() => sale.value?.customer ?? null)
 const paymentMethodIcon = computed(() => PAYMENT_METHOD_ICONS[sale.value?.payment_method ?? ''] ?? 'lucide:circle-dollar-sign')
-const formattedTotal = computed(() => sale.value ? priceFormatter.format(sale.value.total) : '')
+const { t, te, n } = useI18n()
+const { toastApiError } = useApiError()
+// payment_method is free text on the server, so unknown values are shown as-is
+const paymentMethodLabel = computed(() => {
+  const method = sale.value?.payment_method ?? ''
+  return te(`sale.payment_method.${method}`) ? t(`sale.payment_method.${method}`) : method
+})
+const formattedTotal = computed(() => sale.value ? n(sale.value.total, 'currency') : '')
 const overlay = useOverlay()
 
 async function onLoad () {
@@ -44,6 +51,8 @@ async function onCancel () {
     props: {
       title: $t('sale.confirm_cancel.title'),
       description: $t('sale.confirm_cancel.description'),
+      confirmLabel: $t('sale.card.cancel'),
+      cancelLabel: $t('sale.confirm_cancel.keep')
     }
   }).open()
 
@@ -59,6 +68,8 @@ async function onCancel () {
         })
         await loadSales()
       }
+    } catch (error) {
+      toastApiError(error)
     } finally {
       loading.value = false
     }
@@ -101,7 +112,7 @@ async function onCancel () {
           color="neutral"
           variant="subtle"
           :icon="paymentMethodIcon">
-          {{ $t(`sale.payment_method.${sale.payment_method}`) }}
+          {{ paymentMethodLabel }}
         </UBadge>
       </div>
       <div
@@ -110,7 +121,7 @@ async function onCancel () {
         <UIcon
           name="lucide:ban"
           class="size-4 shrink-0"/>
-        <span class="text-sm font-medium">{{ $t('sale.canceled_at') }}: {{ (new Date(sale.canceled_at)).toLocaleString() }}</span>
+        <span class="text-sm font-medium">{{ $t('sale.canceled_at', { date: $d(new Date(sale.canceled_at), 'dateTime') }) }}</span>
       </div>
       <div class="flex flex-col divide-y divide-accented rounded border border-accented bg-accented/20 dark:bg-accented/30">
         <div
@@ -120,13 +131,13 @@ async function onCancel () {
           <div class="flex min-w-0 flex-1 flex-col">
             <span class="truncate font-medium">{{ saleItem.product?.name ?? $t('sale.unknown_product') }}</span>
             <span class="text-xs text-dimmed">
-              {{ saleItem.quantity }} × {{ priceFormatter.format(saleItem.unit_price) }}
+              {{ saleItem.quantity }} × {{ $n(saleItem.unit_price, 'currency') }}
               <span
                 v-if="saleItem.original_unit_price > saleItem.unit_price"
-                class="ml-1 line-through">{{ priceFormatter.format(saleItem.original_unit_price) }}</span>
+                class="ml-1 line-through">{{ $n(saleItem.original_unit_price, 'currency') }}</span>
             </span>
           </div>
-          <span class="shrink-0 font-semibold">{{ priceFormatter.format(saleItem.total) }}</span>
+          <span class="shrink-0 font-semibold">{{ $n(saleItem.total, 'currency') }}</span>
         </div>
       </div>
 
@@ -138,7 +149,7 @@ async function onCancel () {
         v-if="sale?.createdAt" 
         class="text-dimmed text-sm"
       >
-        {{ $t('sale.card.created_at') }}: {{ (new Date(sale.createdAt)).toLocaleString() }}
+        {{ $t('sale.card.created_at', { date: $d(new Date(sale.createdAt), 'dateTime') }) }}
       </span>
     </div>
     <template #footer-btns>

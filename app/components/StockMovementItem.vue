@@ -6,6 +6,7 @@ const props = defineProps<{
 }>()
 
 const isPositiveStock = computed(() => props.movement.quantity >= 0)
+const { formatReason } = useStockReason()
 </script>
 
 <template>
@@ -21,7 +22,7 @@ const isPositiveStock = computed(() => props.movement.quantity >= 0)
 
     <div class="flex min-w-0 flex-1 flex-col justify-center">
       <h1 class="truncate font-bold">{{ movement.product_name }}</h1>
-      <h1 class="truncate text-dimmed text-sm">{{ movement.reason }}</h1>
+      <h1 class="truncate text-dimmed text-sm">{{ formatReason(movement.reason) }}</h1>
     </div>
 
     <div class="flex items-center gap-2 mr-2 justify-between">

@@ -2,7 +2,9 @@
 const props = defineProps<{
   title: string,
   description: string,
-  email: string
+  email: string,
+  confirmLabel?: string,
+  cancelLabel?: string
 }>()
 
 defineEmits(['close'])
@@ -23,11 +25,15 @@ const isValid = computed(() => (expectedValue.value?.length ?? 0) > 0 && input.v
     <template #body>
       <div class="flex flex-col gap-3">
         <p class="text-dimmed">{{ description }}</p>
-        <p class="text-sm text-dimmed">
-          {{ $t('member.transfer_ownership_confirm_prefix') }}
-          <span class="font-bold text-default">{{ expectedValue }}</span>
-          {{ $t('member.transfer_ownership_confirm_suffix') }}
-        </p>
+        <i18n-t
+          keypath="common.type_to_confirm"
+          scope="global"
+          tag="p"
+          class="text-sm text-dimmed">
+          <template #value>
+            <span class="font-bold text-default">{{ expectedValue }}</span>
+          </template>
+        </i18n-t>
         <UInput
           v-model="input"
           :placeholder="expectedValue"
@@ -43,7 +49,7 @@ const isValid = computed(() => (expectedValue.value?.length ?? 0) > 0 && input.v
           variant="ghost"
           @click="$emit('close', false)"
         >
-          {{ $t('cancel.transfer') }}
+          {{ cancelLabel ?? $t('common.cancel') }}
         </UButton>
         <UButton
           color="error"
@@ -51,7 +57,7 @@ const isValid = computed(() => (expectedValue.value?.length ?? 0) > 0 && input.v
           :disabled="!isValid"
           @click="$emit('close', true)"
         >
-          {{ $t('confirm.transfer') }}
+          {{ confirmLabel ?? $t('common.confirm') }}
         </UButton>
       </div>
     </template>

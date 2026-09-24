@@ -4,7 +4,7 @@ export function emptyLine (): SaleLine {
   return { product_id: null, product: null, quantity: 1, unit_price: 0 }
 }
 
-export const priceFormatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+export const CURRENCY = 'BRL'
 
 export const PAYMENT_METHOD_ICONS: Record<string, string> = {
   cash: 'lucide:banknote',
@@ -14,9 +14,9 @@ export const PAYMENT_METHOD_ICONS: Record<string, string> = {
   other: 'lucide:circle-dollar-sign'
 }
 
-export const ROLE_STYLES: Record<Role, { label: string; color: 'primary' | 'error' | 'warning' | 'neutral'; icon: string; accent: string }> = {
-  OWNER: { label: 'owner', color: 'primary', icon: 'i-lucide-crown', accent: 'border-l-primary' },
-  ADMIN: { label: 'admin', color: 'error', icon: 'i-lucide-shield-check', accent: 'border-l-error' },
-  MANAGER: { label: 'manager', color: 'warning', icon: 'i-lucide-briefcase', accent: 'border-l-warning' },
-  EMPLOYEE: { label: 'employee', color: 'neutral', icon: 'i-lucide-user', accent: 'border-l-neutral' },
+export const ROLE_STYLES: Record<Role, { color: 'primary' | 'error' | 'warning' | 'neutral'; icon: string; accent: string }> = {
+  OWNER: { color: 'primary', icon: 'i-lucide-crown', accent: 'border-l-primary' },
+  ADMIN: { color: 'error', icon: 'i-lucide-shield-check', accent: 'border-l-error' },
+  MANAGER: { color: 'warning', icon: 'i-lucide-briefcase', accent: 'border-l-warning' },
+  EMPLOYEE: { color: 'neutral', icon: 'i-lucide-user', accent: 'border-l-neutral' },
 }

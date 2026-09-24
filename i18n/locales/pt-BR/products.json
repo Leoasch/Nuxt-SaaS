@@ -1,0 +1,67 @@
+{
+  "product": {
+    "create": "Novo produto",
+    "no_products": "Nenhum produto ainda.",
+    "name": "Nome",
+    "sku": "SKU",
+    "sku_value": "SKU: {sku}",
+    "barcode": "Código de barras",
+    "barcode_value": "Código de barras: {barcode}",
+    "cost_price": "Preço de custo",
+    "sale_price": "Preço de venda",
+    "minimum_stock": "Estoque mínimo",
+    "title": {
+      "create": "Novo produto",
+      "edit": "Editar produto"
+    },
+    "save": {
+      "create": "Criar produto",
+      "edit": "Salvar alterações"
+    },
+    "confirm_delete": {
+      "title": "Excluir este produto?",
+      "description": "Isso exclui permanentemente o produto e suas imagens. Esta ação não pode ser desfeita."
+    },
+    "delete_success": "Produto excluído.",
+    "search": {
+      "placeholder": "Buscar produtos",
+      "empty": "Nenhum produto encontrado"
+    },
+    "select": {
+      "placeholder": "Buscar um produto"
+    },
+    "selector": {
+      "clear": "Limpar seleção"
+    }
+  },
+  "images": {
+    "add": "Adicionar imagens",
+    "none": "Nenhuma imagem ainda",
+    "alt": "{name}, imagem {n}",
+    "preview": "Pré-visualização da imagem",
+    "view": "Ver imagem",
+    "remove": "Remover imagem",
+    "size": {
+      "b": "{size} B",
+      "kb": "{size} KB",
+      "mb": "{size} MB"
+    }
+  },
+  "stock": {
+    "create": "Nova movimentação",
+    "no_movements": "Nenhuma movimentação de estoque ainda.",
+    "title": {
+      "create": "Nova movimentação de estoque"
+    },
+    "save": {
+      "create": "Salvar movimentação"
+    },
+    "product": "Produto",
+    "quantity": "Quantidade",
+    "reason": "Motivo",
+    "reasons": {
+      "sale": "Venda {id}",
+      "sale_canceled": "Venda {id} cancelada"
+    }
+  }
+}

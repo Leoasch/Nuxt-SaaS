@@ -18,6 +18,7 @@ const loading = ref<boolean>(false)
 const overlay = useOverlay()
 const { user } = useUserSession()
 const { loadOrganizations, paging } = useOrganization()
+const { toastApiError } = useApiError()
 
 async function loadOrganization () {
   if (org_id) {
@@ -52,7 +53,7 @@ const items = computed<DropdownMenuItem[]>(() => {
   
   if (hasMinimumRole(organization.value?.role, 'ADMIN')) {
     arr.push({
-      label: 'organization.edit_organization',
+      label: $t('organization.edit_organization'),
       icon: 'lucide:pencil',
       onSelect: openEditForm
     })
@@ -60,7 +61,7 @@ const items = computed<DropdownMenuItem[]>(() => {
 
   if (hasMinimumRole(organization.value?.role, 'OWNER')) {
     arr.push({
-      label: 'organization.delete_organization',
+      label: $t('organization.delete_organization'),
       color: 'error',
       icon: 'lucide:trash',
       onSelect: deleteOrganizationForm
@@ -78,16 +79,21 @@ async function deleteOrganizationForm () {
     props: {
       title: $t('organization.delete_organization_title'),
       description: $t('organization.delete_organization_description'),
-      email: user.value?.email ?? ''
+      email: user.value?.email ?? '',
+      confirmLabel: $t('organization.delete_organization')
     }
   }).open()
   if (await dialog.result) {
-    const result = await deleteOrganization(organization.value.id)
+    try {
+      const result = await deleteOrganization(organization.value.id)
 
-    if (result.organization) {
-      paging.value.index = 0
-      await loadOrganizations()
-      navigateTo('/organizations')
+      if (result.organization) {
+        paging.value.index = 0
+        await loadOrganizations()
+        navigateTo('/organizations')
+      }
+    } catch (error) {
+      toastApiError(error)
     }
   }
 }
@@ -123,7 +129,7 @@ async function openInviteForm (member?: Membership) {
 
 async function removeMember (
   member: Membership, 
-  dialogBody: { title: string, description: string },
+  dialogBody: { title: string, description: string, confirmLabel: string },
   dialogComponent = ConfirmDialog,
   onQuit = async () => await loadMembers()
 ) {
@@ -131,14 +137,15 @@ async function removeMember (
     return
   }
   const dialog = overlay.create(dialogComponent, {
-    props: {
-      title: dialogBody.title,
-      description: dialogBody.description
-    }
+    props: dialogBody
   }).open()
   if (await dialog.result) {
-    await deleteMember(member)
-    await onQuit()
+    try {
+      await deleteMember(member)
+      await onQuit()
+    } catch (error) {
+      toastApiError(error)
+    }
   }
 }
 
@@ -147,7 +154,8 @@ async function kickMember (member: Membership) {
     member,
     {
       title: $t('member.kick_title'),
-      description: $t('member.kick_description')
+      description: $t('member.kick_description'),
+      confirmLabel: $t('member.kick')
     }
   )
 }
@@ -157,7 +165,8 @@ async function cancelInvitation (member: Membership) {
     member,
     {
       title: $t('member.cancel_invite_title'),
-      description: $t('member.cancel_invite_description')
+      description: $t('member.cancel_invite_description'),
+      confirmLabel: $t('member.cancel_invite')
     }
   )
 }
@@ -167,7 +176,8 @@ async function quitOrganization (member: Membership) {
     member,
     {
       title: $t('member.confirm_exit_title'),
-      description: $t('member.confirm_exit_description')
+      description: $t('member.confirm_exit_description'),
+      confirmLabel: $t('member.quit')
     },
     ConfirmDeleteDialog,
     async () => {
@@ -184,12 +194,17 @@ async function transferOwnershipTo (member: Membership) {
     props: {
       title: $t('member.transfer_ownership_title'),
       description: $t('member.transfer_ownership_description'),
-      email: member.user?.email ?? ''
+      email: member.user?.email ?? '',
+      confirmLabel: $t('member.transfer_ownership')
     }
   }).open()
   if (await dialog.result) {
-    await transferOwnership(member)
-    await Promise.all([loadOrganization(), loadMembers()])
+    try {
+      await transferOwnership(member)
+      await Promise.all([loadOrganization(), loadMembers()])
+    } catch (error) {
+      toastApiError(error)
+    }
   }
 }
 
@@ -197,10 +212,14 @@ async function acceptInvite () {
   if (!organization.value) {
     return
   }
-  const result = await acceptOrganizationInvite(organization.value.id, true)
-  if (!result.membership.pending_invite) {
-    await loadMembers()
-    organization.value.is_member = true
+  try {
+    const result = await acceptOrganizationInvite(organization.value.id, true)
+    if (!result.membership.pending_invite) {
+      await loadMembers()
+      organization.value.is_member = true
+    }
+  } catch (error) {
+    toastApiError(error)
   }
 }
 
@@ -209,13 +228,21 @@ async function declineInvite () {
     return
   }
   const dialog = overlay.create(ConfirmDialog, {
-    props: { title: $t('confirm_decline_title'), description: $t('confirm_decline_description') }
+    props: {
+      title: $t('organization.confirm_decline_title'),
+      description: $t('organization.confirm_decline_description'),
+      confirmLabel: $t('organization.decline_invite')
+    }
   }).open()
   if (await dialog.result) {
-    const result = await acceptOrganizationInvite(organization.value.id, false)
-    if (result.membership.pending_invite) {
-      organization.value = null
-      navigateTo('/')
+    try {
+      const result = await acceptOrganizationInvite(organization.value.id, false)
+      if (result.membership.pending_invite) {
+        organization.value = null
+        navigateTo('/')
+      }
+    } catch (error) {
+      toastApiError(error)
     }
   }
 }
@@ -263,7 +290,7 @@ onMounted(async () => {
                 variant="subtle"
                 :class="!organization.is_member ? 'opacity-60' : ''"
               >
-                {{ $t(ROLE_STYLES[organization.role].label) }}
+                {{ $t('role.' + organization.role) }}
               </UBadge>
             </div>
           </div>
@@ -278,6 +305,7 @@ onMounted(async () => {
               color="neutral"
               variant="ghost"
               class="cursor-pointer"
+              :aria-label="$t('common.more_actions')"
             />
           </UDropdownMenu>
         </div>
@@ -303,7 +331,7 @@ onMounted(async () => {
                 class="ml-auto mr-0 cursor-pointer font-bold"
                 @click="() => openInviteForm()"
               >
-                {{ $t('invite') }}
+                {{ $t('member.invite.button') }}
               </UButton>
             </div>
             <p

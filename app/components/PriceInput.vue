@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CURRENCY } from '~/common'
+
 withDefaults(defineProps<{
   placeholder?: string
   min?: number
@@ -7,6 +9,7 @@ withDefaults(defineProps<{
 })
 
 const price = defineModel<number>({ default: 0 })
+const { locale } = useI18n()
 </script>
 
 <template>
@@ -14,8 +17,8 @@ const price = defineModel<number>({ default: 0 })
     v-model="price"
     :min="min"
     :step="0.01"
-    :format-options="{ style: 'currency', currency: 'BRL' }"
-    locale="pt-BR"
+    :format-options="{ style: 'currency', currency: CURRENCY }"
+    :locale="locale"
     :increment="false"
     :decrement="false"
     :placeholder="placeholder"

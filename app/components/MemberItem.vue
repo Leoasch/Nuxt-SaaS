@@ -105,7 +105,7 @@ const items = computed<DropdownMenuItem[]>(() => {
           variant="subtle"
           size="sm"
           class="shrink-0">
-          {{ $t(ROLE_STYLES[member.role].label) }}
+          {{ $t('role.' + member.role) }}
         </UBadge>
       </div>
     </div>
@@ -120,6 +120,7 @@ const items = computed<DropdownMenuItem[]>(() => {
         color="neutral"
         variant="ghost"
         class="cursor-pointer"
+        :aria-label="$t('common.more_actions')"
       />
     </UDropdownMenu>
   </div>

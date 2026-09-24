@@ -22,6 +22,7 @@ const { errors, resetErrors, handleError } = useFormErrors([
   'user_id',
   'role',
 ] as const, 'save')
+const { toastApiError } = useApiError()
 
 const loading = ref(false)
 const emit = defineEmits(['close'])
@@ -45,15 +46,8 @@ async function save () {
     }
     emit('close', true)
   } catch (error: any) {
-
     handleError(error)
-    if (errors.save) {
-      useToast().add({
-        description: `${ $t('save.error') }: ${$t(errors.save)}`,
-        color: 'error'
-      })
-    }
-
+    toastApiError(error, $t('common.save_failed'))
   } finally {
     loading.value = false
   }
@@ -63,7 +57,7 @@ async function save () {
 
 <template>
   <UModal
-    :title="$t('member.invite.title')"
+    :title="member ? $t('member.invite.edit_title') : $t('member.invite.title')"
     :ui="{
       content: 'max-w-3xl'
     }"
@@ -104,7 +98,7 @@ async function save () {
         <UButton
           v-if="canInvite"
           @click="save">
-          {{ $t('member.invite.save') }}
+          {{ member ? $t('member.invite.save_role') : $t('member.invite.save') }}
         </UButton>
       </div>
     </template>

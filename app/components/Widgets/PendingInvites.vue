@@ -35,6 +35,7 @@ onMounted( async () => {
           color="neutral"
           variant="ghost"
           class="cursor-pointer"
+          :aria-label="$t('common.refresh')"
           :ui="{
             leadingIcon: 'hover:rotate-90 transition-transform duration-300'
           }"
@@ -56,7 +57,7 @@ onMounted( async () => {
           />
         </template>
         <template v-else>
-          <span class="text-dimmed w-full text-center">{{ $t('notifications_none') }}</span>
+          <span class="text-dimmed w-full text-center">{{ $t('organization.no_pending_invites') }}</span>
         </template>
       </Loadable>
     </div>

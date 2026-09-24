@@ -6,7 +6,8 @@ const AUTOPLAY_INTERVAL = 6000
 const props = defineProps<{
   images: ProductImage[],
   orgId: string,
-  productId: string
+  productId: string,
+  productName?: string
 }>()
 
 const currentIndex = ref(0)
@@ -38,7 +39,7 @@ onUnmounted(() => clearInterval(timer))
         <img
           :key="currentImage.id"
           :src="getImageSrc(currentImage.id)"
-          :alt="`${productId} image ${currentIndex + 1}`"
+          :alt="$t('images.alt', { name: productName ?? '', n: currentIndex + 1 })"
           class="absolute inset-0 h-full w-full object-cover"
         >
       </Transition>

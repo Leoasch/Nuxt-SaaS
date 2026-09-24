@@ -284,30 +284,64 @@ export async function accessSale (
   return { sale }
 }
 
+type FieldParams = { minimum?: number, maximum?: number, origin?: string, format?: string }
+
+function throwValidationError (error: z.ZodError, input: unknown): never {
+  const fields: Record<string, string> = {}
+  const params: Record<string, FieldParams> = {}
+  const values = (input && typeof input === 'object' ? input : {}) as Record<string, unknown>
+
+  for (const issue of error.issues) {
+    const field = issue.path[0]
+
+    if (typeof field !== 'string' || fields[field]) {
+      continue
+    }
+
+    if (issue.code === 'custom') {
+      fields[field] = issue.message
+      continue
+    }
+
+    if (issue.path.length > 1) {
+      fields[field] = 'invalid_item'
+      continue
+    }
+
+    fields[field] = issue.code
+
+    const value = values[field]
+    const isEmpty = value === undefined || value === null || value === ''
+
+    if ((issue.code === 'invalid_type' && isEmpty) || (issue.code === 'too_small' && issue.origin === 'string' && Number(issue.minimum) <= 1)) {
+      fields[field] = 'required'
+    } else if (issue.code === 'too_small') {
+      params[field] = { minimum: Number(issue.minimum), origin: issue.origin }
+    } else if (issue.code === 'too_big') {
+      params[field] = { maximum: Number(issue.maximum), origin: issue.origin }
+    } else if (issue.code === 'invalid_format') {
+      params[field] = { format: issue.format }
+    }
+  }
+
+  throw createError({
+    statusCode: 400,
+    statusMessage: 'Validation Error',
+    data: {
+      code: 'VALIDATION_ERROR',
+      fields,
+      params,
+    },
+  })
+}
+
 export async function parseBody<T extends z.ZodType> (event: H3Event<globalThis.EventHandlerRequest>, schema: T) {
   const body = await readBody(event)
 
   const result = await schema.safeParseAsync(body)
 
   if (!result.success) {
-    const fields: Record<string, string> = {}
-
-    for (const issue of result.error.issues) {
-      const field = issue.path[0]
-
-      if (typeof field === 'string' && !fields[field]) {
-        fields[field] = issue.code === 'custom' ? issue.message : issue.code
-      }
-    }
-
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Validation Error',
-      data: {
-        code: 'VALIDATION_ERROR',
-        fields,
-      },
-    })
+    throwValidationError(result.error, body)
   }
 
   return result as z.ZodSafeParseSuccess<z.infer<T>>
@@ -319,24 +353,7 @@ export function parseQuery<T extends z.ZodType> (event: H3Event<globalThis.Event
   const result = schema.safeParse(query)
 
   if (!result.success) {
-    const fields: Record<string, string> = {}
-
-    for (const issue of result.error.issues) {
-      const field = issue.path[0]
-
-      if (typeof field === 'string' && !fields[field]) {
-        fields[field] = issue.code === 'custom' ? issue.message : issue.code
-      }
-    }
-
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Validation Error',
-      data: {
-        code: 'VALIDATION_ERROR',
-        fields,
-      },
-    })
+    throwValidationError(result.error, query)
   }
 
   return result as z.ZodSafeParseSuccess<z.infer<T>>

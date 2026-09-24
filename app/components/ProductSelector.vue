@@ -101,6 +101,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
         v-if="selectedProduct?.images"
         :org-id="selectedProduct.organization_id"
         :product-id="selectedProduct.id"
+        :product-name="selectedProduct.name"
         :images="selectedProduct.images"
         class="size-10 shrink-0 border border-accented/50"
       />
@@ -181,6 +182,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
           v-if="product.images"
           :org-id="product.organization_id"
           :product-id="product.id"
+          :product-name="product.name"
           :images="product.images"
           class="size-12 shrink-0 border border-accented/50"
         />

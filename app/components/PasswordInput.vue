@@ -11,7 +11,7 @@ const show = ref(false)
 <template>
   <UInput
     v-model="password"
-    :placeholder="$t('password')"
+    :placeholder="$t('common.password')"
     :type="show ? 'text' : 'password'"
     :ui="{ trailing: 'pe-1', ...ui }">
     <template #trailing>
@@ -21,7 +21,7 @@ const show = ref(false)
         tabindex="-1"
         size="sm"
         :icon="show ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-        :aria-label="show ? 'Hide password' : 'Show password'"
+        :aria-label="show ? $t('common.hide_password') : $t('common.show_password')"
         :aria-pressed="show"
         aria-controls="password"
         @click="show = !show"

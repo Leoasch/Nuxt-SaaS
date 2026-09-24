@@ -1,0 +1,83 @@
+{
+  "theme": {
+    "title": "Theme",
+    "advanced_options": "Advanced options",
+    "mode": {
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "preset": {
+      "nuxt": "Nuxt",
+      "ocean": "Ocean",
+      "violet": "Violet",
+      "sunset": "Sunset",
+      "slate": "Slate"
+    },
+    "slot": {
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "success": "Success",
+      "info": "Info",
+      "warning": "Warning",
+      "error": "Error",
+      "neutral": "Neutral"
+    },
+    "color": {
+      "red": "Red",
+      "orange": "Orange",
+      "amber": "Amber",
+      "yellow": "Yellow",
+      "lime": "Lime",
+      "green": "Green",
+      "emerald": "Emerald",
+      "teal": "Teal",
+      "cyan": "Cyan",
+      "sky": "Sky",
+      "blue": "Blue",
+      "indigo": "Indigo",
+      "violet": "Violet",
+      "purple": "Purple",
+      "fuchsia": "Fuchsia",
+      "pink": "Pink",
+      "rose": "Rose",
+      "slate": "Slate",
+      "gray": "Gray",
+      "zinc": "Zinc",
+      "neutral": "Neutral",
+      "stone": "Stone"
+    }
+  },
+  "language": {
+    "title": "Language",
+    "description": "Choose the language of the app. Emails you receive will use this language too."
+  },
+  "security": {
+    "title": "Security",
+    "password": "Password",
+    "account": "Account",
+    "change_password": "Change password",
+    "set_password": "Set a password",
+    "password_changed_successfully": "Your password has been updated.",
+    "old_password": "Current password",
+    "new_password": "New password",
+    "repeat_new_password": "Repeat new password",
+    "wrong_current_password": "Your current password is incorrect."
+  },
+  "account": {
+    "delete_button": "Delete account",
+    "delete_title": "Delete your account?",
+    "delete_description": "This permanently deletes your account and removes you from every organization you belong to. Sales and stock movements you recorded are kept. This can't be undone.",
+    "delete_blocked": "You own these organizations. Transfer their ownership or delete them before deleting your account:",
+    "set_password_first": "You sign in with Google and don't have a password yet. Set one above before deleting your account.",
+    "delete_confirm": "Delete my account",
+    "wrong_password": "Incorrect password."
+  },
+  "profile": {
+    "name": "Name",
+    "email": "Email",
+    "edit": "Edit profile",
+    "avatar_alt": "{name}'s profile picture",
+    "upload_avatar": "Upload a profile picture",
+    "remove_avatar": "Remove profile picture"
+  }
+}

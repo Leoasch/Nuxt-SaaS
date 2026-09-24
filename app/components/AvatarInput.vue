@@ -48,14 +48,16 @@ watch(() => props.canEdit, () => {
     <img
       v-else
       :src="imageUrl"
-      alt="user-avatar"
+      :alt="$t('profile.avatar_alt', { name: text })"
       class="size-full shrink-0 object-cover rounded-full"
     >
     <div 
       v-if="canEdit"
       class="size-full absolute inset-0 m-auto bg-accented/50 rounded-full 
       flex items-center justify-center opacity-0 hover:opacity-80 cursor-pointer"
-      @click="openPicker"  
+      role="button"
+      :aria-label="$t('profile.upload_avatar')"
+      @click="openPicker"
     >
       <UIcon
         name="i-lucide-upload"
@@ -72,6 +74,8 @@ watch(() => props.canEdit, () => {
     <div 
       v-if="imageUrl && canEdit"
       class="size-6 border border-error rounded-full bg-error/30 cursor-pointer absolute right-0 bottom-0"
+      role="button"
+      :aria-label="$t('profile.remove_avatar')"
       @click="clearAvatar"
     >
       <UIcon

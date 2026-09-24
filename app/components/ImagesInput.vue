@@ -9,6 +9,7 @@ const props = defineProps<{
 const entries = defineModel<ImageEntry[]>({ default: () => [] })
 
 const inputRef = ref<HTMLInputElement>()
+const { toastApiError } = useApiError()
 
 function openPicker () {
   inputRef.value?.click()
@@ -30,12 +31,18 @@ function addFiles (newFiles: File[]) {
 }
 
 async function removeEntry (idx: number) {
-  const entry = entries.value?.[idx]
+  const previous = entries.value ?? []
+  const entry = previous[idx]
 
-  entries.value = (entries.value ?? []).filter((_, i) => i !== idx)
+  entries.value = previous.filter((_, i) => i !== idx)
 
   if (entry?.type === 'saved' && props.productId) {
-    await deleteProductImage(props.orgId, props.productId, entry.id)
+    try {
+      await deleteProductImage(props.orgId, props.productId, entry.id)
+    } catch (error) {
+      entries.value = previous
+      toastApiError(error)
+    }
   }
 }
 

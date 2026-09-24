@@ -1,0 +1,50 @@
+{
+  "app": {
+    "title": "Nuxt SaaS",
+    "description": "Uma aplicação SaaS para teste"
+  },
+  "common": {
+    "save": "Salvar",
+    "save_failed": "Não foi possível salvar as alterações",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "refresh": "Atualizar",
+    "more_actions": "Mais ações",
+    "increase": "Aumentar",
+    "decrease": "Diminuir",
+    "list_view": "Visualizar em lista",
+    "grid_view": "Visualizar em grade",
+    "or": "ou",
+    "password": "Senha",
+    "show_password": "Mostrar senha",
+    "hide_password": "Ocultar senha",
+    "type_to_confirm": "Digite {value} para confirmar.",
+    "select_organization_first": "Selecione uma organização primeiro."
+  },
+  "nav": {
+    "dashboard": "Painel",
+    "my_organizations": "Minhas organizações",
+    "products": "Produtos",
+    "customers": "Clientes",
+    "sales": "Vendas",
+    "stock": "Estoque",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "theme": "Tema",
+    "language": "Idioma",
+    "logout": "Sair",
+    "close_sidebar": "Fechar menu lateral",
+    "toggle_sidebar": "Alternar menu lateral"
+  },
+  "role": {
+    "OWNER": "Proprietário",
+    "ADMIN": "Administrador",
+    "MANAGER": "Gerente",
+    "EMPLOYEE": "Funcionário"
+  },
+  "page": {
+    "no_organization_selected": "Selecione uma organização para ver esta página."
+  }
+}

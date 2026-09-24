@@ -8,7 +8,7 @@ const { selectedOrganizationId } = useOrganization()
 function openModal () {
   if (!selectedOrganizationId.value) {
     useToast().add({
-      description: $t('sale.create.error.no_org'),
+      description: $t('common.select_organization_first'),
       color: 'error'
     })
     return
