@@ -23,20 +23,20 @@ async function handleForgotPassword () {
 </script>
 
 <template>
-  <div class="flex-1 flex flex-col w-full mt-5">
+  <div class="flex-1 flex flex-col w-full pb-40 m-auto">
     <h1 class="w-full text-center text-2xl">{{ $t('auth.forgot_password.title') }}</h1>
     <div
       v-if="sent"
-      class="flex flex-col items-center mt-5 gap-4">
-      <p class="text-center w-1/2">{{ $t('auth.forgot_password.sent') }}</p>
+      class="flex flex-col items-center mt-5 gap-4 w-100 max-w-full m-auto">
+      <p class="text-center w-full">{{ $t('auth.forgot_password.sent') }}</p>
       <ULink to="/auth/login">{{ $t('auth.forgot_password.back_to_login') }}</ULink>
     </div>
     <div
       v-else
-      class="flex flex-col items-center mt-5 gap-4">
+      class="flex flex-col items-center mt-5 gap-4 w-100 max-w-full m-auto">
       <UFormField
         :label="$t('auth.email')"
-        class="w-1/2"
+        class="w-full"
         :error="errors.email">
         <UInput
           v-model="email"
@@ -46,10 +46,15 @@ async function handleForgotPassword () {
             base: 'p-3'
           }"/>
       </UFormField>
-      <UFormField :error="errors.forgot_password">
+      <UFormField
+        :error="errors.forgot_password"
+        class="w-full">
         <div class="w-full flex">
           <UButton
-            class="m-auto"
+            class="w-full flex justify-center"
+            :ui="{
+              base: 'p-2.5'
+            }"
             @click="handleForgotPassword">{{ $t('auth.forgot_password.submit') }}</UButton>
         </div>
       </UFormField>

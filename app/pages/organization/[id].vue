@@ -17,7 +17,7 @@ const members = ref<Membership[]>([])
 const loading = ref<boolean>(false)
 const overlay = useOverlay()
 const { user } = useUserSession()
-const { loadOrganizations, paging } = useOrganization()
+const { loadOrganizations, paging, selectedOrganizationId } = useOrganization()
 const { toastApiError } = useApiError()
 
 async function loadOrganization () {
@@ -88,6 +88,9 @@ async function deleteOrganizationForm () {
       const result = await deleteOrganization(organization.value.id)
 
       if (result.organization) {
+        if (result.organization.id === selectedOrganizationId.value) {
+          selectedOrganizationId.value = null
+        }
         paging.value.index = 0
         await loadOrganizations()
         navigateTo('/organizations')
@@ -324,15 +327,26 @@ onMounted(async () => {
           <div>
             <div class="flex items-center mb-3">
               <h2 class="text-lg font-bold">{{ $t('organization.members') }}</h2>
-              <UButton
-                v-if="hasMinimumRole(organization.role, 'MANAGER')"
-                color="primary"
-                variant="subtle"
-                class="ml-auto mr-0 cursor-pointer font-bold"
-                @click="() => openInviteForm()"
-              >
-                {{ $t('member.invite.button') }}
-              </UButton>
+              <div class="ml-auto mr-0 flex gap-2">
+                <UButton
+                  :disabled="loading || (selectedOrganizationId === organization.id)"
+                  variant="subtle"
+                  color="neutral"
+                  class="cursor-pointer font-bold"
+                  @click="() => selectedOrganizationId = organization?.id ?? null"
+                >
+                  {{ $t('organization.select_button') }}
+                </UButton>
+                <UButton
+                  v-if="hasMinimumRole(organization.role, 'MANAGER')"
+                  color="primary"
+                  variant="subtle"
+                  class="cursor-pointer font-bold"
+                  @click="() => openInviteForm()"
+                >
+                  {{ $t('member.invite.button') }}
+                </UButton>
+              </div>
             </div>
             <p
               v-if="members.length === 0"

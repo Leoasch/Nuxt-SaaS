@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { AppLocale } from '~~/shared/utils/locales'
 
-const { locale, locales, changeLocale } = useAppLocale()
+const { locale, options, current, changeLocale } = useAppLocale()
 
-const items = computed(() => locales.value.map(l => ({ label: l.name ?? l.code, value: l.code })))
+const items = computed(() => options.value.map(option => ({ label: option.name, value: option.code, icon: option.icon })))
 </script>
 
 <template>
@@ -13,7 +13,7 @@ const items = computed(() => locales.value.map(l => ({ label: l.name ?? l.code, 
       :model-value="locale"
       :items="items"
       :aria-label="$t('language.title')"
-      icon="i-lucide-languages"
+      :icon="current.icon"
       class="w-60 max-w-full"
       @update:model-value="(code) => changeLocale(code as AppLocale)"
     />

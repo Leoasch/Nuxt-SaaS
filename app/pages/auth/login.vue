@@ -78,7 +78,7 @@ defineShortcuts({
         class="w-full">
         <div class="w-full flex">
           <UButton
-            class="m-auto w-full flex justify-center"
+            class="w-full flex justify-center"
             :ui="{
               base: 'p-2.5'
             }"

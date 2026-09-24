@@ -9,7 +9,7 @@ const { isPresetActive, applyPreset } = useTheme()
 const { clear } = useUserSession()
 const { user: sessionUser } = useUserSession()
 const { toastApiError } = useApiError()
-const { locale, locales, changeLocale } = useAppLocale()
+const { locale, options: localeOptions, changeLocale } = useAppLocale()
 const user = ref({
   name: sessionUser.value?.name,
 })
@@ -86,8 +86,9 @@ const themeGroup = computed<DropdownMenuItem[]>(() => [
   {
     label: $t('nav.language'),
     icon: 'i-lucide-languages',
-    children: locales.value.map(option => ({
-      label: option.name ?? option.code,
+    children: localeOptions.value.map(option => ({
+      label: option.name,
+      icon: option.icon,
       type: 'checkbox' as const,
       checked: locale.value === option.code,
       onUpdateChecked (checked: boolean) {

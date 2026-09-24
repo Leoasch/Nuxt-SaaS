@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1114.0",
+    "@iconify-json/flag": "^1.2.12",
     "@iconify-json/lucide": "^1.2.122",
     "@iconify-json/simple-icons": "^1.2.93",
     "@lupinum/nuxt-email": "1.0.0-beta.4",
