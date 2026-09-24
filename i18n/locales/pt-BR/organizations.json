@@ -24,7 +24,6 @@
     "confirm_decline_title": "Recusar este convite?",
     "confirm_decline_description": "Você não poderá participar desta organização a menos que alguém o convide novamente.",
     "not_found": "Esta organização não existe ou você não tem acesso a ela.",
-    "page": "Abrir página",
     "select_button": "Selecionar",
     "select": {
       "placeholder": "Selecione uma organização"
@@ -55,21 +54,14 @@
       "title": "Convidar membro",
       "edit_title": "Alterar cargo",
       "user": "Usuário",
+      "email": "E-mail",
+      "email_placeholder": "nome{'@'}empresa.com",
+      "email_help": "A pessoa precisa já ter uma conta.",
+      "user_not_found": "Nenhuma conta usa este e-mail. Peça para a pessoa se cadastrar primeiro.",
       "role": "Cargo",
       "not_allowed": "Somente gerentes ou cargos acima podem convidar membros.",
       "save": "Enviar convite",
       "save_role": "Salvar cargo"
-    }
-  },
-  "user": {
-    "select": {
-      "placeholder": "Buscar por nome ou e-mail"
-    },
-    "selector": {
-      "clear": "Limpar seleção"
-    },
-    "search": {
-      "empty": "Nenhum usuário encontrado"
     }
   }
 }

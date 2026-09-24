@@ -20,11 +20,15 @@ const roleCheck = () => {
 const emits = defineEmits(['alter_permission', 'cancel_invite', 'member_quit', 'member_kick', 'transfer_ownership'])
 
 const items = computed<DropdownMenuItem[]>(() => {
-  const arr: DropdownMenuItem[] = [{
-    label: $t('member.profile'),
-    icon: 'lucide:user-round',
-    to: `/user/${props.member.user_id}`,
-  }]
+  const arr: DropdownMenuItem[] = []
+
+  if (props.member.user_id === user.value?.id) {
+    arr.push({
+      label: $t('member.profile'),
+      icon: 'lucide:user-round',
+      to: '/profile',
+    })
+  }
 
   if (props.member.role === 'OWNER') {
     return arr

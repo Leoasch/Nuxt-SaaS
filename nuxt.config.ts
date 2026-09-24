@@ -73,10 +73,6 @@ export default defineNuxtConfig({
     }
   },
 
-  routeRules: {
-    '/': { prerender: true }
-  },
-
   nuxtApiShield: {
     limit: {
       max: 120,
@@ -100,6 +96,9 @@ export default defineNuxtConfig({
   nitro: {
     storage: {
       shield: { driver: 'fs', base: './.data/shield' }
+    },
+    experimental: {
+      tasks: true
     },
     scheduledTasks: {
       // every 5 min: drop bans whose duration has already expired

@@ -1,11 +1,9 @@
 import { User } from '~~/server/database/models/User'
 
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event)
+  const { user: userAuth } = await requireUserSession(event)
 
-  const id = getRouterParam(event, 'id')
-
-  if (!id) {
+  if (!userAuth?.id) {
     throw createError({
       statusCode: 400,
       data: {
@@ -15,7 +13,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const user = await User.findOne({
-    where: { id },
+    where: { id: userAuth.id },
     attributes: ['id', 'name', 'email', 'avatarUrl', 'updatedAt']
   })
 

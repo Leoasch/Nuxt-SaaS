@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
   if (membership.role === 'OWNER') {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'The organization owner cannot be removed.',
       data: {
         code: 'MEMBERSHIP.OWNER_CANNOT_BE_REMOVED',
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
   if (!hasMinimumRole(userMembership.role, membership.role)) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'User does not have permission to remove this member.',
       data: {
         code: 'MEMBERSHIP.NOT_ALLOWED',

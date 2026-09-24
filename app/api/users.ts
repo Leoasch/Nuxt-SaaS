@@ -6,14 +6,8 @@ export type EditUserBody = {
   email: string
 }
 
-export async function searchUsers (query: string) {
-  return await apiRequest<{ users: User[] }>('/users/search', {
-    query: { q: query }
-  })
-}
-
-export async function getUser (id: string) {
-  return await apiRequest<{ user: User }>(`/users/${id}`)
+export async function getUser () {
+  return await apiRequest<{ user: User }>('/users')
 }
 
 export async function editUser (id: string, body: EditUserBody) {

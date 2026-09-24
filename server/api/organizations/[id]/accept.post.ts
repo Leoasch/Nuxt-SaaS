@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
 
   if (!membership.pending_invite) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'User does not have permission to accept an already accepted invite.',
       data: {
         code: 'MEMBERSHIP.ALREADY_ACCEPTED',

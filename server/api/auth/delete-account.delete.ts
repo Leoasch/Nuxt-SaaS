@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
 
   if (!user.passwordHash) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'Set a password before deleting your account.',
       data: {
         code: 'ACCOUNT.PASSWORD_REQUIRED',
@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
 
   if (ownedOrganizations.length > 0) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'Transfer ownership or delete these organizations before deleting your account.',
       data: {
         code: 'ACCOUNT.OWNS_ORGANIZATIONS',

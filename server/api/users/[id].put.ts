@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
 
   if (id !== sessionUser.id) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'You can only update your own profile.',
       data: {
         code: 'USER.NOT_ALLOWED',
@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
 
   if (existingEmail) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'Email is already in use.',
       data: {
         code: 'USER.EMAIL_TAKEN',

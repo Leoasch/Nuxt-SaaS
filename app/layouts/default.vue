@@ -22,7 +22,7 @@ const accountItems = computed<DropdownMenuItem[]>(() => [
   {
     label: $t('nav.profile'),
     icon: 'i-lucide-user',
-    to: `/user/${sessionUser.value?.id}`
+    to: '/profile'
   },
   {
     label: $t('nav.settings'),

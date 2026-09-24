@@ -47,7 +47,7 @@ export async function organizationAccessValidation (
 
   if (!opts.allowPending && membership.pending_invite) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'User has not accepted the invite to this organization.',
       data: {
         code: 'MEMBERSHIP.PENDING',
@@ -72,7 +72,7 @@ export async function organizationAccessValidation (
 
   if (requiredRoles.length > 0 && !isSelf && !requiredRoles.some(r => hasMinimumRole(membership.role, r))) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'User does not have permission to execute that task.',
       data: {
         code: 'ORGANIZATION.NOT_ALLOWED',

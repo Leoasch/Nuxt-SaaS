@@ -8,6 +8,11 @@ export type OrganizationBody = {
 }
 
 export type InviteMemberBody = {
+  email: string
+  role: Role
+}
+
+export type AlterMemberRoleBody = {
   user_id: string
   role: Role
 }
@@ -69,7 +74,7 @@ export async function inviteMember (organization_id: string, body: InviteMemberB
   })
 }
 
-export async function alterMemberRole (organization_id: string, body: InviteMemberBody) {
+export async function alterMemberRole (organization_id: string, body: AlterMemberRoleBody) {
   return await apiRequest<{ membership: Membership }>(orgRoute(organization_id) + `/members/${body.user_id}`, {
     method: 'PUT',
     body,

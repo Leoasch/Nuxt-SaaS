@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
   if (targetMembership.user_id === ownerMembership.user_id) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'You are already the owner of this organization.',
       data: {
         code: 'MEMBERSHIP.ALREADY_OWNER',
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
   if (targetMembership.pending_invite) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'Cannot transfer ownership to a member who has not accepted their invite.',
       data: {
         code: 'MEMBERSHIP.PENDING',

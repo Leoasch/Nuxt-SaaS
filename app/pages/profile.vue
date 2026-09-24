@@ -2,9 +2,6 @@
 import { deleteAvatar, editUser, getUser, uploadAvatar } from '~/api/users'
 import type { User } from '~~/shared/types'
 
-
-const route = useRoute()
-const user_id = route.params.id as string
 const user = ref<User | null>(null)
 const loading = ref<boolean>(false)
 const saving = ref<boolean>(false)
@@ -26,11 +23,9 @@ const { toastApiError } = useApiError()
 async function loadUser () {
   loading.value = true
   try {
-    if (user_id) {
-      const result = await getUser(user_id)
-      if (result.user) {
-        user.value = result.user
-      }
+    const result = await getUser()
+    if (result.user) {
+      user.value = result.user
     }
   } finally {
     loading.value = false

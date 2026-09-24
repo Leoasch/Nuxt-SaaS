@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
   if (id !== sessionUser.id) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'You can only update your own avatar.',
       data: {
         code: 'USER.NOT_ALLOWED',

@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   if (!hasMinimumRole(userMembership.role, membership.role)) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'User does not have permission to alter this member.',
       data: {
         code: 'MEMBERSHIP.NOT_ALLOWED',
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
 
   if (!hasMinimumRole(userMembership.role, role)) {
     throw createError({
-      statusCode: 405,
+      statusCode: 403,
       statusMessage: 'User does not have permission to promote a member to this role.',
       data: {
         code: 'MEMBERSHIP.NOT_ALLOWED',

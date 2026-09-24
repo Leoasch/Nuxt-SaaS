@@ -20,8 +20,6 @@ const oauthError = computed(() => {
 })
 
 async function handleLogin () {
-  console.log('handleLogin')
-  
   resetErrors()
 
   try {

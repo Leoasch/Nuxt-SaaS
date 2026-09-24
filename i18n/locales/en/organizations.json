@@ -24,7 +24,6 @@
     "confirm_decline_title": "Decline this invite?",
     "confirm_decline_description": "You won't be able to join this organization unless someone invites you again.",
     "not_found": "This organization doesn't exist or you don't have access to it.",
-    "page": "Open page",
     "select_button": "Select",
     "select": {
       "placeholder": "Select an organization"
@@ -55,21 +54,14 @@
       "title": "Invite member",
       "edit_title": "Change role",
       "user": "User",
+      "email": "Email",
+      "email_placeholder": "name{'@'}company.com",
+      "email_help": "The person needs to have an account already.",
+      "user_not_found": "No account uses this email. Ask them to sign up first.",
       "role": "Role",
       "not_allowed": "Only managers and above can invite members.",
       "save": "Send invite",
       "save_role": "Save role"
-    }
-  },
-  "user": {
-    "select": {
-      "placeholder": "Search by name or email"
-    },
-    "selector": {
-      "clear": "Clear selection"
-    },
-    "search": {
-      "empty": "No users found"
     }
   }
 }
