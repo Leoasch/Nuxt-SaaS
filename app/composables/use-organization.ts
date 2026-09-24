@@ -72,7 +72,6 @@ export default function () {
     await loadSelectedOrganization(true)
   }
 
-  fetchOrganizations().catch(() => {})
   loadSelectedOrganization()
 
   if (getCurrentInstance()) {

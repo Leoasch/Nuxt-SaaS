@@ -88,6 +88,11 @@ watch(() => [selectedOrganizationId.value], async () => {
 watch(() => paging.value.index, loadData)
 
 onUnmounted(() => clearTimeout(debounceTimer))
+
+const initialLoad = callOnce('customers', () => loadData().catch(() => {}), { mode: 'navigation' })
+if (import.meta.server) {
+  await initialLoad
+}
 </script>
 <template>
   <UContainer class="size-full flex flex-col">

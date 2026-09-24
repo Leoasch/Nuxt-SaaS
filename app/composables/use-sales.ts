@@ -32,7 +32,5 @@ export default function () {
     sales.value = []
   }
 
-  loadSales().catch(() => {})
-
   return { sales, loadSales, paging }
 }

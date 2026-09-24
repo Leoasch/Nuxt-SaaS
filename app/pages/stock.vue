@@ -20,9 +20,7 @@ function openStockMovementCard (id: string) {
   overlay.create(StockMovementCard, { props: { stockId: id } }).open()
 }
 
-onMounted(() => {
-  productFilter.value = null
-})
+productFilter.value = null
 
 watch(() => selectedOrganizationId.value, async () => {
   productFilter.value = null
@@ -39,6 +37,10 @@ watch(() => [productFilter.value, selectedOrganizationId.value], async () => {
 
 watch(() => paging.value.index, loadData)
 
+const initialLoad = callOnce('stock', () => loadData().catch(() => {}), { mode: 'navigation' })
+if (import.meta.server) {
+  await initialLoad
+}
 </script>
 <template>
   <UContainer class="size-full flex flex-col">

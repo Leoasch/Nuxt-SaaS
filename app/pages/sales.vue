@@ -30,6 +30,10 @@ function openCard (id: string) {
   overlay.create(SaleCard, { props: { saleId: id } }).open()
 }
 
+const initialLoad = callOnce('sales', () => loadData().catch(() => {}), { mode: 'navigation' })
+if (import.meta.server) {
+  await initialLoad
+}
 </script>
 <template>
   <UContainer class="size-full flex flex-col">

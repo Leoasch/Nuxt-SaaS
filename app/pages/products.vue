@@ -86,6 +86,11 @@ watch(search_query, (value) => {
 })
 
 onUnmounted(() => clearTimeout(debounceTimer))
+
+const initialLoad = callOnce('products', () => loadData().catch(() => {}), { mode: 'navigation' })
+if (import.meta.server) {
+  await initialLoad
+}
 </script>
 
 <template>

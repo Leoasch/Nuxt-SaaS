@@ -32,7 +32,5 @@ export default function () {
     customers.value = []
   }
 
-  loadCustomers().catch(() => {})
-
   return { customers, loadCustomers, paging }
 }

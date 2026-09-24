@@ -37,7 +37,5 @@ export default function () {
     stock.value = []
   }
 
-  loadStock().catch(() => {})
-
   return { stock, loadStock, productFilter, paging }
 }

@@ -27,7 +27,5 @@ export default function () {
     products.value = []
   }
 
-  loadProducts().catch(() => {})
-
   return { products, loadProducts, paging }
 }
