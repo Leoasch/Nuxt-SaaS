@@ -11,6 +11,7 @@ export interface User extends DatabaseModel {
   name: string
   email: string
   avatarUrl?: string | null
+  emailVerified?: boolean
 }
 
 export interface Membership extends DatabaseModel {

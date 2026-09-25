@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware((to) => {
     return navigateTo('/auth/login')
   }
 
-  if (isAuth && loggedIn.value) {
+  if (isAuth && loggedIn.value && to.path !== '/auth/verify-email') {
     return navigateTo('/')
   }
 })

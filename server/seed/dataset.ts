@@ -90,6 +90,10 @@ export async function buildDataset (now: Date): Promise<SeedDataset> {
       resetPasswordTokenHash: null,
       resetPasswordTokenExpiresAt: null,
       locale: null,
+      emailVerifiedAt: createdAt,
+      emailVerificationTokenHash: null,
+      emailVerificationTokenExpiresAt: null,
+      sessionVersion: 0,
       createdAt,
       updatedAt: createdAt
     })

@@ -16,6 +16,10 @@ export class User extends Model<
   declare resetPasswordTokenHash: string | null
   declare resetPasswordTokenExpiresAt: Date | null
   declare locale: string | null
+  declare emailVerifiedAt: Date | null
+  declare emailVerificationTokenHash: string | null
+  declare emailVerificationTokenExpiresAt: Date | null
+  declare sessionVersion: CreationOptional<number>
   declare createdAt: CreationOptional<Date>
   declare updatedAt: CreationOptional<Date>
 }
@@ -69,6 +73,26 @@ User.init(
       type: DataTypes.STRING(10),
       allowNull: true,
       defaultValue: null
+    },
+    emailVerifiedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
+    },
+    emailVerificationTokenHash: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null
+    },
+    emailVerificationTokenExpiresAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
+    },
+    sessionVersion: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE

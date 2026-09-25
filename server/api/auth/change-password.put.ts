@@ -49,16 +49,10 @@ export default defineEventHandler(async (event) => {
 
   const passwordHash = await hashPassword(newPassword)
   user.passwordHash = passwordHash
+  user.sessionVersion += 1
   await user.save()
 
-  await setUserSession(event, {
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      hasPassword: true
-    }
-  })
+  await startUserSession(event, user)
 
   return {
     success: true,

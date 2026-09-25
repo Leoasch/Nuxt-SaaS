@@ -3,10 +3,19 @@ import { getOrganizationInvites } from '~/api/organization'
 import type { Membership } from '~~/shared/types'
 import WidgetBox from './WidgetBox.vue'
 import InviteNotification from '../Notifications/InviteNotification.vue'
+import Notification from '../Notifications/Notification.vue'
 
 
 const invites = ref<Membership[]>([])
 const loading = ref<boolean>(false)
+const {
+  email,
+  verified,
+  sending,
+  sent,
+  load: loadEmailVerification,
+  send: sendVerificationEmail
+} = useEmailVerification()
 
 async function loadInvites () {
   loading.value = true
@@ -20,9 +29,12 @@ async function loadInvites () {
   }
 }
 
-onMounted( async () => {
-  await loadInvites()
-})
+function refresh () {
+  loadEmailVerification().catch(() => {})
+  loadInvites()
+}
+
+onMounted(refresh)
 
 </script>
 
@@ -39,10 +51,30 @@ onMounted( async () => {
           :ui="{
             leadingIcon: 'hover:rotate-90 transition-transform duration-300'
           }"
-          @click="loadInvites"
+          @click="refresh"
         />
       </div>
       <USeparator/>
+      <Notification
+        v-if="verified === false"
+        class="gap-2">
+        <UIcon
+          name="lucide:mail-warning"
+          class="mx-1 size-5 shrink-0 text-warning"/>
+        <div class="flex min-w-0 flex-col">
+          <span class="font-bold">{{ $t('email_verification.notification') }}</span>
+          <span class="truncate text-xs text-dimmed">{{ email }}</span>
+        </div>
+        <UButton
+          class="ml-auto shrink-0 cursor-pointer"
+          variant="ghost"
+          :icon="sent ? 'lucide:check' : 'lucide:send'"
+          :loading="sending"
+          :disabled="sent"
+          @click="sendVerificationEmail">
+          {{ sent ? $t('email_verification.sent_short') : $t('email_verification.send_short') }}
+        </UButton>
+      </Notification>
       <Loadable
         :loading
         class="size-full flex flex-col"

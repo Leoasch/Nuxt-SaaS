@@ -61,6 +61,9 @@ export default defineNuxtConfig({
     mailPassword: '',
     mailFrom: 'no-reply@nuxt-saas.local',
     appUrl: 'http://localhost:3000',
+    session: {
+      maxAge: 60 * 60 * 24 * 30
+    },
     public: {
       nuxtApiShield: {
         security: {
@@ -89,6 +92,9 @@ export default defineNuxtConfig({
       { path: '/api/auth/delete-account', max: 5, duration: 60, ban: 900 },
       { path: '/api/auth/forgot-password', max: 5, duration: 60, ban: 900 },
       { path: '/api/auth/reset-password', max: 5, duration: 60, ban: 900 },
+      { path: '/api/auth/verify-email/send', max: 5, duration: 60, ban: 900 },
+      { path: '/api/auth/verify-email/confirm', max: 10, duration: 60, ban: 900 },
+      { path: '/api/organizations/*/invite', pattern: true, max: 10, duration: 60, ban: 300 },
       { path: '/api' },
     ],
   },

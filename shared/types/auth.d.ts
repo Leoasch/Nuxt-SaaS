@@ -6,6 +6,10 @@ declare module '#auth-utils' {
     avatarUrl?: string | null
     hasPassword?: boolean
   }
+
+  interface SecureSessionData {
+    sessionVersion: number
+  }
 }
 
 export {}

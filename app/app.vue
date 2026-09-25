@@ -1,10 +1,6 @@
 <script setup>
-import { en, pt_br } from '@nuxt/ui/locale'
-
-const { t, locale, localeProperties } = useI18n()
-
-const UI_LOCALES = { 'pt-BR': pt_br, 'en': en }
-const uiLocale = computed(() => UI_LOCALES[locale.value] ?? pt_br)
+const { t, localeProperties } = useI18n()
+const uiLocale = useUiLocale()
 
 useHead({
   htmlAttrs: {

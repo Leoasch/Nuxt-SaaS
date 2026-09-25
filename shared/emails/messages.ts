@@ -12,6 +12,13 @@ type EmailMessages = {
     button: string
     footer: string
   }
+  verifyEmail: {
+    subject: string
+    preview: string
+    body: string
+    button: string
+    footer: string
+  }
   organizationInvite: {
     subject: (params: InviteParams) => string
     title: string
@@ -30,6 +37,13 @@ const EMAIL_MESSAGES: Record<AppLocale, EmailMessages> = {
       button: 'Redefinir senha',
       footer: 'Se você não fez essa solicitação, pode ignorar este e-mail com segurança.'
     },
+    verifyEmail: {
+      subject: 'Confirme seu e-mail',
+      preview: 'Confirme seu e-mail no Nuxt SaaS - este link expira em 24 horas.',
+      body: 'Clique no botão abaixo para confirmar que este endereço de e-mail é seu. Este link expira em 24 horas.',
+      button: 'Confirmar e-mail',
+      footer: 'Se você não criou uma conta no Nuxt SaaS, pode ignorar este e-mail com segurança.'
+    },
     organizationInvite: {
       subject: ({ organizationName }) => `Você foi convidado para participar de ${organizationName}`,
       title: 'Convite para organização',
@@ -45,6 +59,13 @@ const EMAIL_MESSAGES: Record<AppLocale, EmailMessages> = {
       body: 'We received a request to reset your password. Click the button below to choose a new one. This link expires in 1 hour.',
       button: 'Reset your password',
       footer: 'If you did not request this, you can safely ignore this email.'
+    },
+    verifyEmail: {
+      subject: 'Confirm your email',
+      preview: 'Confirm your Nuxt SaaS email - this link expires in 24 hours.',
+      body: 'Click the button below to confirm this email address belongs to you. This link expires in 24 hours.',
+      button: 'Confirm email',
+      footer: 'If you didn\'t create a Nuxt SaaS account, you can safely ignore this email.'
     },
     organizationInvite: {
       subject: ({ organizationName }) => `You've been invited to join ${organizationName}`,

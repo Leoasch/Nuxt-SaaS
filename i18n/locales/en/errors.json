@@ -58,6 +58,11 @@
     },
     "STOCK": {
       "NOT_FOUND": "Stock movement not found."
+    },
+    "EMAIL_VERIFICATION": {
+      "INVALID_TOKEN": "This confirmation link is invalid or has expired.",
+      "ALREADY_VERIFIED": "Your email is already confirmed.",
+      "TOO_SOON": "We just sent you an email. Wait a minute before requesting another one."
     }
   },
   "validation": {

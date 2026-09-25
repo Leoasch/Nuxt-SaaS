@@ -8,6 +8,10 @@
     </PageSection>
     <PageSection :title="$t('security.title')">
       <div class="p-4">
+        <h1 class="text-2xl font-bold mb-1">{{ $t('security.email') }}</h1>
+        <EmailVerification class="p-2"/>
+      </div>
+      <div class="p-4">
         <h1 class="text-2xl font-bold mb-1">{{ $t('security.password') }}</h1>
         <PasswordChanger class="p-2"/>
       </div>

@@ -74,3 +74,16 @@ export async function resetPassword (token: string, password: string, repeatPass
     body: { token, password, repeatPassword }
   })
 }
+
+export async function sendEmailVerification () {
+  return await apiRequest<{ success: true }>('/auth/verify-email/send', {
+    method: 'POST'
+  })
+}
+
+export async function confirmEmail (token: string) {
+  return await apiRequest<{ success: true }>('/auth/verify-email/confirm', {
+    method: 'POST',
+    body: { token }
+  })
+}

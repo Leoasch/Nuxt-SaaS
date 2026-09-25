@@ -61,7 +61,8 @@
     "old_password": "Senha atual",
     "new_password": "Nova senha",
     "repeat_new_password": "Repita a nova senha",
-    "wrong_current_password": "Sua senha atual está incorreta."
+    "wrong_current_password": "Sua senha atual está incorreta.",
+    "email": "E-mail"
   },
   "account": {
     "delete_button": "Excluir conta",
@@ -79,5 +80,16 @@
     "avatar_alt": "Foto de perfil de {name}",
     "upload_avatar": "Enviar uma foto de perfil",
     "remove_avatar": "Remover foto de perfil"
+  },
+  "email_verification": {
+    "verified": "Verificado",
+    "not_verified": "Não verificado",
+    "description": "Confirme que este e-mail é seu para ajudar a proteger sua conta. Enviaremos um link de confirmação.",
+    "send": "Enviar e-mail de confirmação",
+    "resend": "Reenviar e-mail",
+    "sent": "Enviamos um link para {email}. Ele expira em 24 horas.",
+    "notification": "Confirme seu e-mail",
+    "send_short": "Enviar link",
+    "sent_short": "Link enviado"
   }
 }

@@ -19,30 +19,30 @@ const googleHandler = defineOAuthGoogleEventHandler({
       })
 
       if (user) {
+        if (!user.emailVerifiedAt) {
+          user.passwordHash = null
+          user.sessionVersion += 1
+        }
         user.googleId = googleUser.sub
       } else {
         user = await User.create({
           name: googleUser.name || email.split('@')[0],
           email,
           googleId: googleUser.sub,
+          emailVerifiedAt: new Date(),
           passwordHash: null,
           locale
         })
       }
     }
 
+    if (user.email.toLowerCase() === email) {
+      user.emailVerifiedAt ??= new Date()
+    }
     user.locale = locale
     await user.save()
 
-    await replaceUserSession(event, {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        avatarUrl: user.avatarUrl,
-        hasPassword: !!user.passwordHash
-      }
-    })
+    await startUserSession(event, user)
 
     return sendRedirect(event, '/')
   },

@@ -42,14 +42,7 @@ export default defineEventHandler(async (event) => {
   user.locale = getRequestLocale(event)
   await user.save()
 
-  await setUserSession(event, {
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      hasPassword: true
-    }
-  })
+  await startUserSession(event, user)
 
   return {
     success: true,

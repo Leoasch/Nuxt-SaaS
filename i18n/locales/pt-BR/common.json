@@ -46,5 +46,17 @@
   },
   "page": {
     "no_organization_selected": "Selecione uma organização para ver esta página."
+  },
+  "error_page": {
+    "not_found": {
+      "title": "Página não encontrada",
+      "description": "A página que você procura não existe ou foi movida."
+    },
+    "generic": {
+      "title": "Algo deu errado",
+      "description": "Ocorreu um erro inesperado. Tente novamente em instantes."
+    },
+    "home": "Voltar ao início",
+    "retry": "Tentar novamente"
   }
 }

@@ -2,7 +2,7 @@ import { User } from '~~/server/database/models/User'
 import { deleteObject } from '~~/server/utils/storage'
 
 export default defineEventHandler(async (event) => {
-  const { user: sessionUser } = await requireUserSession(event)
+  const { user: sessionUser, secure } = await requireUserSession(event)
 
   const id = getRouterParam(event, 'id')
 
@@ -44,7 +44,8 @@ export default defineEventHandler(async (event) => {
   }
 
   await replaceUserSession(event, {
-    user: { ...sessionUser, avatarUrl: null }
+    user: { ...sessionUser, avatarUrl: null },
+    secure
   })
 
   return { avatarUrl: null }

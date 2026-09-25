@@ -6,12 +6,6 @@ export default function useApiError () {
 
   function apiErrorMessage (error: any, overrides: Record<string, string> = {}): string {
     const status = error?.statusCode ?? error?.status
-
-    if (status === 429) {
-      const seconds = error?.data?.retryAfter
-      return seconds ? t('errors.RATE_LIMITED_RETRY', { seconds }) : t('errors.RATE_LIMITED')
-    }
-
     const code = error?.data?.data?.code
 
     if (code && overrides[code]) {
@@ -20,6 +14,11 @@ export default function useApiError () {
 
     if (code && te(`errors.${code}`)) {
       return t(`errors.${code}`)
+    }
+
+    if (status === 429) {
+      const seconds = error?.data?.retryAfter
+      return seconds ? t('errors.RATE_LIMITED_RETRY', { seconds }) : t('errors.RATE_LIMITED')
     }
 
     if (status === 401) {

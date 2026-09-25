@@ -2,6 +2,7 @@ import { Op } from 'sequelize'
 import { z } from 'zod'
 import { User } from '~~/server/database/models/User'
 import { parseBody } from '~~/server/utils/accessValidation'
+import { sendVerificationEmail } from '~~/server/utils/emailVerification'
 
 const editUserSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -60,6 +61,13 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const emailChanged = user.email.toLowerCase() !== email.toLowerCase()
+
+  if (emailChanged) {
+    user.emailVerifiedAt = null
+    user.emailVerificationTokenHash = null
+    user.emailVerificationTokenExpiresAt = null
+  }
   user.name = name
   user.email = email
   await user.save()
@@ -68,12 +76,21 @@ export default defineEventHandler(async (event) => {
     user: { ...sessionUser, name, email }
   })
 
+  if (emailChanged) {
+    try {
+      await sendVerificationEmail(event, user)
+    } catch (error) {
+      console.error('Failed to send email verification', error)
+    }
+  }
+
   return {
     user: {
       id: user.id,
       name: user.name,
       email: user.email,
-      avatarUrl: user.avatarUrl
+      avatarUrl: user.avatarUrl,
+      emailVerified: !!user.emailVerifiedAt
     }
   }
 })

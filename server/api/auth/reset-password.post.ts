@@ -32,19 +32,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (!user.emailVerifiedAt) {
+    user.googleId = null
+    user.emailVerifiedAt = new Date()
+  }
   user.passwordHash = await hashPassword(password)
   user.resetPasswordTokenHash = null
   user.resetPasswordTokenExpiresAt = null
+  user.sessionVersion += 1
   await user.save()
 
-  await setUserSession(event, {
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      hasPassword: true,
-    },
-  })
+  await startUserSession(event, user)
 
   return { success: true }
 })

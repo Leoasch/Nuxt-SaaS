@@ -58,6 +58,11 @@
     },
     "STOCK": {
       "NOT_FOUND": "Movimentação de estoque não encontrada."
+    },
+    "EMAIL_VERIFICATION": {
+      "INVALID_TOKEN": "Este link de confirmação é inválido ou expirou.",
+      "ALREADY_VERIFIED": "Seu e-mail já está confirmado.",
+      "TOO_SOON": "Acabamos de enviar um e-mail. Aguarde um minuto antes de pedir outro."
     }
   },
   "validation": {

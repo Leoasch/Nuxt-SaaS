@@ -68,7 +68,7 @@ export async function getOrganizationMembers (organization_id: string, member_id
 }
 
 export async function inviteMember (organization_id: string, body: InviteMemberBody) {
-  return await apiRequest<{ membership: Membership }>(`/organizations/${organization_id}/members`, {
+  return await apiRequest<{ membership: Membership }>(`/organizations/${organization_id}/invite`, {
     method: 'POST',
     body,
   })

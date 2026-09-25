@@ -110,7 +110,20 @@ onMounted(() => {
         <div class="flex flex-col p-4 h-full">
           <template v-if="!isEditing">
             <h1 class="font-bold text-xl">{{ user.name }}</h1>
-            <h1 class="text-dimmed">{{ user.email }}</h1>
+            <div class="flex flex-wrap items-center gap-2">
+              <h1 class="text-dimmed">{{ user.email }}</h1>
+              <ULink
+                v-if="user.emailVerified === false"
+                to="/settings">
+                <UBadge
+                  color="warning"
+                  variant="subtle"
+                  size="sm"
+                  icon="lucide:mail-warning">
+                  {{ $t('email_verification.not_verified') }}
+                </UBadge>
+              </ULink>
+            </div>
           </template>
           <template v-else>
             <div class="border-b border-accented flex">

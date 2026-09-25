@@ -1,6 +1,7 @@
 import { User } from '~~/server/database/models/User'
 import { z } from 'zod'
 import { parseBody } from '~~/server/utils/accessValidation'
+import { sendVerificationEmail } from '~~/server/utils/emailVerification'
 
 const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -36,17 +37,17 @@ export default defineEventHandler(async (event) => {
     name,
     email,
     passwordHash,
+    emailVerifiedAt: null,
     locale: getRequestLocale(event)
   })
 
-  await setUserSession(event, {
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      hasPassword: true,
-    },
-  })
+  await startUserSession(event, user)
+
+  try {
+    await sendVerificationEmail(event, user)
+  } catch (error) {
+    console.error('Failed to send email verification', error)
+  }
 
   return {
     user: {

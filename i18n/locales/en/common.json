@@ -46,5 +46,17 @@
   },
   "page": {
     "no_organization_selected": "Select an organization to see this page."
+  },
+  "error_page": {
+    "not_found": {
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist or has been moved."
+    },
+    "generic": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred. Try again in a moment."
+    },
+    "home": "Back to home",
+    "retry": "Try again"
   }
 }
