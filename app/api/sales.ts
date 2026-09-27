@@ -14,20 +14,28 @@ export type SaleBody = {
 }
 
 
-export async function getSales(org_id: string, params: QueryPageParams): Promise<{ sales: Sale[], page: PagingMetadata }>
+export type SalesFilter = {
+  product_id?: string
+  from?: string
+  to?: string
+}
+
+export type SalesListSummary = {
+  count: number
+  quantity: number | null
+  total: number
+}
+
+type SalesPage = { sales: Sale[], page: PagingMetadata, summary: SalesListSummary }
+
+export async function getSales(org_id: string, params: QueryPageParams & SalesFilter): Promise<SalesPage>
 export async function getSales(org_id: string, id: string): Promise<{ sale: Sale }>
-export async function getSales (org_id: string, idOrParams: string | QueryPageParams) {
+export async function getSales (org_id: string, idOrParams: string | (QueryPageParams & SalesFilter)) {
   if (typeof idOrParams === 'string') {
     return await apiRequest<{ sale: Sale }>(orgRoute(org_id) + `/sales/${idOrParams}`)
   }
-  return await apiRequest<{ sales: Sale[], page: PagingMetadata }>(orgRoute(org_id) + '/sales', {
+  return await apiRequest<SalesPage>(orgRoute(org_id) + '/sales', {
     query: idOrParams
-  })
-}
-
-export async function searchSales (org_id: string, query: string) {
-  return await apiRequest<{ sales: Sale[] }>(orgRoute(org_id) + '/sales/search', {
-    query: { q: query }
   })
 }
 

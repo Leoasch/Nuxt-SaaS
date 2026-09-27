@@ -42,6 +42,21 @@
     "error": {
       "no_products": "Add at least one product",
       "no_payment_method": "Choose a payment method"
+    },
+    "filter": {
+      "period": "Period",
+      "any_date": "Any date",
+      "clear_period": "Clear period",
+      "presets": {
+        "today": "Today",
+        "last_7_days": "Last 7 days",
+        "last_30_days": "Last 30 days",
+        "this_month": "This month"
+      },
+      "summary": "{count} sale · {total} | {count} sales · {total}",
+      "summary_product": "{count} sale · {units} · {total} from this product | {count} sales · {units} · {total} from this product",
+      "units": "{n} unit sold | {n} units sold",
+      "empty": "No sales match these filters."
     }
   },
   "dashboard": {

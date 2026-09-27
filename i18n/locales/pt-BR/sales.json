@@ -42,6 +42,21 @@
     "error": {
       "no_products": "Adicione pelo menos um produto",
       "no_payment_method": "Escolha uma forma de pagamento"
+    },
+    "filter": {
+      "period": "Período",
+      "any_date": "Qualquer data",
+      "clear_period": "Limpar período",
+      "presets": {
+        "today": "Hoje",
+        "last_7_days": "Últimos 7 dias",
+        "last_30_days": "Últimos 30 dias",
+        "this_month": "Este mês"
+      },
+      "summary": "{count} venda · {total} | {count} vendas · {total}",
+      "summary_product": "{count} venda · {units} · {total} deste produto | {count} vendas · {units} · {total} deste produto",
+      "units": "{n} unidade vendida | {n} unidades vendidas",
+      "empty": "Nenhuma venda encontrada com esses filtros."
     }
   },
   "dashboard": {

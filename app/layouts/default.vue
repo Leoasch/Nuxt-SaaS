@@ -14,7 +14,15 @@ const user = ref({
   name: sessionUser.value?.name,
 })
 
+const SIDEBAR_MOBILE_QUERY = '(max-width: 1023px)'
+
 const route = useRoute()
+
+watch(() => route.path, () => {
+  if (window.matchMedia(SIDEBAR_MOBILE_QUERY).matches) {
+    open.value = false
+  }
+})
 
 const isSettingsRoute = computed(() => route.name === 'settings')
 
