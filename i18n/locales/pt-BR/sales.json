@@ -55,6 +55,28 @@
     "revenue_last_1_day": "Receita nas últimas 24 horas",
     "revenue_last_7_days": "Receita nos últimos 7 dias",
     "revenue_last_30_days": "Receita nos últimos 30 dias",
-    "sales_count": "Nenhuma venda | 1 venda | {n} vendas"
+    "sales_count": "Nenhuma venda | 1 venda | {n} vendas",
+    "low_stock": {
+      "title": "Estoque baixo",
+      "below_count": "{count} abaixo do mínimo",
+      "near_count": "{count} perto do mínimo",
+      "quantity": "{stock} / mín. {minimum}",
+      "below": "Abaixo do mínimo",
+      "near": "Perto do mínimo",
+      "more": "+{count} outro | +{count} outros",
+      "empty": "Todos os produtos estão acima do estoque mínimo."
+    },
+    "profit_by_product": {
+      "title": "Produtos mais lucrativos",
+      "total": "Lucro",
+      "others": "Outros",
+      "empty": "Nenhuma venda com lucro no período.",
+      "losses": "{count} produto vendido com prejuízo | {count} produtos vendidos com prejuízo"
+    },
+    "top_selling": {
+      "title": "Produtos mais vendidos",
+      "units": "{count} unidade | {count} unidades",
+      "empty": "Nenhuma venda no período."
+    }
   }
 }

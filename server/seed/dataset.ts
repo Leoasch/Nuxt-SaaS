@@ -200,6 +200,7 @@ export async function buildDataset (now: Date): Promise<SeedDataset> {
       products: products.map(product => ({
         id: product.id,
         sale_price: product.sale_price,
+        cost_price: product.cost_price,
         minimum_stock: product.minimum_stock,
         initial_stock: product.initial_stock
       }))

@@ -55,6 +55,28 @@
     "revenue_last_1_day": "Revenue in the last 24 hours",
     "revenue_last_7_days": "Revenue in the last 7 days",
     "revenue_last_30_days": "Revenue in the last 30 days",
-    "sales_count": "No sales | 1 sale | {n} sales"
+    "sales_count": "No sales | 1 sale | {n} sales",
+    "low_stock": {
+      "title": "Low stock",
+      "below_count": "{count} below minimum",
+      "near_count": "{count} near minimum",
+      "quantity": "{stock} / min {minimum}",
+      "below": "Below minimum",
+      "near": "Near minimum",
+      "more": "+{count} more | +{count} more",
+      "empty": "All products are above their minimum stock."
+    },
+    "profit_by_product": {
+      "title": "Most profitable products",
+      "total": "Profit",
+      "others": "Others",
+      "empty": "No profitable sales in this period.",
+      "losses": "{count} product sold at a loss | {count} products sold at a loss"
+    },
+    "top_selling": {
+      "title": "Best-selling products",
+      "units": "{count} unit | {count} units",
+      "empty": "No sales in this period."
+    }
   }
 }

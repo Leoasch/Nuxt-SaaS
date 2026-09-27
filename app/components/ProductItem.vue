@@ -6,7 +6,9 @@ const props = defineProps<{
   displayType: DisplayType
 }>()
 
-const isLowStock = computed(() => props.product.stock_quantity <= props.product.minimum_stock)
+const STOCK_BADGE_COLORS = { below: 'error', near: 'warning', ok: 'neutral' } as const
+
+const stockColor = computed(() => STOCK_BADGE_COLORS[stockStatus(props.product)])
 </script>
 
 <template>
@@ -33,7 +35,7 @@ const isLowStock = computed(() => props.product.stock_quantity <= props.product.
       :class="displayType === 'grid' ? 'justify-between' : 'shrink-0'">
       <span class="font-bold">{{ $n(product.sale_price, 'currency') }}</span>
       <UBadge
-        :color="isLowStock ? 'error' : 'neutral'"
+        :color="stockColor"
         variant="subtle"
         icon="lucide:package">
         {{ product.stock_quantity }}

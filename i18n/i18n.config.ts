@@ -2,8 +2,10 @@ import { CURRENCY } from '../app/common'
 
 const numberFormats = {
   currency: { style: 'currency', currency: CURRENCY },
+  compactCurrency: { style: 'currency', currency: CURRENCY, notation: 'compact', maximumFractionDigits: 1 },
   integer: { maximumFractionDigits: 0 },
-  decimal: { maximumFractionDigits: 2 }
+  decimal: { maximumFractionDigits: 2 },
+  percent: { style: 'percent', maximumFractionDigits: 0 }
 } as const
 
 export default defineI18nConfig(() => ({

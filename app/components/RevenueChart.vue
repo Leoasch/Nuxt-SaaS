@@ -133,8 +133,10 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
         @click="load"
       />
     </div>
-    <div class="mt-2 h-40">
-      <Loadable :loading>
+    <div class="relative mt-2 min-h-40 flex-1">
+      <Loadable
+        :loading
+        class="absolute inset-0">
         <Line
           :data="chartData"
           :options="chartOptions"

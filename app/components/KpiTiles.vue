@@ -26,24 +26,28 @@ const tiles = computed(() => [
     key: 'revenue',
     icon: 'lucide:banknote',
     label: 'dashboard.kpi_revenue',
+    big: true,
     value: n(summary.value?.totalRevenue ?? 0, 'currency')
-  },
-  {
-    key: 'sales',
-    icon: 'lucide:shopping-cart',
-    label: 'dashboard.kpi_sales',
-    value: n(summary.value?.salesCount ?? 0, 'integer')
   },
   {
     key: 'avg',
     icon: 'lucide:receipt',
     label: 'dashboard.kpi_avg_order_value',
+    big: true,
     value: n(summary.value?.avgOrderValue ?? 0, 'currency')
+  },
+  {
+    key: 'sales',
+    icon: 'lucide:shopping-cart',
+    label: 'dashboard.kpi_sales',
+    big: false,
+    value: n(summary.value?.salesCount ?? 0, 'integer')
   },
   {
     key: 'customers',
     icon: 'lucide:users',
     label: 'dashboard.kpi_active_customers',
+    big: false,
     value: n(summary.value?.activeCustomers ?? 0, 'integer')
   }
 ])
@@ -55,6 +59,7 @@ const tiles = computed(() => [
       <div
         v-for="tile in tiles"
         :key="tile.key"
+        :class="tile.big ? 'col-span-2 md:col-span-1' : ''"
         class="flex items-center gap-3 rounded border border-accented bg-accented/20 p-4 dark:bg-accented/30">
         <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
           <UIcon

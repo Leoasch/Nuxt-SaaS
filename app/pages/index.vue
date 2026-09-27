@@ -10,19 +10,25 @@ const { selectedOrganizationId } = useOrganization()
       v-if="selectedOrganizationId"
       :org-id="selectedOrganizationId"
     />
-    <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
-      <div class="lg:col-span-2">
+    <div class="grid gap-4 lg:grid-cols-3">
+      <template v-if="selectedOrganizationId">
         <RevenueChart
-          v-if="selectedOrganizationId"
+          class="lg:col-span-2"
           :org-id="selectedOrganizationId"
         />
-        <div
-          v-else
-          class="flex size-full min-h-64 flex-col items-center justify-center rounded border border-accented bg-accented/20 p-4 dark:bg-accented/30">
-          <NoOrganizationIcon class="mb-2 size-14"/>
-          <h1 class="text-dimmed">{{ $t('page.no_organization_selected') }}</h1>
-        </div>
-      </div>
+        <LowStockProducts
+          :org-id="selectedOrganizationId"
+          class="max-h-80"
+        />
+        <ProfitByProductChart
+          :org-id="selectedOrganizationId"
+          class="h-80"
+        />
+        <TopSellingProductsChart
+          :org-id="selectedOrganizationId"
+          class="h-80"
+        />
+      </template>
       <PendingInvites class="min-h-64"/>
     </div>
   </div>

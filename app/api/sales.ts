@@ -54,6 +54,22 @@ export async function getRevenue (org_id: string, days: 1 | 7 | 30 = 30) {
   })
 }
 
+export type TopProductsResult = {
+  byQuantity: { id: string, name: string, quantity: number, revenue: number }[]
+  byProfit: {
+    items: { id: string, name: string, profit: number }[]
+    others: number
+    total: number
+    lossCount: number
+  }
+}
+
+export async function getTopProducts (org_id: string, days: 1 | 7 | 30 = 30) {
+  return await apiRequest<TopProductsResult>(orgRoute(org_id) + '/sales/top-products', {
+    query: { days }
+  })
+}
+
 export type SalesSummary = {
   totalRevenue: number
   salesCount: number

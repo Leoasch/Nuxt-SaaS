@@ -13,6 +13,7 @@ export class SaleItem extends Model<
   declare quantity: number
   declare unit_price: number
   declare original_unit_price: number
+  declare unit_cost: number | null
   declare total: number
 }
 
@@ -50,6 +51,14 @@ SaleItem.init(
       defaultValue: 0,
       get (this: SaleItem) {
         return decimalToNumber.call(this, 'original_unit_price')
+      }
+    },
+    unit_cost: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      defaultValue: null,
+      get (this: SaleItem) {
+        return decimalToNumber.call(this, 'unit_cost')
       }
     },
     total: {

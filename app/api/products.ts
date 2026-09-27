@@ -1,5 +1,16 @@
 import type { Product, ProductImage } from '~~/shared/types'
+import type { StockStatus } from '~~/shared/utils/stock'
 import { apiRequest, orgRoute } from '.'
+
+export type LowStockProduct = Pick<Product, 'id' | 'name' | 'sku' | 'stock_quantity' | 'minimum_stock'> & {
+  status: Exclude<StockStatus, 'ok'>
+}
+
+export type LowStockResult = {
+  products: LowStockProduct[]
+  total: number
+  counts: { below: number, near: number }
+}
 
 export type ProductBody = {
   id?: string;
@@ -27,6 +38,10 @@ export async function searchProducts (org_id: string, query: string) {
   return await apiRequest<{ products: Product[] }>(orgRoute(org_id) + '/products/search', {
     query: { q: query }
   })
+}
+
+export async function getLowStockProducts (org_id: string) {
+  return await apiRequest<LowStockResult>(orgRoute(org_id) + '/products/low-stock')
 }
 
 export async function postProduct (org_id: string, body: ProductBody) {

@@ -1,25 +1,18 @@
 import { Op } from 'sequelize'
 import { Sale } from '~~/server/database/models/Sale'
 import { organizationAccessValidation } from '~~/server/utils/accessValidation'
-
-const ALLOWED_DAYS = [1, 7, 30]
-const DEFAULT_DAYS = 30
-const HOURS_IN_DAY = 24
+import { getSalesPeriodDays, HOURS_IN_DAY, salesPeriodStart } from '~~/server/utils/salesPeriod'
 
 export default defineEventHandler(async (event) => {
   const { organization } = await organizationAccessValidation(event)
 
-  const query = getQuery(event)
-  const requestedDays = Number(query.days)
-  const days = ALLOWED_DAYS.includes(requestedDays) ? requestedDays : DEFAULT_DAYS
+  const days = getSalesPeriodDays(event)
 
   if (days === 1) {
     return { revenue: await getHourlyRevenue(organization.id) }
   }
 
-  const cutoff = new Date()
-  cutoff.setHours(0, 0, 0, 0)
-  cutoff.setDate(cutoff.getDate() - (days - 1))
+  const cutoff = salesPeriodStart(days)
 
   const sales = await Sale.findAll({
     where: {
@@ -57,9 +50,7 @@ export default defineEventHandler(async (event) => {
 })
 
 async function getHourlyRevenue (organizationId: string) {
-  const cutoff = new Date()
-  cutoff.setMinutes(0, 0, 0)
-  cutoff.setHours(cutoff.getHours() - (HOURS_IN_DAY - 1))
+  const cutoff = salesPeriodStart(1)
 
   const sales = await Sale.findAll({
     where: {

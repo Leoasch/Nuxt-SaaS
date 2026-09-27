@@ -77,6 +77,7 @@ export default defineEventHandler(async (event) => {
         quantity: line.quantity,
         unit_price,
         original_unit_price,
+        unit_cost: product.cost_price,
         total: itemTotal
       })
 

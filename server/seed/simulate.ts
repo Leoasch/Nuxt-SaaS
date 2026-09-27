@@ -47,6 +47,7 @@ export interface SimCustomer {
 export interface SimProduct {
   id: string
   sale_price: number
+  cost_price: number
   minimum_stock: number
   initial_stock: number
 }
@@ -237,6 +238,7 @@ export function simulate (input: SimulationInput): SimulationResult {
         quantity: line.quantity,
         unit_price: line.unit_price,
         original_unit_price: line.product.sale_price,
+        unit_cost: line.product.cost_price,
         total: line.total,
         createdAt: new Date(at),
         updatedAt: new Date(at)
