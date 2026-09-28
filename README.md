@@ -51,6 +51,20 @@ pnpm seed
 - It refuses to run with `NODE_ENV=production` unless you pass `--force`.
 - Every seeded user has the password `Password123!`, for example `ana@seed.example.com` (owner of TechNova), `felipe@seed.example.com` (employee), `julia@seed.example.com` (two pending invites) or `lucas@seed.example.com` (no organization). The full list is printed when the seeder finishes.
 
+### Migrations
+
+The schema is versioned in `server/database/migrations` and applied with [Umzug](https://github.com/sequelize/umzug), which records what already ran in the `SequelizeMeta` table. Pending migrations run automatically when the server starts (and before `pnpm seed`), so a fresh clone needs no extra step. They can also be run by hand:
+
+```bash
+pnpm db:migrate          # apply pending migrations
+pnpm db:migrate:down     # revert the last applied migration
+pnpm db:migrate:status   # list applied and pending migrations
+```
+
+A database created before migrations existed (by the old `sequelize.sync()`) is detected on the first run: the baseline migration is marked as applied and only the later ones run.
+
+To change the schema, add a new numbered file next to the others (e.g. `0003-add-supplier-to-products.ts`) exporting `up` and `down`, append it to the list in `migrations/index.ts`, and update the matching model. Never edit a migration that has already been applied; write a new one instead.
+
 ## Development Server
 
 Start the development server on `http://localhost:3000`:

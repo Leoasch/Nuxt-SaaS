@@ -9,6 +9,7 @@ import './runtime'
 import { parseArgs } from 'node:util'
 import { sequelize } from '~~/server/database'
 import { registerAssociations } from '~~/server/database/associations'
+import { runMigrations } from '~~/server/database/migrator'
 import { ensureBucket, s3 } from '~~/server/utils/storage'
 import { imageStats } from './catalog'
 import type { SeedDataset } from './dataset'
@@ -65,7 +66,7 @@ async function main () {
   // Same initialization as server/plugins/database.ts and storage.ts, so this works on a fresh database too.
   registerAssociations()
   await sequelize.authenticate()
-  await sequelize.sync({ alter: true })
+  await runMigrations()
   await ensureBucket()
 
   if (!flags.reset && await isSeeded()) {

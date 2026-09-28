@@ -8,6 +8,9 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "seed": "tsx --tsconfig .nuxt/tsconfig.server.json server/seed/run.ts",
+    "db:migrate": "tsx --tsconfig .nuxt/tsconfig.server.json server/database/migrate.ts up",
+    "db:migrate:down": "tsx --tsconfig .nuxt/tsconfig.server.json server/database/migrate.ts down",
+    "db:migrate:status": "tsx --tsconfig .nuxt/tsconfig.server.json server/database/migrate.ts status",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck"
   },
@@ -29,6 +32,7 @@
     "pg": "^8.23.0",
     "sequelize": "^6.37.8",
     "tailwindcss": "^4.3.3",
+    "umzug": "^3.8.3",
     "vue-chartjs": "^5.3.4",
     "zod": "^4.4.3"
   },
