@@ -8,7 +8,8 @@ import {
   type ImageEntry,
   type ProductBody
 } from '~/api/products'
-import type { Product } from '~~/shared/types'
+import type { Product, ProductImage } from '~~/shared/types'
+import { MAX_IMAGES_PER_UPLOAD } from '~~/shared/utils/uploads'
 
 const props = defineProps<{
   product?: Product,
@@ -44,20 +45,38 @@ const form = ref<ProductBody>({
 
 const images = ref<ImageEntry[]>([])
 
+function savedEntry (productId: string, image: ProductImage): ImageEntry {
+  return {
+    type: 'saved',
+    id: image.id,
+    url: productImageUrl(props.orgId, productId, image.id),
+    mimeType: image.mime_type,
+    size: image.size,
+  }
+}
+
 if (props.product) {
   const productId = props.product.id
 
   getProductImages(props.orgId, productId).then((result) => {
     if (result?.images) {
-      images.value = result.images.map((image): ImageEntry => ({
-        type: 'saved',
-        id: image.id,
-        url: productImageUrl(props.orgId, productId, image.id),
-        mimeType: image.mime_type,
-        size: image.size,
-      }))
+      images.value = result.images.map(image => savedEntry(productId, image))
     }
   })
+}
+
+async function uploadNewImages (productId: string) {
+  const pending = images.value.filter((entry): entry is Extract<ImageEntry, { type: 'new' }> => entry.type === 'new')
+
+  for (let start = 0; start < pending.length; start += MAX_IMAGES_PER_UPLOAD) {
+    const batch = pending.slice(start, start + MAX_IMAGES_PER_UPLOAD)
+    const result = await uploadProductImages(props.orgId, productId, batch.map(entry => entry.file))
+
+    images.value = images.value.map((entry) => {
+      const uploaded = result.images[batch.findIndex(item => item === entry)]
+      return uploaded ? savedEntry(productId, uploaded) : entry
+    })
+  }
 }
 
 async function save () {
@@ -70,13 +89,8 @@ async function save () {
       ? await editProduct(props.orgId, body)
       : await postProduct(props.orgId, body)
 
-    const newFiles = images.value
-      .filter(entry => entry.type === 'new')
-      .map(entry => entry.file)
-
-    if (newFiles.length > 0) {
-      await uploadProductImages(props.orgId, result.product.id, newFiles)
-    }
+    form.value.id = result.product.id
+    await uploadNewImages(result.product.id)
 
     await loadProducts()
     emit('close', true)
@@ -168,7 +182,7 @@ async function save () {
         <ImagesInput
           v-model="images"
           :org-id="orgId"
-          :product-id="product?.id"
+          :product-id="form.id"
         />
       </div>
     </template>

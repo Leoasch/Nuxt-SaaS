@@ -4,6 +4,7 @@ import {
   DeleteObjectCommand,
   GetObjectCommand,
   HeadBucketCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client
 } from '@aws-sdk/client-s3'
@@ -26,7 +27,16 @@ export async function ensureBucket () {
   try {
     await s3.send(new HeadBucketCommand({ Bucket: bucket }))
   } catch (error: any) {
-    const isNotFound = error?.$metadata?.httpStatusCode === 404 || error?.name === 'NotFound'
+    const status = error?.$metadata?.httpStatusCode
+
+    // A key limited to objects (e.g. an R2 "Object Read & Write" token) can't query buckets, and the bucket
+    // is created in the provider's dashboard. Listing one object still fails on a missing bucket or bad credentials.
+    if (status === 403) {
+      await s3.send(new ListObjectsV2Command({ Bucket: bucket, MaxKeys: 1 }))
+      return
+    }
+
+    const isNotFound = status === 404 || error?.name === 'NotFound'
 
     if (!isNotFound) {
       throw error

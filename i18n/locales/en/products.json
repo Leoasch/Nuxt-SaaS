@@ -45,7 +45,9 @@
       "b": "{size} B",
       "kb": "{size} KB",
       "mb": "{size} MB"
-    }
+    },
+    "skipped_too_large": "{count} image over 5 MB was skipped. | {count} images over 5 MB were skipped.",
+    "limit_reached": "Each product can have up to {max} images; the extra images were skipped."
   },
   "stock": {
     "create": "New movement",

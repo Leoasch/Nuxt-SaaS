@@ -50,7 +50,11 @@
       "NOT_FOUND": "Imagem não encontrada.",
       "EMPTY": "Escolha uma imagem para enviar.",
       "INVALID_TYPE": "Use imagens PNG, JPEG, WebP, GIF ou AVIF.",
-      "TOO_LARGE": "Uma das imagens é grande demais. O limite é 5 MB por imagem."
+      "TOO_LARGE": "Uma das imagens é grande demais. O limite é 5 MB por imagem.",
+      "TOO_MANY_FILES": "Envie no máximo 5 imagens por vez.",
+      "UPLOAD_TOO_LARGE": "O envio é grande demais. Envie até 5 imagens de até 5 MB por vez.",
+      "PRODUCT_LIMIT": "Cada produto pode ter no máximo 10 imagens.",
+      "STORAGE_QUOTA": "Esta organização atingiu o limite de 100 MB em imagens. Exclua imagens de produtos para enviar novas."
     },
     "SALE": {
       "NOT_FOUND": "Venda não encontrada.",

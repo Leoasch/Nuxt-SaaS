@@ -45,7 +45,9 @@
       "b": "{size} B",
       "kb": "{size} KB",
       "mb": "{size} MB"
-    }
+    },
+    "skipped_too_large": "{count} imagem acima de 5 MB foi ignorada. | {count} imagens acima de 5 MB foram ignoradas.",
+    "limit_reached": "Cada produto pode ter até {max} imagens; as imagens extras foram ignoradas."
   },
   "stock": {
     "create": "Nova movimentação",

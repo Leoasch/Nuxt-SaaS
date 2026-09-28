@@ -29,3 +29,4 @@ minio-data/
 
 # Secrets
 google-secret.json
+google-secret-deploy.json

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { deleteProductImage, type ImageEntry } from '~/api/products'
+import { MAX_IMAGE_SIZE, MAX_IMAGES_PER_PRODUCT } from '~~/shared/utils/uploads'
 
 const props = defineProps<{
   orgId: string
@@ -10,6 +11,10 @@ const entries = defineModel<ImageEntry[]>({ default: () => [] })
 
 const inputRef = ref<HTMLInputElement>()
 const { toastApiError } = useApiError()
+const toast = useToast()
+const { t } = useI18n()
+
+const isFull = computed(() => (entries.value?.length ?? 0) >= MAX_IMAGES_PER_PRODUCT)
 
 function openPicker () {
   inputRef.value?.click()
@@ -24,9 +29,22 @@ function onChange (event: Event) {
 }
 
 function addFiles (newFiles: File[]) {
+  const current = entries.value ?? []
+  const withinSize = newFiles.filter(file => file.size <= MAX_IMAGE_SIZE)
+  const accepted = withinSize.slice(0, Math.max(0, MAX_IMAGES_PER_PRODUCT - current.length))
+  const tooLarge = newFiles.length - withinSize.length
+
+  if (tooLarge > 0) {
+    toast.add({ color: 'warning', description: t('images.skipped_too_large', { count: tooLarge }, tooLarge) })
+  }
+
+  if (accepted.length < withinSize.length) {
+    toast.add({ color: 'warning', description: t('images.limit_reached', { max: MAX_IMAGES_PER_PRODUCT }) })
+  }
+
   entries.value = [
-    ...(entries.value ?? []),
-    ...newFiles.map((file): ImageEntry => ({ type: 'new', file }))
+    ...current,
+    ...accepted.map((file): ImageEntry => ({ type: 'new', file }))
   ]
 }
 
@@ -62,12 +80,16 @@ function entryKey (entry: ImageEntry) {
       accept="image/*"
       class="hidden"
       @change="onChange">
-    <UButton
-      icon="i-lucide-image-plus"
-      variant="soft"
-      @click="openPicker">
-      {{ $t('images.add') }}
-    </UButton>
+    <div class="flex items-center gap-2">
+      <UButton
+        icon="i-lucide-image-plus"
+        variant="soft"
+        :disabled="isFull"
+        @click="openPicker">
+        {{ $t('images.add') }}
+      </UButton>
+      <span class="text-xs text-dimmed">{{ entries.length }}/{{ MAX_IMAGES_PER_PRODUCT }}</span>
+    </div>
     <div class="w-full flex flex-col border border-accented/40 rounded mt-2 p-1 gap-1">
       <ImageItem
         v-for="(entry, idx) in entries"

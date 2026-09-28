@@ -1,8 +1,9 @@
 import { User } from '~~/server/database/models/User'
 import { uploadObject } from '~~/server/utils/storage'
+import { assertContentLength } from '~~/server/utils/uploads'
+import { MAX_IMAGE_SIZE, maxUploadBytes } from '~~/shared/utils/uploads'
 
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif']
-const MAX_FILE_SIZE = 5 * 1024 * 1024
 
 export default defineEventHandler(async (event) => {
   const { user: sessionUser } = await requireUserSession(event)
@@ -28,6 +29,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  assertContentLength(event, maxUploadBytes(1), 'AVATAR.TOO_LARGE')
+
   const parts = await readMultipartFormData(event)
   const file = (parts ?? []).find(part => part.name === 'avatar' && part.filename)
 
@@ -51,7 +54,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (file.data.length > MAX_FILE_SIZE) {
+  if (file.data.length > MAX_IMAGE_SIZE) {
     throw createError({
       statusCode: 413,
       statusMessage: 'Image too large',

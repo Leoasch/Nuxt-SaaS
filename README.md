@@ -89,6 +89,20 @@ pnpm preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
+### Free hosting: Render + Neon + Cloudflare R2
+
+1. **Postgres (Neon):** create a project and copy the *direct* (non-pooled) connection's host, database, user and password into the `NUXT_DATABASE_*` variables, with `NUXT_DATABASE_SSL=true`. The tables are created by the migrations on the first boot.
+2. **Object storage (Cloudflare R2):** create a bucket in the dashboard, then an API token with *Object Read & Write* on that bucket. Use `NUXT_S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com`, `NUXT_S3_REGION=auto`, the bucket name and the token's access key pair.
+3. **Email:** Render's free instances block outbound SMTP on ports 25, 465 and 587, so use a provider that also listens on 2525. With [Brevo](https://www.brevo.com) (300 emails/day free): `NUXT_MAIL_HOST=smtp-relay.brevo.com`, `NUXT_MAIL_PORT=2525`, `NUXT_MAIL_SECURE=false` (the connection is upgraded with STARTTLS), your SMTP login and SMTP key, and a sender address verified in Brevo as `NUXT_MAIL_FROM`.
+4. **App (Render web service):** connect the repository and use
+   - build command: `corepack enable && pnpm install --frozen-lockfile && pnpm build`
+   - start command: `node .output/server/index.mjs`
+   - environment: `NODE_VERSION=22`, the variables above, `NUXT_SESSION_PASSWORD` (at least 32 random characters), `NUXT_APP_URL=https://<service>.onrender.com`, the Google OAuth pair and `TRUST_X_FORWARDED_FOR=true` (Render sets the first `X-Forwarded-For` address to the real client IP; it is read at build time, so set it before the first deploy).
+5. **Google sign-in:** add `https://<service>.onrender.com/auth/google` to the OAuth client's authorized redirect URIs.
+6. **Demo data (optional):** point a local `.env` at Neon and R2 and run `pnpm seed`.
+
+A free Render instance sleeps after 15 minutes without traffic, so the first request after that takes about a minute; the rate limiter's data (kept on the instance's disk) is reset whenever it restarts.
+
 ## Renovate integration
 
 Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.

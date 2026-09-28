@@ -15,6 +15,7 @@ const config = {
   databaseName: env.NUXT_DATABASE_NAME ?? 'main',
   databaseUser: env.NUXT_DATABASE_USER ?? 'admin',
   databasePassword: env.NUXT_DATABASE_PASSWORD ?? 'Q7i{G8HU?71gKpv',
+  databaseSsl: env.NUXT_DATABASE_SSL === 'true',
   s3Endpoint: env.NUXT_S3_ENDPOINT ?? 'http://localhost:9000',
   s3Region: env.NUXT_S3_REGION ?? 'us-east-1',
   s3Bucket: env.NUXT_S3_BUCKET ?? 'images',

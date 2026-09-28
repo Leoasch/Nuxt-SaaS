@@ -9,6 +9,7 @@ export const sequelize = new Sequelize({
   database: config.databaseName,
   username: config.databaseUser,
   password: config.databasePassword,
+  dialectOptions: config.databaseSsl ? { ssl: { rejectUnauthorized: true } } : {},
   logging: false,
   pool: {
     max: 10,
