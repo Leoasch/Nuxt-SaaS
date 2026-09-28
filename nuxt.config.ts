@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { fileURLToPath } from 'node:url'
 import { DEFAULT_LOCALE, LOCALE_COOKIE } from './shared/utils/locales'
 
 const LOCALE_FILES = ['common.json', 'errors.json', 'auth.json', 'settings.json', 'organizations.json', 'products.json', 'customers.json', 'sales.json']
@@ -102,6 +103,9 @@ export default defineNuxtConfig({
   },
 
   nitro: {
+    externals: {
+      traceInclude: [fileURLToPath(new URL('./node_modules/tailwindcss/dist/colors.mjs', import.meta.url))]
+    },
     storage: {
       shield: { driver: 'fs', base: './.data/shield' }
     },
