@@ -1,6 +1,11 @@
 <script setup lang="ts">
 const redirecting = ref(false)
 
+async function continueWithGoogle () {
+  redirecting.value = true
+  await navigateTo('/auth/google', { external: true })
+}
+
 function resetOnReturn (event: PageTransitionEvent) {
   if (event.persisted) {
     redirecting.value = false
@@ -15,8 +20,6 @@ onUnmounted(() => window.removeEventListener('pageshow', resetOnReturn))
   <div class="w-full flex flex-col gap-4 ">
     <USeparator :label="$t('common.or')"/>
     <UButton
-      to="/auth/google"
-      external
       icon="i-simple-icons-google"
       color="neutral"
       variant="outline"
@@ -24,8 +27,9 @@ onUnmounted(() => window.removeEventListener('pageshow', resetOnReturn))
       :ui="{
         base: 'p-3'
       }"
+      class="cursor-pointer"
       block
-      @click="redirecting = true">
+      @click="continueWithGoogle">
       {{ $t('auth.continue_with_google') }}
     </UButton>
   </div>
