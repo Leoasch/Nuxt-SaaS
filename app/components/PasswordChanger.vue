@@ -100,7 +100,7 @@ watch(() => formOpen.value, (newVal) => {
       <UFormField :error="errors.changePassword">
         <div class="flex gap-2">
           <UButton
-            :disabled="loading"
+            :loading
             type="submit"
             icon="lucide:save"
             color="success"

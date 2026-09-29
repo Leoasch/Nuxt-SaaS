@@ -9,15 +9,23 @@ const email = ref('')
 const sent = ref(false)
 
 const { errors, resetErrors, handleError } = useFormErrors(['email'] as const, 'forgot_password')
+const loading = ref(false)
 
 async function handleForgotPassword () {
+  if (loading.value) {
+    return
+  }
+
   resetErrors()
+  loading.value = true
 
   try {
     await forgotPassword(email.value)
     sent.value = true
   } catch (error: any) {
     handleError(error)
+  } finally {
+    loading.value = false
   }
 }
 </script>
@@ -55,6 +63,7 @@ async function handleForgotPassword () {
             :ui="{
               base: 'p-2.5'
             }"
+            :loading
             @click="handleForgotPassword">{{ $t('auth.forgot_password.submit') }}</UButton>
         </div>
       </UFormField>

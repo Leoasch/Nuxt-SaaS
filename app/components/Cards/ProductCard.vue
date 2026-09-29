@@ -14,7 +14,7 @@ const loading = ref(false)
 const { selectedOrganizationId } = useOrganization()
 const { loadProducts } = useProducts()
 const overlay = useOverlay()
-const emits = defineEmits(['close'])
+const emits = defineEmits(['close', 'edit'])
 const { n } = useI18n()
 const { toastApiError } = useApiError()
 
@@ -48,6 +48,7 @@ async function onEdit () {
       } }
     ).open()
     if (await dialog.result) {
+      emits('edit')
       await onLoad()
     }
   }
@@ -62,6 +63,7 @@ async function onDelete () {
   }).open()
   if (await dialog.result) {
     if (product.value) {
+      loading.value = true
       try {
         const result = await deleteProduct(product.value.organization_id, product.value.id)
         if (result.product) {
@@ -70,10 +72,13 @@ async function onDelete () {
             color: 'success'
           })
           await loadProducts()
+          emits('edit')
           emits('close')
         }
       } catch (error) {
         toastApiError(error)
+      } finally {
+        loading.value = false
       }
     }
   }

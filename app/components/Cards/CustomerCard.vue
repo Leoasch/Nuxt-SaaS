@@ -57,6 +57,7 @@ async function onDelete () {
   }).open()
   if (await dialog.result) {
     if (customer.value) {
+      loading.value = true
       try {
         const result = await deleteCustomer(customer.value?.organization_id, customer.value.id)
         if (result.customer) {
@@ -69,6 +70,8 @@ async function onDelete () {
         }
       } catch (error) {
         toastApiError(error)
+      } finally {
+        loading.value = false
       }
     }
   }

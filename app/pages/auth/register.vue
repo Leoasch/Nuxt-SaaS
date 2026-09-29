@@ -14,11 +14,17 @@ const { errors, resetErrors, handleError } = useFormErrors(
   ['name', 'email', 'password', 'repeatPassword'] as const,
   'register'
 )
+const loading = ref(false)
 
 const { fetch: fetchSession } = useUserSession()
 
 async function handleRegister () {
+  if (loading.value) {
+    return
+  }
+
   resetErrors()
+  loading.value = true
 
   try {
     await register({
@@ -32,6 +38,8 @@ async function handleRegister () {
     await navigateTo('/')
   } catch (error: any) {
     handleError(error)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -105,6 +113,7 @@ defineShortcuts({
             :ui="{
               base: 'p-2.5'
             }"
+            :loading
             @click="handleRegister">{{ $t('auth.register.submit') }}</UButton>
         </div>
       </UFormField>

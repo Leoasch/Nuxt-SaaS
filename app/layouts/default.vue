@@ -169,17 +169,23 @@ function getItems () {
   ] satisfies NavigationMenuItem[]
 }
 
+const loggingOut = ref(false)
+
 async function handleLogout () {
-  try {
-    await logout()
-  } catch (error) {
-    toastApiError(error)
+  if (loggingOut.value) {
     return
   }
 
-  await clear()
-
-  await navigateTo('/auth/login')
+  loggingOut.value = true
+  try {
+    await logout()
+    await clear()
+    await navigateTo('/auth/login')
+  } catch (error) {
+    toastApiError(error)
+  } finally {
+    loggingOut.value = false
+  }
 }
 </script>
 
@@ -228,6 +234,7 @@ async function handleLogout () {
             trailing-icon="i-lucide-chevrons-up-down"
             color="neutral"
             variant="ghost"
+            :loading="loggingOut"
             square
             class="w-full data-[state=open]:bg-elevated overflow-hidden"
             :ui="{
@@ -235,8 +242,12 @@ async function handleLogout () {
             }"
           >
             <template #leading>
+              <UIcon
+                v-if="loggingOut"
+                name="lucide:loader-circle"
+                class="size-5 shrink-0 animate-spin"/>
               <AvatarFrame
-                v-if="sessionUser"
+                v-else-if="sessionUser"
                 :text="sessionUser.name"
                 :image-url="sessionUser.avatarUrl"
                 class="size-5 shrink-0"/>

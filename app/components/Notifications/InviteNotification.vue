@@ -12,8 +12,10 @@ const props = defineProps<{
 const overlay = useOverlay()
 const emits = defineEmits(['remove'])
 const { toastApiError } = useApiError()
+const pending = ref<'accept' | 'decline' | null>(null)
 
 async function acceptInvite () {
+  pending.value = 'accept'
   try {
     const result = await acceptOrganizationInvite(props.invite.organization_id, true)
     if (!result.membership.pending_invite) {
@@ -21,6 +23,8 @@ async function acceptInvite () {
     }
   } catch (error) {
     toastApiError(error)
+  } finally {
+    pending.value = null
   }
 }
 
@@ -33,6 +37,7 @@ async function declineInvite () {
     }
   }).open()
   if (await dialog.result) {
+    pending.value = 'decline'
     try {
       const result = await acceptOrganizationInvite(props.invite.organization_id, false)
       if (result.membership.pending_invite) {
@@ -40,6 +45,8 @@ async function declineInvite () {
       }
     } catch (error) {
       toastApiError(error)
+    } finally {
+      pending.value = null
     }
   }
 }
@@ -68,6 +75,8 @@ async function declineInvite () {
         variant="ghost"
         class="cursor-pointer p-1"
         :aria-label="$t('organization.decline_invite')"
+        :loading="pending === 'decline'"
+        :disabled="pending === 'accept'"
         @click="declineInvite"
       />
       <UButton
@@ -76,6 +85,8 @@ async function declineInvite () {
         variant="ghost"
         class="cursor-pointer p-1"
         :aria-label="$t('organization.accept_invite')"
+        :loading="pending === 'accept'"
+        :disabled="pending === 'decline'"
         @click="acceptInvite"
       />
     </div>

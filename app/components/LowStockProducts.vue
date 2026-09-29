@@ -39,8 +39,7 @@ async function load () {
 }
 
 async function openProduct (productId: string) {
-  await overlay.create(ProductCard, { props: { productId } }).open().result
-  await load()
+  await overlay.create(ProductCard, { props: { productId, onEdit: load } }).open().result
 }
 
 watch(() => props.orgId, load, { immediate: true })

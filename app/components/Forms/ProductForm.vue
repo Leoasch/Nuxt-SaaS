@@ -188,7 +188,9 @@ async function save () {
     </template>
     <template #footer>
       <div class="flex justify-end gap-2 w-full">
-        <UButton @click="save">
+        <UButton
+          :loading
+          @click="save">
           {{ $t(`product.save.${type}`) }}
         </UButton>
       </div>

@@ -6,7 +6,8 @@ import { hasMinimumRole } from '~~/shared/utils/roles.ts'
 
 const props = defineProps<{
   member: Membership,
-  organization: Organization
+  organization: Organization,
+  busy?: boolean
 }>()
 
 const { user } = useUserSession()
@@ -114,7 +115,7 @@ const items = computed<DropdownMenuItem[]>(() => {
       </div>
     </div>
     <UDropdownMenu
-      :disabled="!items.length"
+      :disabled="!items.length || busy"
       :items
       class="shrink-0"
       :class="!items.length ? 'opacity-60' : ''"  
@@ -123,6 +124,7 @@ const items = computed<DropdownMenuItem[]>(() => {
         icon="lucide:ellipsis-vertical"
         color="neutral"
         variant="ghost"
+        :loading="busy"
         class="cursor-pointer"
         :aria-label="$t('common.more_actions')"
       />

@@ -9,6 +9,7 @@ const email = ref('')
 const password = ref('')
 
 const { errors, resetErrors, handleError } = useFormErrors(['email', 'password'] as const, 'login')
+const loading = ref(false)
 
 const { fetch: fetchSession } = useUserSession()
 const { toastApiError } = useApiError()
@@ -25,7 +26,12 @@ const oauthError = computed(() => {
 })
 
 async function handleLogin () {
+  if (loading.value) {
+    return
+  }
+
   resetErrors()
+  loading.value = true
 
   try {
     await login({
@@ -37,6 +43,8 @@ async function handleLogin () {
     await navigateTo('/')
   } catch (error: any) {
     handleError(error)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -103,6 +111,7 @@ defineShortcuts({
             :ui="{
               base: 'p-2.5'
             }"
+            :loading
             @click="handleLogin">{{ $t('auth.login.submit') }}</UButton>
         </div>
       </UFormField>

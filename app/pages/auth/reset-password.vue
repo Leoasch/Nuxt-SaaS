@@ -15,11 +15,17 @@ const { errors, resetErrors, handleError } = useFormErrors(
   ['token', 'password', 'repeatPassword'] as const,
   'reset_password'
 )
+const loading = ref(false)
 
 const { fetch: fetchSession } = useUserSession()
 
 async function handleResetPassword () {
+  if (loading.value) {
+    return
+  }
+
   resetErrors()
+  loading.value = true
 
   try {
     await resetPassword(token.value, password.value, repeatPassword.value)
@@ -28,6 +34,8 @@ async function handleResetPassword () {
     await navigateTo('/')
   } catch (error: any) {
     handleError(error)
+  } finally {
+    loading.value = false
   }
 }
 </script>
@@ -67,6 +75,7 @@ async function handleResetPassword () {
             :ui="{
               base: 'p-2.5'
             }"
+            :loading
             @click="handleResetPassword">{{ $t('auth.reset_password.submit') }}</UButton>
         </div>
       </UFormField>

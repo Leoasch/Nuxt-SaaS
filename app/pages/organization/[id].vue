@@ -15,10 +15,22 @@ const org_id = route.params.id as string
 const organization = ref<Organization | null>(null)
 const members = ref<Membership[]>([])
 const loading = ref<boolean>(false)
+const busy = ref<string | null>(null)
 const overlay = useOverlay()
 const { user } = useUserSession()
 const { loadOrganizations, paging, selectedOrganizationId } = useOrganization()
 const { toastApiError } = useApiError()
+
+async function runAction (key: string, action: () => Promise<void>) {
+  busy.value = key
+  try {
+    await action()
+  } catch (error) {
+    toastApiError(error)
+  } finally {
+    busy.value = null
+  }
+}
 
 async function loadOrganization () {
   if (org_id) {
@@ -84,8 +96,8 @@ async function deleteOrganizationForm () {
     }
   }).open()
   if (await dialog.result) {
-    try {
-      const result = await deleteOrganization(organization.value.id)
+    await runAction('organization', async () => {
+      const result = await deleteOrganization(organization.value!.id)
 
       if (result.organization) {
         if (result.organization.id === selectedOrganizationId.value) {
@@ -93,11 +105,9 @@ async function deleteOrganizationForm () {
         }
         paging.value.index = 0
         await loadOrganizations()
-        navigateTo('/organizations')
+        await navigateTo('/organizations')
       }
-    } catch (error) {
-      toastApiError(error)
-    }
+    })
   }
 }
 
@@ -143,12 +153,10 @@ async function removeMember (
     props: dialogBody
   }).open()
   if (await dialog.result) {
-    try {
+    await runAction(member.id, async () => {
       await deleteMember(member)
       await onQuit()
-    } catch (error) {
-      toastApiError(error)
-    }
+    })
   }
 }
 
@@ -184,7 +192,7 @@ async function quitOrganization (member: Membership) {
     },
     ConfirmDeleteDialog,
     async () => {
-      navigateTo('/organizations')
+      await navigateTo('/organizations')
     }
   )
 }
@@ -202,12 +210,10 @@ async function transferOwnershipTo (member: Membership) {
     }
   }).open()
   if (await dialog.result) {
-    try {
+    await runAction(member.id, async () => {
       await transferOwnership(member)
       await Promise.all([loadOrganization(), loadMembers()])
-    } catch (error) {
-      toastApiError(error)
-    }
+    })
   }
 }
 
@@ -215,15 +221,13 @@ async function acceptInvite () {
   if (!organization.value) {
     return
   }
-  try {
-    const result = await acceptOrganizationInvite(organization.value.id, true)
+  await runAction('accept', async () => {
+    const result = await acceptOrganizationInvite(organization.value!.id, true)
     if (!result.membership.pending_invite) {
       await loadMembers()
-      organization.value.is_member = true
+      organization.value!.is_member = true
     }
-  } catch (error) {
-    toastApiError(error)
-  }
+  })
 }
 
 async function declineInvite () {
@@ -238,15 +242,13 @@ async function declineInvite () {
     }
   }).open()
   if (await dialog.result) {
-    try {
-      const result = await acceptOrganizationInvite(organization.value.id, false)
+    await runAction('decline', async () => {
+      const result = await acceptOrganizationInvite(organization.value!.id, false)
       if (result.membership.pending_invite) {
         organization.value = null
-        navigateTo('/')
+        await navigateTo('/')
       }
-    } catch (error) {
-      toastApiError(error)
-    }
+    })
   }
 }
 
@@ -301,12 +303,14 @@ onMounted(async () => {
           <UDropdownMenu
             v-if="hasMinimumRole(organization.role, 'ADMIN')"
             :items
+            :disabled="busy === 'organization'"
             class="shrink-0"
           >
             <UButton
               icon="lucide:ellipsis-vertical"
               color="neutral"
               variant="ghost"
+              :loading="busy === 'organization'"
               class="cursor-pointer"
               :aria-label="$t('common.more_actions')"
             />
@@ -361,6 +365,7 @@ onMounted(async () => {
                 :key="member.id"
                 :member
                 :organization
+                :busy="busy === member.id"
                 @alter_permission="() => openInviteForm(member)"
                 @cancel_invite="() => cancelInvitation(member)"
                 @member_kick="() => kickMember(member)"
@@ -376,7 +381,8 @@ onMounted(async () => {
             <div class="flex flex-wrap items-center justify-center">              
               <UButton
                 icon="lucide:x"
-                :disabled="loading"
+                :disabled="loading || busy === 'accept'"
+                :loading="busy === 'decline'"
                 variant="ghost"
                 color="error"
                 class="cursor-pointer"
@@ -386,7 +392,8 @@ onMounted(async () => {
               </UButton>    
               <UButton
                 icon="lucide:check"
-                :disabled="loading"
+                :disabled="loading || busy === 'decline'"
+                :loading="busy === 'accept'"
                 variant="ghost"
                 color="primary"
                 class="cursor-pointer"
