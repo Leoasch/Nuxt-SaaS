@@ -89,8 +89,7 @@ export interface Sale extends DatabaseModel {
 }
 
 export type SaleLine = {
-  product_id: string | null
-  product: Product | null
+  product: Product
   quantity: number
   unit_price: number
 }

@@ -61,6 +61,13 @@
     "product": "Produto",
     "quantity": "Quantidade",
     "reason": "Motivo",
+    "reason_placeholder": "Ex.: compra de fornecedor, ajuste de inventário, avaria",
+    "direction": {
+      "label": "Tipo",
+      "in": "Entrada",
+      "out": "Saída"
+    },
+    "stock_after": "Estoque após salvar",
     "reasons": {
       "sale": "Venda {id}",
       "sale_canceled": "Venda {id} cancelada"

@@ -1,36 +1,46 @@
 <script setup lang="ts">
-import { emptyLine } from '~/common'
 import type { SaleLine } from '~~/shared/types'
 
-defineProps<{
-  canDelete?: boolean
-}>()
+const line = defineModel<SaleLine>({ required: true })
 
-const line = defineModel<SaleLine>({ default: () => emptyLine() })
+defineEmits<{ delete: [] }>()
 
-function lineTotal (line: SaleLine) {
-  return line.unit_price * line.quantity
-}
-
-defineEmits<{ select: [product: Product | null], delete: [] }>()
-
+const lineTotal = computed(() => line.value.unit_price * line.value.quantity)
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-    <div class="min-w-0 flex-1">
-      <ProductSelector
-        v-model="line.product_id"
-        @select="product => $emit('select', product)"
+  <div class="flex flex-wrap items-center gap-2 rounded border border-accented p-2 sm:flex-nowrap">
+    <div class="flex min-w-0 flex-1 items-center gap-3">
+      <ImageCarousel
+        :org-id="line.product.organization_id"
+        :product-id="line.product.id"
+        :product-name="line.product.name"
+        :images="line.product.images ?? []"
+        class="size-10 shrink-0 border border-accented/50"
       />
+      <div class="flex min-w-0 flex-1 flex-col">
+        <span class="truncate font-bold">{{ line.product.name }}</span>
+        <span class="flex min-w-0 items-center gap-x-3 overflow-hidden text-xs text-dimmed">
+          <span
+            v-if="line.product.sku"
+            class="flex min-w-0 items-center gap-1">
+            <UIcon
+              name="lucide:tag"
+              class="size-3.5 shrink-0"/>
+            <span class="truncate">{{ line.product.sku }}</span>
+          </span>
+          <span
+            class="flex shrink-0 items-center gap-1"
+            :class="line.quantity > line.product.stock_quantity ? 'text-error' : ''">
+            <UIcon
+              name="lucide:package"
+              class="size-3.5 shrink-0"/>
+            {{ line.product.stock_quantity }}
+          </span>
+        </span>
+      </div>
     </div>
-    <div class="flex items-center gap-2">
-      <!-- <UInput
-        v-model.number="line.quantity"
-        type="number"
-        class="w-16 sm:w-20"
-        :placeholder="$t('sale.quantity')"
-        /> -->
+    <div class="order-last flex w-full items-center gap-2 sm:order-none sm:w-auto">
       <AmountInput
         v-model="line.quantity"
         :min="1"
@@ -39,20 +49,22 @@ defineEmits<{ select: [product: Product | null], delete: [] }>()
       />
       <PriceInput
         v-model="line.unit_price"
-        class="w-24 sm:w-32"
+        class="min-w-0 flex-1 sm:w-32 sm:flex-none"
         :placeholder="$t('sale.unit_price')"
       />
-      <span class="w-20 shrink-0 text-right text-sm text-dimmed sm:w-28">
-        {{ $n(lineTotal(line), 'currency') }}
+      <span class="hidden w-28 shrink-0 text-right text-sm text-dimmed sm:block">
+        {{ $n(lineTotal, 'currency') }}
       </span>
-      <UButton
-        icon="lucide:trash-2"
-        color="error"
-        variant="ghost"
-        :aria-label="$t('sale.remove_product')"
-        :disabled="!canDelete"
-        @click="() => $emit('delete')"
-      />
     </div>
+    <span class="shrink-0 text-sm text-dimmed sm:hidden">
+      {{ $n(lineTotal, 'currency') }}
+    </span>
+    <UButton
+      icon="lucide:trash-2"
+      color="error"
+      variant="ghost"
+      :aria-label="$t('sale.remove_product')"
+      @click="() => $emit('delete')"
+    />
   </div>
 </template>

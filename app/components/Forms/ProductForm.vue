@@ -22,11 +22,12 @@ const { errors, resetErrors, handleError } = useFormErrors([
   'barcode',
   'cost_price',
   'sale_price',
-  'stock_quantity',
   'minimum_stock'
 ] as const, 'save')
 const { toastApiError } = useApiError()
 const { loadProducts } = useProducts()
+
+const iconInputUi = { base: 'py-2 ps-10 pe-4', leading: 'ps-3' }
 
 const type = computed(() => props.product ? 'edit' : 'create')
 const loading = ref(false)
@@ -39,7 +40,6 @@ const form = ref<ProductBody>({
   barcode: props.product?.barcode ?? '',
   cost_price: props.product?.cost_price ?? 0,
   sale_price: props.product?.sale_price ?? 0,
-  stock_quantity: props.product?.stock_quantity ?? 0,
   minimum_stock: props.product?.minimum_stock ?? 0
 })
 
@@ -113,76 +113,78 @@ async function save () {
     :dismissible="false"
   >
     <template #body>
-      <div class="flex flex-col gap-6">
+      <div class="grid grid-cols-2 sm:grid-cols-6 gap-4">
         <UFormField
           :label="$t('product.name')"
-          :error="errors.name">
+          :error="errors.name"
+          class="col-span-2 sm:col-span-6">
           <UInput
             v-model="form.name"
+            icon="lucide:package"
             :placeholder="$t('product.name')"
             class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
+            :ui="iconInputUi"
           />
         </UFormField>
         <UFormField
           :label="$t('product.sku')"
-          :error="errors.sku">
+          :error="errors.sku"
+          class="col-span-2 sm:col-span-3">
           <UInput
             v-model="form.sku!"
+            icon="lucide:hash"
             :placeholder="$t('product.sku')"
             class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
+            :ui="iconInputUi"
           />
         </UFormField>
         <UFormField
           :label="$t('product.barcode')"
-          :error="errors.barcode">
+          :error="errors.barcode"
+          class="col-span-2 sm:col-span-3">
           <UInput
             v-model="form.barcode!"
+            icon="lucide:barcode"
             :placeholder="$t('product.barcode')"
             class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
+            :ui="iconInputUi"
           />
         </UFormField>
         <UFormField
           :label="$t('product.cost_price')"
-          :error="errors.cost_price">
+          :error="errors.cost_price"
+          class="sm:col-span-2">
           <PriceInput
             v-model="form.cost_price"
+            icon="lucide:wallet"
             :placeholder="$t('product.cost_price')"
           />
         </UFormField>
         <UFormField
           :label="$t('product.sale_price')"
-          :error="errors.sale_price">
+          :error="errors.sale_price"
+          class="sm:col-span-2">
           <PriceInput
             v-model="form.sale_price"
+            icon="lucide:tag"
             :placeholder="$t('product.sale_price')"
           />
         </UFormField>
         <UFormField
           :label="$t('product.minimum_stock')"
-          :error="errors.minimum_stock">
-          <UInput
+          :error="errors.minimum_stock"
+          class="col-span-2 sm:col-span-2">
+          <QuantityInput
             v-model="form.minimum_stock"
-            type="number"
+            icon="lucide:triangle-alert"
             :placeholder="$t('product.minimum_stock')"
-            class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
           />
         </UFormField>
         <ImagesInput
           v-model="images"
           :org-id="orgId"
           :product-id="form.id"
+          class="col-span-2 sm:col-span-6"
         />
       </div>
     </template>

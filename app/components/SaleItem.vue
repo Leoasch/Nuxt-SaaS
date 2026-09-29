@@ -14,7 +14,6 @@ const paymentMethodIcon = computed(() => PAYMENT_METHOD_ICONS[props.sale.payment
 
 const { t, te, n, d } = useI18n()
 
-// payment_method is free text on the server, so unknown values are shown as-is
 const paymentMethodLabel = computed(() => te(`sale.payment_method.${props.sale.payment_method}`)
   ? t(`sale.payment_method.${props.sale.payment_method}`)
   : props.sale.payment_method)

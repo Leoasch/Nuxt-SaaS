@@ -5,6 +5,12 @@ import type { Product } from '~~/shared/types'
 const DEBOUNCE_MS = 300
 const DEFAULT_LIMIT = 10
 
+const props = defineProps<{
+  placeholder?: string
+  resetOnSelect?: boolean
+  autofocus?: boolean
+}>()
+
 const search_query = ref('')
 const product_id = defineModel<string | null>({ default: null })
 const emit = defineEmits<{ select: [product: Product | null] }>()
@@ -14,7 +20,9 @@ const defaultProducts = ref<Product[]>([])
 const searchedProducts = ref<Product[]>([])
 const selectedProduct = ref<Product | null>(null)
 const loading = ref(false)
+const loadingDefaults = ref(false)
 const open = ref(false)
+const inputRef = ref<HTMLInputElement>()
 
 const displayedProducts = computed(() => search_query.value.trim()
   ? searchedProducts.value
@@ -29,9 +37,14 @@ async function loadDefaultProducts () {
     return
   }
 
-  const result = await getProducts(selectedOrganizationId.value, { index: 0, limit: DEFAULT_LIMIT })
+  loadingDefaults.value = true
+  try {
+    const result = await getProducts(selectedOrganizationId.value, { index: 0, limit: DEFAULT_LIMIT })
 
-  defaultProducts.value = result.products
+    defaultProducts.value = result.products
+  } finally {
+    loadingDefaults.value = false
+  }
 }
 
 async function search () {
@@ -73,11 +86,18 @@ watch(() => selectedOrganizationId.value, async () => {
   await loadDefaultProducts()
 })
 
-onMounted(() => loadDefaultProducts().catch(() => {}))
+onMounted(() => {
+  loadDefaultProducts().catch(() => {})
+  if (props.autofocus) {
+    inputRef.value?.focus()
+  }
+})
 
 function select (product: Product) {
-  product_id.value = product.id
-  selectedProduct.value = product
+  if (!props.resetOnSelect) {
+    product_id.value = product.id
+    selectedProduct.value = product
+  }
   search_query.value = ''
   searchedProducts.value = []
   open.value = false
@@ -109,9 +129,9 @@ onUnmounted(() => clearTimeout(debounceTimer))
         v-else
         class="flex size-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-accented/50 text-dimmed">
         <UIcon
-          :name="loading ? 'lucide:loader-circle' : 'lucide:search'"
+          :name="loading || loadingDefaults ? 'lucide:loader-circle' : 'lucide:search'"
           class="size-4"
-          :class="loading ? 'animate-spin' : ''"
+          :class="loading || loadingDefaults ? 'animate-spin' : ''"
         />
       </div>
 
@@ -149,11 +169,14 @@ onUnmounted(() => clearTimeout(debounceTimer))
       </div>
       <input
         v-else
+        ref="inputRef"
         v-model="search_query"
         type="text"
         class="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-dimmed"
-        :placeholder="$t('product.select.placeholder')"
+        :placeholder="placeholder ?? $t('product.select.placeholder')"
         @focus="open = true"
+        @click="open = true"
+        @input="open = true"
         @blur="open = false"
       >
 
@@ -219,7 +242,7 @@ onUnmounted(() => clearTimeout(debounceTimer))
       </button>
 
       <p
-        v-if="!loading && displayedProducts.length === 0"
+        v-if="!loading && !loadingDefaults && displayedProducts.length === 0"
         class="p-2 text-sm text-dimmed">
         {{ $t('product.search.empty') }}
       </p>

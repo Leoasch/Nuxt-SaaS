@@ -8,8 +8,7 @@ const createProductSchema = z.object({
   barcode: z.string().trim().min(2).max(100).optional().nullable(),
   cost_price: z.number().optional(),
   sale_price: z.number().optional(),
-  stock_quantity: z.number().optional(),
-  minimum_stock: z.number().optional(),
+  minimum_stock: z.number().min(0).optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -23,8 +22,7 @@ export default defineEventHandler(async (event) => {
     sku,
     cost_price,
     minimum_stock,
-    sale_price,
-    stock_quantity
+    sale_price
   } = result.data
 
 
@@ -36,7 +34,7 @@ export default defineEventHandler(async (event) => {
     cost_price: cost_price ?? 0,
     minimum_stock: minimum_stock ?? 0,
     sale_price: sale_price ?? 0,
-    stock_quantity: stock_quantity ?? 0,
+    stock_quantity: 0,
   })
 
   return { product }

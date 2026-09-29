@@ -7,8 +7,7 @@ const editProductSchema = z.object({
   barcode: z.string().trim().min(2).max(100).optional().nullable(),
   cost_price: z.number().optional(),
   sale_price: z.number().optional(),
-  stock_quantity: z.number().optional(),
-  minimum_stock: z.number().optional(),
+  minimum_stock: z.number().min(0).optional(),
 })
 
 export default defineEventHandler(async (event) => {

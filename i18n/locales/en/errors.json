@@ -109,6 +109,9 @@
     "token": {
       "required": "This reset link is incomplete. Request a new one."
     },
+    "quantity": {
+      "not_zero": "Quantity can't be zero"
+    },
     "products": {
       "too_small": "Add at least one product",
       "invalid_item": "Check each product's quantity and price"

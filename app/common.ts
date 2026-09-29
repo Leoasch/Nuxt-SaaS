@@ -1,8 +1,4 @@
-import type { Role, SaleLine } from '~~/shared/types'
-
-export function emptyLine (): SaleLine {
-  return { product_id: null, product: null, quantity: 1, unit_price: 0 }
-}
+import type { Role } from '~~/shared/types'
 
 export const CURRENCY = 'BRL'
 

@@ -10,6 +10,8 @@ const { errors, resetErrors, handleError } = useFormErrors(['name', 'document'] 
 const { toastApiError } = useApiError()
 const { loadOrganizations } = useOrganization()
 
+const iconInputUi = { base: 'py-2 ps-10 pe-4', leading: 'ps-3' }
+
 const type = computed(() => props.organization ? 'edit' : 'create')
 const loading = ref(false)
 const emit = defineEmits(['close'])
@@ -55,31 +57,29 @@ async function save () {
     :dismissible="false"
   >
     <template #body>
-      <div class="grid md:grid-cols-5 grid-cols-1 gap-6 max-w-full">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-5">
         <UFormField
           :label="$t('organization.name')"
           :error="errors.name"
-          class="md:col-span-3">
+          class="sm:col-span-3">
           <UInput
             v-model="form.name"
+            icon="lucide:building-2"
             :placeholder="$t('organization.name')"
             class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
+            :ui="iconInputUi"
           />
         </UFormField>
         <UFormField
           :label="$t('organization.document')"
           :error="errors.document"
-          class="md:col-span-2">
+          class="sm:col-span-2">
           <UInput
             v-model="form.document"
+            icon="lucide:id-card"
             :placeholder="$t('organization.document')"
             class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
+            :ui="iconInputUi"
           />
         </UFormField>
       </div>

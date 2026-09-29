@@ -19,7 +19,8 @@
       "other": "Outro"
     },
     "products": "Produtos",
-    "add_product": "Adicionar produto",
+    "add_product": "Buscar produto para adicionar",
+    "no_products_added": "Nenhum produto adicionado",
     "remove_product": "Remover produto",
     "quantity": "Quantidade",
     "unit_price": "Preço unitário",

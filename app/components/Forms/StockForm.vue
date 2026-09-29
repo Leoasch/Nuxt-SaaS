@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
-import { postStockMV, type StockMVBody } from '~/api/stockMovements'
+import { postStockMV } from '~/api/stockMovements'
+import type { Product } from '~~/shared/types'
 
 const props = defineProps<{
   orgId: string
@@ -17,20 +18,40 @@ const { loadStock } = useStock()
 const loading = ref(false)
 const emit = defineEmits(['close'])
 
-const form = ref<StockMVBody>({
-  quantity: 0,
-  reason: '',
-  product_id: null
-})
+const product_id = ref<string | null>(null)
+const product = ref<Product | null>(null)
+const direction = ref<'in' | 'out'>('in')
+const quantity = ref(1)
+const reason = ref('')
+
+const directions = [
+  { value: 'in', icon: 'lucide:arrow-up', color: 'success' },
+  { value: 'out', icon: 'lucide:arrow-down', color: 'error' }
+] as const
+
+const signedQuantity = computed(() => direction.value === 'in' ? quantity.value : -quantity.value)
+const stockAfter = computed(() => product.value ? product.value.stock_quantity + signedQuantity.value : 0)
+
+function onSelectProduct (selected: Product | null) {
+  product.value = selected
+  resetErrors()
+}
 
 async function save () {
   resetErrors()
+
+  if (!product_id.value) {
+    setError('product', 'errors.PRODUCT_ID_MISSING')
+    return
+  }
+
   loading.value = true
   try {
-    const body = nullifyEmpty(form.value)
-
-    
-    await postStockMV(props.orgId, body)
+    await postStockMV(props.orgId, nullifyEmpty({
+      product_id: product_id.value,
+      quantity: signedQuantity.value,
+      reason: reason.value
+    }))
 
     await loadStock()
     emit('close')
@@ -59,36 +80,72 @@ async function save () {
     }"
     :dismissible="false">
     <template #body>
-      <div class="flex flex-col gap-6">
-        
-        
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <UFormField
           :label="$t('stock.product')"
-          :error="errors.product">
-          <ProductSelector v-model="form.product_id"/>
+          :error="errors.product"
+          class="sm:col-span-2">
+          <ProductSelector
+            v-model="product_id"
+            autofocus
+            @select="onSelectProduct"
+          />
+        </UFormField>
+        <UFormField :label="$t('stock.direction.label')">
+          <UFieldGroup class="w-full">
+            <UButton
+              v-for="item in directions"
+              :key="item.value"
+              :icon="item.icon"
+              :color="direction === item.value ? item.color : 'neutral'"
+              :variant="direction === item.value ? 'subtle' : 'outline'"
+              :aria-pressed="direction === item.value"
+              class="flex-1 justify-center py-2"
+              @click="direction = item.value">
+              {{ $t(`stock.direction.${item.value}`) }}
+            </UButton>
+          </UFieldGroup>
         </UFormField>
         <UFormField
           :label="$t('stock.quantity')"
           :error="errors.quantity">
-          <UInput
-            v-model="form.quantity"
-            type="number"
+          <QuantityInput
+            v-model="quantity"
+            :min="1"
+            icon="lucide:boxes"
             :placeholder="$t('stock.quantity')"
-            class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
           />
         </UFormField>
+        <div
+          v-if="product"
+          class="flex items-center gap-2 rounded-md bg-elevated/60 px-3 py-2 text-sm sm:col-span-2">
+          <UIcon
+            name="lucide:package"
+            class="size-4 shrink-0 text-dimmed"/>
+          <span class="text-muted">{{ $t('stock.stock_after') }}</span>
+          <span class="ml-auto font-medium">{{ product.stock_quantity }}</span>
+          <UIcon
+            name="lucide:arrow-right"
+            class="size-4 shrink-0 text-dimmed"/>
+          <span
+            class="font-bold"
+            :class="stockAfter < 0 ? 'text-error' : stockAfter <= product.minimum_stock ? 'text-warning' : 'text-highlighted'">
+            {{ stockAfter }}
+          </span>
+        </div>
         <UFormField
           :label="$t('stock.reason')"
-          :error="errors.reason">
+          :error="errors.reason"
+          class="sm:col-span-2">
           <UTextarea
-            v-model="form.reason!"
-            :placeholder="$t('stock.reason')"
+            v-model="reason"
+            icon="lucide:message-square-text"
+            :rows="3"
+            :placeholder="$t('stock.reason_placeholder')"
             class="w-full"
             :ui="{
-              base: 'py-2 px-4'
+              base: 'py-2 ps-10 pe-4',
+              leading: 'ps-3'
             }"
           />
         </UFormField>

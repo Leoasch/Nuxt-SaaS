@@ -19,7 +19,6 @@ export type ProductBody = {
   barcode: string | null;
   cost_price: number;
   sale_price: number;
-  stock_quantity: number;
   minimum_stock: number;
 }
 

@@ -109,6 +109,9 @@
     "token": {
       "required": "Este link de redefinição está incompleto. Solicite um novo."
     },
+    "quantity": {
+      "not_zero": "A quantidade não pode ser zero"
+    },
     "products": {
       "too_small": "Adicione pelo menos um produto",
       "invalid_item": "Confira a quantidade e o preço de cada produto"

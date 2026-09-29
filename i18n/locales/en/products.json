@@ -61,6 +61,13 @@
     "product": "Product",
     "quantity": "Quantity",
     "reason": "Reason",
+    "reason_placeholder": "E.g. supplier purchase, inventory count, damaged goods",
+    "direction": {
+      "label": "Type",
+      "in": "Stock in",
+      "out": "Stock out"
+    },
+    "stock_after": "Stock after saving",
     "reasons": {
       "sale": "Sale {id}",
       "sale_canceled": "Sale {id} canceled"

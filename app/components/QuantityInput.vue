@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { CURRENCY } from '~/common'
-
 withDefaults(defineProps<{
   placeholder?: string
   min?: number
@@ -9,24 +7,21 @@ withDefaults(defineProps<{
   min: 0
 })
 
-const price = defineModel<number>({ default: 0 })
+const quantity = defineModel<number>({ default: 0 })
 const { locale } = useI18n()
 </script>
 
 <template>
   <div class="relative">
     <UInputNumber
-      v-model="price"
+      v-model="quantity"
       :min="min"
-      :step="0.01"
-      :format-options="{ style: 'currency', currency: CURRENCY }"
       :locale="locale"
-      :increment="false"
-      :decrement="false"
+      orientation="vertical"
       :placeholder="placeholder"
       class="w-full"
       :ui="{
-        base: icon ? 'py-2 ps-10 pe-4 text-start' : 'py-2 px-4'
+        base: icon ? 'py-2 ps-10 pe-9' : 'py-2 ps-4 pe-9'
       }"
     />
     <UIcon

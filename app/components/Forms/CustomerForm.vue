@@ -16,6 +16,8 @@ const { errors, resetErrors, handleError } = useFormErrors([
 const { toastApiError } = useApiError()
 const { loadCustomers } = useCustomers()
 
+const iconInputUi = { base: 'py-2 ps-10 pe-4', leading: 'ps-3' }
+
 const type = computed(() => props.customer ? 'edit' : 'create')
 const loading = ref(false)
 const emit = defineEmits(['close'])
@@ -61,31 +63,27 @@ async function save () {
     :dismissible="false"
   >
     <template #body>
-      <div class="grid grid-cols-2 gap-x-4 gap-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <UFormField
           :label="$t('customer.name')"
-          :error="errors.name"
-          class="col-span-2">
+          :error="errors.name">
           <UInput
             v-model="form.name"
+            icon="lucide:user"
             :placeholder="$t('customer.name')"
             class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
+            :ui="iconInputUi"
           />
         </UFormField>
         <UFormField
           :label="$t('customer.email')"
-          :error="errors.email"
-          class="col-span-2">
+          :error="errors.email">
           <UInput
             v-model="form.email!"
+            icon="lucide:mail"
             :placeholder="$t('customer.email')"
             class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
+            :ui="iconInputUi"
           />
         </UFormField>
         <UFormField
@@ -93,11 +91,10 @@ async function save () {
           :error="errors.document">
           <UInput
             v-model="form.document!"
+            icon="lucide:id-card"
             :placeholder="$t('customer.document')"
             class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
+            :ui="iconInputUi"
           />
         </UFormField>
         <UFormField
@@ -105,14 +102,12 @@ async function save () {
           :error="errors.phone">
           <UInput
             v-model="form.phone!"
+            icon="lucide:phone"
             :placeholder="$t('customer.phone')"
             class="w-full"
-            :ui="{
-              base: 'py-2 px-4'
-            }"
+            :ui="iconInputUi"
           />
         </UFormField>
-        
       </div>
     </template>
     <template #footer>

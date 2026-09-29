@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SelectItem } from '@nuxt/ui'
 import { postSale, type SaleBody } from '~/api/sales'
-import { emptyLine } from '~/common'
+import { PAYMENT_METHOD_ICONS } from '~/common'
 import type { Product, SaleLine } from '~~/shared/types'
 
 const props = defineProps<{
@@ -23,26 +23,27 @@ const emit = defineEmits(['close'])
 
 const customer_id = ref<string | null>(null)
 const payment_method = ref<string | null>(null)
-const lines = ref<SaleLine[]>([emptyLine()])
+const lines = ref<(SaleLine & { key: number })[]>([])
+const linesList = ref<HTMLElement>()
+let nextLineKey = 0
 
 const paymentMethodItems = computed<SelectItem[]>(() => PAYMENT_METHODS.map(method => ({
   label: $t(`sale.payment_method.${method}`),
-  value: method
+  value: method,
+  icon: PAYMENT_METHOD_ICONS[method]
 })))
 
-function lineTotal (line: SaleLine) {
-  return line.unit_price * line.quantity
-}
+const total = computed(() => lines.value.reduce((sum, line) => sum + line.unit_price * line.quantity, 0))
 
-const total = computed(() => lines.value.reduce((sum, line) => sum + lineTotal(line), 0))
+async function addProduct (product: Product | null) {
+  if (!product) {
+    return
+  }
 
-function onSelectProduct (line: SaleLine, product: Product | null) {
-  line.product = product
-  line.unit_price = product?.sale_price ?? 0
-}
+  const index = lines.value.push({ key: nextLineKey++, product, quantity: 1, unit_price: product.sale_price }) - 1
 
-function addLine () {
-  lines.value.push(emptyLine())
+  await nextTick()
+  linesList.value?.children[index]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
 }
 
 function removeLine (index: number) {
@@ -53,13 +54,11 @@ async function save () {
   resetErrors()
   loading.value = true
   try {
-    const products = lines.value
-      .filter(line => line.product_id)
-      .map(line => ({
-        product_id: line.product_id!,
-        quantity: line.quantity,
-        unit_price: line.unit_price
-      }))
+    const products = lines.value.map(line => ({
+      product_id: line.product.id,
+      quantity: line.quantity,
+      unit_price: line.unit_price
+    }))
 
     if (products.length === 0) {
       setError('products', 'sale.error.no_products')
@@ -100,7 +99,7 @@ async function save () {
     :dismissible="false"
   >
     <template #body>
-      <div class="flex flex-col gap-6">
+      <div class="flex flex-col gap-6 max-h-full h-120">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <UFormField
             :label="$t('sale.customer')"
@@ -113,32 +112,47 @@ async function save () {
             <USelect
               v-model="payment_method"
               :items="paymentMethodItems"
+              :icon="payment_method ? PAYMENT_METHOD_ICONS[payment_method] : 'lucide:wallet'"
               :placeholder="$t('sale.payment_method_label')"
               class="w-full"
-              :ui="{ base: 'h-[58px]' }"
+              :ui="{
+                base: 'h-[58px] ps-10',
+                leading: 'ps-3'
+              }"
             />
           </UFormField>
         </div>
 
         <UFormField
           :label="$t('sale.products')"
-          :error="errors.products">
-          <div class="flex flex-col gap-3">
+          :error="errors.products"
+          :ui="{
+            root: 'flex min-h-0 flex-1 flex-col',
+            container: 'flex min-h-0 flex-1 flex-col gap-3'
+          }">
+          <ProductSelector
+            reset-on-select
+            autofocus
+            :placeholder="$t('sale.add_product')"
+            @select="addProduct"
+          />
+          <div
+            ref="linesList"
+            class="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
             <ProductsListLine
               v-for="(line, idx) in lines"
-              :key="idx"
-              :can-delete="lines.length > 1"
+              :key="line.key"
               :model-value="line"
-              @select="product => onSelectProduct(line, product)"
               @delete="removeLine(idx)"
             />
-            <UButton
-              variant="ghost"
-              icon="lucide:plus"
-              class="self-start"
-              @click="addLine">
-              {{ $t('sale.add_product') }}
-            </UButton>
+            <p
+              v-if="lines.length === 0"
+              class="m-auto flex items-center gap-2 text-sm text-dimmed">
+              <UIcon
+                name="lucide:shopping-cart"
+                class="size-4"/>
+              {{ $t('sale.no_products_added') }}
+            </p>
           </div>
         </UFormField>
       </div>
