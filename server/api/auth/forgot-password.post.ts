@@ -2,7 +2,9 @@ import { createHash, randomBytes } from 'node:crypto'
 import { z } from 'zod'
 import { User } from '~~/server/database/models/User'
 import { parseBody } from '~~/server/utils/accessValidation'
+import { isDemoMode } from '~~/server/utils/demo'
 import { sendMail } from '~~/server/utils/mailer'
+import { isDemoEmail } from '~~/shared/utils/demo'
 import { emailMessages } from '~~/shared/emails/messages'
 
 const forgotPasswordSchema = z.object({ email: z.email() })
@@ -14,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   const user = await User.findOne({ where: { email } })
 
-  if (user) {
+  if (user && !(isDemoMode() && isDemoEmail(user.email))) {
     const token = randomBytes(32).toString('hex')
     user.resetPasswordTokenHash = createHash('sha256').update(token).digest('hex')
     user.resetPasswordTokenExpiresAt = new Date(Date.now() + RESET_TOKEN_TTL_MS)

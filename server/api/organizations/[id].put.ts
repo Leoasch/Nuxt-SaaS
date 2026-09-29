@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { organizationAccessValidation, parseBody } from '~~/server/utils/accessValidation'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 const editOrganizationSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -8,6 +9,7 @@ const editOrganizationSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const { organization, membership } = await organizationAccessValidation(event, ['ADMIN'])
+  await assertNotDemoAccount(event)
 
   const result = await parseBody(event, editOrganizationSchema)
 

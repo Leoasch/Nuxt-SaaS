@@ -7,6 +7,7 @@ import { User } from '~~/server/database/models/User'
 import { parseBody } from '~~/server/utils/accessValidation'
 import { findOwnedOrganizations } from '~~/server/utils/ownedOrganizations'
 import { deleteObject } from '~~/server/utils/storage'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 const deleteAccountSchema = z.object({
   password: z.string()
@@ -14,6 +15,7 @@ const deleteAccountSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const { user: sessionUser } = await requireUserSession(event)
+  await assertNotDemoAccount(event)
 
   const result = await parseBody(event, deleteAccountSchema)
 

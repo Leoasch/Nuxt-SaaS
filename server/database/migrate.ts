@@ -1,4 +1,4 @@
-// Usage: pnpm db:migrate | db:migrate:down | db:migrate:status
+// Usage: pnpm db:migrate | db:migrate:down | db:migrate:status [--env-file <path>]
 
 // Keep this import first: it installs `useRuntimeConfig` before the database module is loaded.
 import '../seed/runtime'
@@ -6,7 +6,7 @@ import { parseArgs } from 'node:util'
 import { sequelize } from '~~/server/database'
 import { migrator, runMigrations } from '~~/server/database/migrator'
 
-const { positionals: [command = 'up'] } = parseArgs({ allowPositionals: true })
+const { positionals: [command = 'up'] } = parseArgs({ allowPositionals: true, options: { 'env-file': { type: 'string' } } })
 
 async function main () {
   await sequelize.authenticate()
@@ -28,7 +28,8 @@ async function main () {
   }
 
   if (command === 'status') {
-    const [executed, pending] = await Promise.all([migrator.executed(), migrator.pending()])
+    const executed = await migrator.executed()
+    const pending = await migrator.pending()
 
     console.log('Applied:')
     console.log(executed.length > 0 ? executed.map(({ name }) => `  ${name}`).join('\n') : '  (none)')

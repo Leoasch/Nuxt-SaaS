@@ -1,7 +1,8 @@
 import type { Role } from '~~/shared/types'
+import { SEED_EMAIL_DOMAIN } from '~~/shared/utils/demo'
 import { chance, int, pick } from './random'
 
-export const SEED_EMAIL_DOMAIN = 'seed.example.com'
+export { SEED_EMAIL_DOMAIN }
 export const SEED_PASSWORD = 'Password123!'
 
 export type OrgKey = 'tech' | 'home' | 'fashion'

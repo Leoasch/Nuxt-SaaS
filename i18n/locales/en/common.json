@@ -58,5 +58,8 @@
     },
     "home": "Back to home",
     "retry": "Try again"
+  },
+  "demo": {
+    "banner": "Demo account: the data is restored every day at 03:00 (Brasília time) and some account actions are disabled."
   }
 }

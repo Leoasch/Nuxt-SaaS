@@ -1,6 +1,7 @@
 import { User } from '~~/server/database/models/User'
 import { z } from 'zod'
 import { parseBody } from '~~/server/utils/accessValidation'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 const changePasswordSchema = z.object({
   oldPassword: z.string().optional(),
@@ -16,6 +17,7 @@ const changePasswordSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const { user: sessionUser } = await requireUserSession(event)
+  await assertNotDemoAccount(event)
 
   const result = await parseBody(event, changePasswordSchema)
 

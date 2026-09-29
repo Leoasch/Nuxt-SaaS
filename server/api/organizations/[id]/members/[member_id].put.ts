@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { accessMembership, organizationAccessValidation, parseBody } from '~~/server/utils/accessValidation'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 const addMemberSchema = z.object({
   role: z.enum(['ADMIN', 'MANAGER', 'EMPLOYEE'])
@@ -7,6 +8,7 @@ const addMemberSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const { organization, membership: userMembership } = await organizationAccessValidation(event, ['MANAGER'])
+  await assertNotDemoAccount(event)
   const { membership } = await accessMembership(event, organization.id)
 
   const { role } = (await parseBody(event, addMemberSchema)).data

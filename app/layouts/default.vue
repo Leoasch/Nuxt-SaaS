@@ -2,6 +2,7 @@
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 import { logout } from '~/api/auth'
 import { THEME_PRESETS } from '~/utils/themeColors'
+import { isDemoEmail } from '~~/shared/utils/demo'
 
 const open = ref(false)
 const colorMode = useColorMode()
@@ -17,6 +18,8 @@ const user = ref({
 const SIDEBAR_MOBILE_QUERY = '(max-width: 1023px)'
 
 const route = useRoute()
+
+const isDemoSession = computed(() => !!useRuntimeConfig().public.demoEmail && isDemoEmail(sessionUser.value?.email))
 
 watch(() => route.path, () => {
   if (window.matchMedia(SIDEBAR_MOBILE_QUERY).matches) {
@@ -253,6 +256,15 @@ async function handleLogout () {
           @click="open = !open"
         />
         <OrganizationSelector class="mr-4 ml-auto w-60"/>
+      </div>
+
+      <div
+        v-if="isDemoSession"
+        class="flex shrink-0 items-center gap-2 border-b border-default bg-info/10 px-4 py-1.5 text-xs text-info">
+        <UIcon
+          name="lucide:info"
+          class="size-4 shrink-0"/>
+        <span>{{ $t('demo.banner') }}</span>
       </div>
 
       <div class="flex-1 p-4 overflow-auto">

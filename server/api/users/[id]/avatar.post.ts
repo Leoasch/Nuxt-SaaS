@@ -2,11 +2,13 @@ import { User } from '~~/server/database/models/User'
 import { uploadObject } from '~~/server/utils/storage'
 import { assertContentLength } from '~~/server/utils/uploads'
 import { MAX_IMAGE_SIZE, maxUploadBytes } from '~~/shared/utils/uploads'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif']
 
 export default defineEventHandler(async (event) => {
   const { user: sessionUser } = await requireUserSession(event)
+  await assertNotDemoAccount(event)
 
   const id = getRouterParam(event, 'id')
 

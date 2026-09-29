@@ -1,8 +1,10 @@
 import { sequelize } from '~~/server/database'
 import { accessMembership, organizationAccessValidation } from '~~/server/utils/accessValidation'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 export default defineEventHandler(async (event) => {
   const { organization, membership: ownerMembership } = await organizationAccessValidation(event, ['OWNER'])
+  await assertNotDemoAccount(event)
   const { membership: targetMembership } = await accessMembership(event, organization.id)
 
   if (targetMembership.user_id === ownerMembership.user_id) {

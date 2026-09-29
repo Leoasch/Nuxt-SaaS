@@ -34,6 +34,12 @@ export async function login (body: LoginBody) {
   })
 }
 
+export async function demoLogin () {
+  return await apiRequest<{ success: true, organizationId: string | null }>('/auth/demo', {
+    method: 'POST',
+  })
+}
+
 export async function logout () {
   return await apiRequest<{ success: true }>('/auth/logout', {
     method: 'POST',

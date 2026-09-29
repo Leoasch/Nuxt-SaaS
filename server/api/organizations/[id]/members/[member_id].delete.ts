@@ -1,7 +1,9 @@
 import { accessMembership } from '~~/server/utils/accessValidation'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 export default defineEventHandler(async (event) => {
   const { organization, membership: userMembership } = await organizationAccessValidation(event, ['MANAGER'], { allowSelf: true })
+  await assertNotDemoAccount(event)
 
   const { membership } = await accessMembership(event, organization.id)
 

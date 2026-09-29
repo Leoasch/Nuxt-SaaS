@@ -1,8 +1,10 @@
 import { User } from '~~/server/database/models/User'
 import { deleteObject } from '~~/server/utils/storage'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 export default defineEventHandler(async (event) => {
   const { user: sessionUser, secure } = await requireUserSession(event)
+  await assertNotDemoAccount(event)
 
   const id = getRouterParam(event, 'id')
 

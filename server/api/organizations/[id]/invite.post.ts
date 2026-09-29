@@ -5,6 +5,7 @@ import { User } from '~~/server/database/models/User'
 import { organizationAccessValidation, parseBody } from '~~/server/utils/accessValidation'
 import { sendMail } from '~~/server/utils/mailer'
 import { emailMessages } from '~~/shared/emails/messages'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 const addMemberSchema = z.object({
   email: z.email(),
@@ -13,6 +14,7 @@ const addMemberSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const { organization, membership, user: inviter } = await organizationAccessValidation(event, ['MANAGER'])
+  await assertNotDemoAccount(event)
 
   const result = await parseBody(event, addMemberSchema)
 

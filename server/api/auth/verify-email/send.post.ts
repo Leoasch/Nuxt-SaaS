@@ -1,8 +1,10 @@
 import { User } from '~~/server/database/models/User'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 import { EMAIL_VERIFICATION_COOLDOWN_MS, EMAIL_VERIFICATION_TTL_MS, sendVerificationEmail } from '~~/server/utils/emailVerification'
 
 export default defineEventHandler(async (event) => {
   const { user: sessionUser } = await requireUserSession(event)
+  await assertNotDemoAccount(event)
 
   const user = await User.findByPk(sessionUser.id)
 

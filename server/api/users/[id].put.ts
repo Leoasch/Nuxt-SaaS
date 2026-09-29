@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { User } from '~~/server/database/models/User'
 import { parseBody } from '~~/server/utils/accessValidation'
 import { sendVerificationEmail } from '~~/server/utils/emailVerification'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 const editUserSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -11,6 +12,7 @@ const editUserSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const { user: sessionUser } = await requireUserSession(event)
+  await assertNotDemoAccount(event)
 
   const id = getRouterParam(event, 'id')
 

@@ -67,6 +67,7 @@ export default defineNuxtConfig({
       maxAge: 60 * 60 * 24 * 30
     },
     public: {
+      demoEmail: '',
       nuxtApiShield: {
         security: {
           // true only when a reverse proxy sits in front and can be trusted to set/overwrite
@@ -96,6 +97,7 @@ export default defineNuxtConfig({
       { path: '/api/auth/reset-password', max: 5, duration: 60, ban: 900 },
       { path: '/api/auth/verify-email/send', max: 5, duration: 60, ban: 900 },
       { path: '/api/auth/verify-email/confirm', max: 10, duration: 60, ban: 900 },
+      { path: '/api/auth/demo', max: 10, duration: 60, ban: 300 },
       { path: '/api/organizations/*/invite', pattern: true, max: 10, duration: 60, ban: 300 },
       { path: '/api/organizations/*/products/*/images', pattern: true, max: 20, duration: 60, ban: 300 },
       { path: '/api' },

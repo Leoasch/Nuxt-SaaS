@@ -6,9 +6,11 @@ import { Sale } from '~~/server/database/models/Sale'
 import { SaleItem } from '~~/server/database/models/SaleItem'
 import { StockMovement } from '~~/server/database/models/StockMovements'
 import { organizationAccessValidation } from '~~/server/utils/accessValidation'
+import { assertNotDemoAccount } from '~~/server/utils/demo'
 
 export default defineEventHandler(async (event) => {
   const { organization, membership } = await organizationAccessValidation(event, ['OWNER'])
+  await assertNotDemoAccount(event)
 
   await sequelize.transaction(async (transaction) => {
     const sales = await Sale.findAll({

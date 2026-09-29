@@ -58,5 +58,8 @@
     },
     "home": "Voltar ao início",
     "retry": "Tentar novamente"
+  },
+  "demo": {
+    "banner": "Conta de demonstração: os dados são restaurados todos os dias às 03:00 (horário de Brasília) e algumas ações da conta estão desativadas."
   }
 }

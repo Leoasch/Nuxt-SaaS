@@ -1,7 +1,8 @@
-// Usage: pnpm seed [--reset] [--force]
-//   (no flag)  seed the database, or do nothing when it was already seeded
-//   --reset    delete what the seeder created earlier (only that) and seed again
-//   --force    allow running with NODE_ENV=production
+// Usage: pnpm seed [--reset] [--force] [--env-file <path>]
+//   (no flag)   seed the database, or do nothing when it was already seeded
+//   --reset     delete what the seeder created earlier (only that) and seed again
+//   --force     allow running with NODE_ENV=production
+//   --env-file  read the settings from that file instead of .env (e.g. .env.deploy)
 
 // Keep this import first: it installs `useRuntimeConfig` before the models are loaded.
 // (A bare import, so the bundler can't drop it as unused.)
@@ -19,8 +20,9 @@ import { SEED_PASSWORD } from './people'
 
 const { values: flags } = parseArgs({
   options: {
-    reset: { type: 'boolean', default: false },
-    force: { type: 'boolean', default: false }
+    'reset': { type: 'boolean', default: false },
+    'force': { type: 'boolean', default: false },
+    'env-file': { type: 'string' }
   }
 })
 

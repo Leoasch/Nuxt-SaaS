@@ -1,32 +1,3 @@
-# Nuxt Starter Template
-
-[![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
-
-Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
-
-- [Live demo](https://starter-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
-
-<a href="https://starter-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png" width="830" height="466">
-  </picture>
-</a>
-
-> The starter template for Vue is on https://github.com/nuxt-ui-templates/starter-vue.
-
-## Quick Start
-
-```bash [Terminal]
-npm create nuxt@latest -- -t ui
-```
-
-## Deploy your own
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
-
 ## Setup
 
 Make sure to install the dependencies:
@@ -89,20 +60,20 @@ pnpm preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
-### Free hosting: Render + Neon + Cloudflare R2
+## Public demo
 
-1. **Postgres (Neon):** create a project and copy the *direct* (non-pooled) connection's host, database, user and password into the `NUXT_DATABASE_*` variables, with `NUXT_DATABASE_SSL=true`. The tables are created by the migrations on the first boot.
-2. **Object storage (Cloudflare R2):** create a bucket in the dashboard, then an API token with *Object Read & Write* on that bucket. Use `NUXT_S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com`, `NUXT_S3_REGION=auto`, the bucket name and the token's access key pair.
-3. **Email:** Render's free instances block outbound SMTP on ports 25, 465 and 587, so use a provider that also listens on 2525. With [Brevo](https://www.brevo.com) (300 emails/day free): `NUXT_MAIL_HOST=smtp-relay.brevo.com`, `NUXT_MAIL_PORT=2525`, `NUXT_MAIL_SECURE=false` (the connection is upgraded with STARTTLS), your SMTP login and SMTP key, and a sender address verified in Brevo as `NUXT_MAIL_FROM`.
-4. **App (Render web service):** connect the repository and use
-   - build command: `corepack enable && pnpm install --frozen-lockfile && pnpm build`
-   - start command: `node .output/server/index.mjs`
-   - environment: `NODE_VERSION=22`, the variables above, `NUXT_SESSION_PASSWORD` (at least 32 random characters), `NUXT_APP_URL=https://<service>.onrender.com`, the Google OAuth pair and `TRUST_X_FORWARDED_FOR=true` (Render sets the first `X-Forwarded-For` address to the real client IP; it is read at build time, so set it before the first deploy).
-5. **Google sign-in:** add `https://<service>.onrender.com/auth/google` to the OAuth client's authorized redirect URIs.
-6. **Demo data (optional):** point a local `.env` at Neon and R2 and run `pnpm seed`.
+Setting `NUXT_PUBLIC_DEMO_EMAIL` to a seeded account (e.g. `carla@seed.example.com`) turns on demo mode:
 
-A free Render instance sleeps after 15 minutes without traffic, so the first request after that takes about a minute; the rate limiter's data (kept on the instance's disk) is reset whenever it restarts.
+- the login page shows an "Explore the demo" button that signs in to that account and opens its organization;
+- every seeded account (`@seed.example.com`) is protected: password, profile, email and profile picture changes, account deletion, organization edits and deletion, ownership transfer, invites and member changes are refused, and password-reset emails aren't sent to them.
 
-## Renovate integration
+Leave it unset locally, where seed users behave like any other account.
 
-Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.
+To seed a hosted database from your machine, keep its settings in a separate file and point the seeder at it. Only that file is read, and any missing setting stops the script:
+
+```bash
+pnpm seed --env-file .env.deploy
+pnpm db:migrate:status --env-file .env.deploy
+```
+
+The `reset-demo` GitHub Actions workflow runs `pnpm seed --reset` every night at 03:00 (Brasília), which undoes whatever visitors changed and moves the sales to the current dates. It needs these repository secrets: `NUXT_DATABASE_HOST`, `NUXT_DATABASE_PORT`, `NUXT_DATABASE_NAME`, `NUXT_DATABASE_USER`, `NUXT_DATABASE_PASSWORD`, `NUXT_DATABASE_SSL`, `NUXT_S3_ENDPOINT`, `NUXT_S3_REGION`, `NUXT_S3_BUCKET`, `NUXT_S3_ACCESS_KEY_ID` and `NUXT_S3_SECRET_ACCESS_KEY`. It can also be started by hand from the Actions tab. GitHub pauses scheduled workflows after 60 days without activity in the repository; re-enable it from the same tab.

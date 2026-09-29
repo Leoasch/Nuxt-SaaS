@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { login } from '~/api/auth'
+import { demoLogin, login } from '~/api/auth'
 
 definePageMeta({
   layout: 'no-auth',
@@ -11,6 +11,11 @@ const password = ref('')
 const { errors, resetErrors, handleError } = useFormErrors(['email', 'password'] as const, 'login')
 
 const { fetch: fetchSession } = useUserSession()
+const { toastApiError } = useApiError()
+const { selectedOrganizationId } = useOrganization()
+
+const demoEnabled = !!useRuntimeConfig().public.demoEmail
+const demoLoading = ref(false)
 
 const OAUTH_ERRORS = ['GOOGLE_AUTH_CANCELLED', 'GOOGLE_AUTH_FAILED', 'GOOGLE_EMAIL_UNVERIFIED']
 const route = useRoute()
@@ -32,6 +37,24 @@ async function handleLogin () {
     await navigateTo('/')
   } catch (error: any) {
     handleError(error)
+  }
+}
+
+async function handleDemoLogin () {
+  demoLoading.value = true
+
+  try {
+    const { organizationId } = await demoLogin()
+
+    await fetchSession()
+    if (organizationId) {
+      selectedOrganizationId.value = organizationId
+    }
+    await navigateTo('/')
+  } catch (error) {
+    toastApiError(error)
+  } finally {
+    demoLoading.value = false
   }
 }
 
@@ -85,6 +108,23 @@ defineShortcuts({
       </UFormField>
       <div class="w-full flex flex-col gap-4">
         <GoogleAuthButton/>
+        <div
+          v-if="demoEnabled"
+          class="flex w-full flex-col gap-1.5">
+          <UButton
+            icon="lucide:presentation"
+            variant="soft"
+            :loading="demoLoading"
+            :ui="{
+              base: 'p-3'
+            }"
+            class="cursor-pointer"
+            block
+            @click="handleDemoLogin">
+            {{ $t('auth.demo.button') }}
+          </UButton>
+          <p class="text-center text-xs text-dimmed">{{ $t('auth.demo.hint') }}</p>
+        </div>
         <div class="w-full flex flex-col items-center">
           <ULink to="/auth/forgot-password">{{ $t('auth.login.forgot_password') }}</ULink>
           <ULink to="/auth/register">{{ $t('auth.login.register_link') }}</ULink>

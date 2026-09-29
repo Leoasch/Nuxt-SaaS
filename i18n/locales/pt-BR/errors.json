@@ -67,6 +67,10 @@
       "INVALID_TOKEN": "Este link de confirmação é inválido ou expirou.",
       "ALREADY_VERIFIED": "Seu e-mail já está confirmado.",
       "TOO_SOON": "Acabamos de enviar um e-mail. Aguarde um minuto antes de pedir outro."
+    },
+    "DEMO": {
+      "ACTION_DISABLED": "Esta ação está desativada nas contas de demonstração.",
+      "UNAVAILABLE": "A demonstração está sendo restaurada. Tente de novo em alguns minutos."
     }
   },
   "validation": {
